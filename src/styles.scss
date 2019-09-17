@@ -1,0 +1,191 @@
+$primary: #1fab89;
+$secondary: #226b80;
+
+@import "node_modules/bootstrap/scss/bootstrap";
+
+$fa-font-path: "assets/webfonts";
+
+@import "node_modules/@fortawesome/fontawesome-free/scss/fontawesome.scss";
+@import "node_modules/@fortawesome/fontawesome-free/scss/solid.scss";
+@import "node_modules/@fortawesome/fontawesome-free/scss/regular.scss";
+
+body {
+    background-color: #fbfbfb;
+}
+
+h1 {
+    font-size: 1.4em;
+}
+
+h2 {
+    font-size: 1.3em;
+}
+
+h3 {
+    font-size: 1.2em;
+}
+
+/* Avatars */
+.avatar-sm {
+    width: 40px;
+    height: 40px;
+    border-radius: 900px;
+}
+
+.avatar-md {
+    width: 60px;
+    height: 60px;
+    border-radius: 900px;
+}
+
+.avatar-lg {
+    width: 100px;
+    height: 100px;
+    border-radius: 900px;
+}
+
+.avatar-xlg {
+    width: 200px;
+    height: 200px;
+    border-radius: 900px;
+}
+
+/* ROUNDED */
+.rounded-10 {
+    border-radius: 10px !important;
+}
+
+.rounded-25 {
+    border-radius: 25px !important;
+}
+
+.rounded-50 {
+    border-radius: 50px !important;
+}
+
+.rounded-card-img {
+    margin: 0px;
+    width: 100%;
+    height: 100%;
+    border-top-left-radius: 25px;
+    border-bottom-left-radius: 25px;
+}
+
+.rounded-top-25 {
+    border-top-left-radius: 25px !important;
+    border-top-right-radius: 25px !important;
+    border-bottom-left-radius: 0px !important;
+    border-bottom-right-radius: 0px !important;
+    border-bottom: 0px;
+}
+
+.rounded-bottom-25 {
+    border-bottom-left-radius: 25px !important;
+    border-bottom-right-radius: 25px !important;
+    border-top-left-radius: 0px !important;
+    border-top-right-radius: 0px !important;
+    border-top: 0px;
+}
+
+.rounded-left-25 {
+    border-top-left-radius: 25px !important;
+    border-bottom-left-radius: 25px !important;
+}
+
+.rounded-left-50 {
+    border-top-left-radius: 50px !important;
+    border-bottom-left-radius: 50px !important;
+}
+
+.rounded-right-25 {
+    border-top-right-radius: 25px !important;
+    border-bottom-right-radius: 25px !important;
+}
+
+.rounded-input {
+    border-top-left-radius: 25px;
+    border-bottom-left-radius: 25px;
+    height: auto;
+}
+
+.rounded-input-button {
+    border-top-right-radius: 25px;
+    border-bottom-right-radius: 25px;
+}
+
+.rounded-input-button:disabled,
+.rounded-input-button[disabled] {
+    border-top-right-radius: 25px !important;
+    border-bottom-right-radius: 25px !important;
+}
+
+.no-rounded {
+    border-top-left-radius: 0px !important;
+    border-top-right-radius: 0px !important;
+    border-bottom-left-radius: 0px !important;
+    border-bottom-right-radius: 0px !important;
+}
+
+.no-rounded-top {
+    border-top-left-radius: 0px !important;
+    border-top-right-radius: 0px !important;
+}
+
+.no-rounded-bottom {
+    border-bottom-left-radius: 0px !important;
+    border-bottom-right-radius: 0px !important;
+}
+
+/* CURSORS */
+
+.default-cursor {
+    cursor: default;
+}
+
+.mouse-zoom {
+    cursor: zoom-in;
+}
+
+.mouse-zoom-out {
+    cursor: zoom-out;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+/* Float */
+
+.float-left {
+    float: left;
+}
+
+.float-right {
+    float: right;
+}
+
+.float-bottom {
+    float: bottom;
+}
+
+/* Chip */
+
+.chip {
+    display: inline-block;
+    padding: 0 20px;
+    height: 35px;
+    font-size: 14px;
+    line-height: 35px;
+    border-radius: 25px;
+    background-color: rgb(240, 240, 240);
+    font-family: 'CerebriSans-Light', sans-serif;
+    cursor: pointer;
+  }
+
+.chip img {
+    float: left;
+    margin: 0 10px 0 -25px;
+    height: 35px;
+    width: 35px;
+    border-radius: 50%;
+}

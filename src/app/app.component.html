@@ -1,0 +1,46 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+    <div class="container">
+        <a class="navbar-brand" routerLink="home">
+            <img src="./assets/images/logo.png" width="117" height="32" class="d-inline-block align-top" alt="Logo">
+        </a>
+        <button class="navbar-toggler navbar-toggler-right" type="button" aria-controls="appNavigation"
+            [attr.aria-expanded]="!isCollapsed" aria-label="Toggle navigation" (click)="toggleMenu()">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="appNavigation" [ngbCollapse]="isCollapsed">
+            <div class="navbar-nav mr-auto">
+                <a class="nav-link" routerLink="home" routerLinkActive="active">
+                    <i class="fas fa-home"></i> Inicio
+                </a>
+            </div>
+            <ul class="navbar-nav navbar-right" *ngIf="!identity">
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="login">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="register">Registrate</a>
+                </li>
+            </ul>
+            <div ngbDropdown class="d-inline-block">
+                <a class="text-light pointer" id="dropdownBasic1" ngbDropdownToggle>
+                    <img *ngIf="identity && identity.avatar"
+                        [src]="identity.avatar" class="avatar-sm mr-1" alt="">
+                </a>
+                <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                    <a class="dropdown-item" [routerLink]="['/u/', identity.nick]" ngbDropdownItem>
+                        <i class="fas fa-user"></i> Perfil
+                    </a>
+                    <a class="dropdown-item" routerLink="/settings" ngbDropdownItem>
+                        <i class="fas fa-cog"></i>
+                        Ajustes
+                    </a>
+                    <a class="dropdown-item" routerLink="/logout/1" ngbDropdownItem>
+                        <i class="fas fa-sign-out-alt"></i> Salir
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<router-outlet></router-outlet>
