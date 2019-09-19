@@ -39,6 +39,8 @@ export class CalendarComponent {
         event: CalendarEvent;
     };
 
+    modal;
+
     refresh: Subject<any> = new Subject();
 
     events: CalendarEvent[] = [
@@ -90,7 +92,6 @@ export class CalendarComponent {
             }
             this.viewDate = date;
         }
-        console.log(this.events);
     }
 
     eventTimesChanged({ event, newStart, newEnd }: CalendarEventTimesChangedEvent): void {
@@ -104,12 +105,13 @@ export class CalendarComponent {
             }
             return iEvent;
         });
-        this.handleEvent('Dropped or resized', event);
+
+        this.updateEvent(event);
     }
 
     handleEvent(action: string, event: CalendarEvent): void {
         this.modalData = { event, action };
-        this.modalService.open(this.modalContent, { size: 'xl' });
+        this.modal = this.modalService.open(this.modalContent, { size: 'xl' });
     }
 
     addEvent(): void {
@@ -131,16 +133,6 @@ export class CalendarComponent {
         ];
     }
 
-    uploadEvent(eventToUpload: CalendarEvent) {
-        console.log('Evento a subir', eventToUpload);
-    }
-
-    deleteEvent(eventToDelete: CalendarEvent) {
-        this.events = this.events.filter(event => event !== eventToDelete);
-
-        console.log('Evento eliminado (Eliminar de la BD)');
-    }
-
     setView(view: CalendarView) {
         this.view = view;
     }
@@ -151,5 +143,21 @@ export class CalendarComponent {
 
     openEventsModal(content) {
         this.modalService.open(content, { size: 'xl' });
+    }
+
+    /*** CRUD ***/
+
+    storeEvent(eventToStore: CalendarEvent) {
+        console.log('Evento a subir', eventToStore);
+    }
+
+    updateEvent(eventToUpdate: CalendarEvent) {
+        console.log('Update en el backend', eventToUpdate);
+    }
+
+    deleteEvent(eventToDelete: CalendarEvent) {
+        this.events = this.events.filter(event => event !== eventToDelete);
+
+        console.log('Evento eliminado', eventToDelete);
     }
 }

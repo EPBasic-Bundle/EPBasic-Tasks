@@ -1,73 +1,87 @@
-<div class="container">
-    <table class="table table-dark">
-        <thead>
-            <tr>
-                <th scope="col"></th>
-                <th scope="col">Lunes</th>
-                <th scope="col">Martes</th>
-                <th scope="col">Miercoles</th>
-                <th scope="col">Jueves</th>
-                <th scope="col">Viernes</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>8:30 - 9:25</td>
-                <td>MME</td>
-                <td>REDES</td>
-                <td>SOM</td>
-                <td>SOM</td>
-                <td>MME</td>
-            </tr>
-            <tr>
-                <td>9:25 - 10:20</td>
-                <td>MME</td>
-                <td>REDES</td>
-                <td>SOM</td>
-                <td>FOL</td>
-                <td>AOF</td>
-            </tr>
-            <tr>
-                <td>10:20 - 11:15</td>
-                <td>REDES</td>
-                <td>MME</td>
-                <td>REDES</td>
-                <td>MME</td>
-                <td>AOF</td>
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>11:45 - 12:40</td>
-                <td>REDES</td>
-                <td>MME</td>
-                <td>FOL</td>
-                <td>MME</td>
-                <td>SOM</td>
-            </tr>
-            <tr>
-                <td>12:40 - 13:35</td>
-                <td>SOM</td>
-                <td>INGLES</td>
-                <td>AOF</td>
-                <td>INGLES</td>
-                <td>REDES</td>
-            </tr>
-            <tr>
-                <td>13:35 - 14:30</td>
-                <td>SOM</td>
-                <td>FOL</td>
-                <td>AOF</td>
-                <td>REDES</td>
-                <td>REDES</td>
-            </tr>
-        </tbody>
-    </table>
-
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <table class="table table-dark">
+                <thead>
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col">Lunes</th>
+                        <th scope="col">Martes</th>
+                        <th scope="col">Miercoles</th>
+                        <th scope="col">Jueves</th>
+                        <th scope="col">Viernes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>8:30 - 9:25</td>
+                        <td>MME</td>
+                        <td>REDES</td>
+                        <td>SOM</td>
+                        <td>SOM</td>
+                        <td>MME</td>
+                    </tr>
+                    <tr>
+                        <td>9:25 - 10:20</td>
+                        <td>MME</td>
+                        <td>REDES</td>
+                        <td>SOM</td>
+                        <td>FOL</td>
+                        <td>AOF</td>
+                    </tr>
+                    <tr>
+                        <td>10:20 - 11:15</td>
+                        <td>REDES</td>
+                        <td>MME</td>
+                        <td>REDES</td>
+                        <td>MME</td>
+                        <td>AOF</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>11:45 - 12:40</td>
+                        <td>REDES</td>
+                        <td>MME</td>
+                        <td>FOL</td>
+                        <td>MME</td>
+                        <td>SOM</td>
+                    </tr>
+                    <tr>
+                        <td>12:40 - 13:35</td>
+                        <td>SOM</td>
+                        <td>INGLES</td>
+                        <td>AOF</td>
+                        <td>INGLES</td>
+                        <td>REDES</td>
+                    </tr>
+                    <tr>
+                        <td>13:35 - 14:30</td>
+                        <td>SOM</td>
+                        <td>FOL</td>
+                        <td>AOF</td>
+                        <td>REDES</td>
+                        <td>REDES</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-lg-3">
+            <div class="card rounded-25">
+                <div class="card-body">
+                    <h1>Asignaturas</h1>
+                    <hr>
+                    <ng-container *ngFor="let subject of subjects">
+                        {{ subject.name }}
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

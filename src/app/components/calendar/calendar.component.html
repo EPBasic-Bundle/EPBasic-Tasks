@@ -1,6 +1,6 @@
 <div class="container-fluid">
     <div class="row d-flex justify-content-center">
-        <div class="col-7">
+        <div class="col-lg-7 mb-4">
             <div class="card rounded-25">
                 <div class="row text-center mt-4">
                     <div class="col-md-4">
@@ -62,7 +62,7 @@
             </div>
         </div>
 
-        <div class="col-3">
+        <div class="col-lg-3">
             <div class="card rounded-25">
                 <div class="card-body">
                     <div class="title">
@@ -109,7 +109,7 @@
 <ng-template #modalContent let-close="close">
     <div class="modal-header">
         <h5 class="modal-title">{{ modalData?.event.title }}</h5>
-        <button type="button" class="close" (click)="close()">
+        <button type="button" class="close" (click)="modal.close()">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
@@ -117,7 +117,7 @@
         <pre>{{ modalData?.event | json }}</pre>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-outline-secondary" (click)="close()">
+        <button type="button" class="btn btn-outline-secondary" (click)="modal.close()">
             Cerrar
         </button>
     </div>
@@ -126,7 +126,7 @@
 <ng-template #eventsModal let-close="close">
     <div class="modal-header">
         <h5 class="modal-title">Añadir eventos</h5>
-        <button type="button" class="close" (click)="close()">
+        <button type="button" class="close" (click)="modal.close()">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
@@ -173,7 +173,7 @@
                                 placeholder="Not set" />
                         </td>
                         <td>
-                            <button class="btn btn-primary rounded-25 mr-2" (click)="uploadEvent(event)">
+                            <button class="btn btn-primary rounded-25 mr-2" (click)="storeEvent(event)">
                                 <i class="fa fa-save"></i>
                             </button>
                             <button class="btn btn-danger rounded-25" (click)="deleteEvent(event)">
@@ -186,7 +186,7 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-outline-secondary" (click)="close()">
+        <button type="button" class="btn btn-outline-secondary" (click)="modal.close()">
             Cerrar
         </button>
     </div>
