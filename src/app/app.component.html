@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
     <div class="container">
         <a class="navbar-brand" routerLink="home">
-            <img src="./assets/images/logo.png" width="117" height="32" class="d-inline-block align-top" alt="Logo">
+            <img src="./assets/images/logo.png" width="128" height="42" class="d-inline-block align-top" alt="Logo">
         </a>
         <button class="navbar-toggler navbar-toggler-right" type="button" aria-controls="appNavigation"
             [attr.aria-expanded]="!isCollapsed" aria-label="Toggle navigation" (click)="toggleMenu()">
@@ -11,6 +11,12 @@
             <div class="navbar-nav mr-auto">
                 <a class="nav-link" routerLink="home" routerLinkActive="active">
                     <i class="fas fa-home"></i> Inicio
+                </a>
+                <a class="nav-link" routerLink="calendar" routerLinkActive="active">
+                    <i class="fas fa-calendar"></i> Calendario
+                </a>
+                <a class="nav-link" routerLink="timetable" routerLinkActive="active">
+                    <i class="fas fa-clock"></i> Horario
                 </a>
             </div>
             <ul class="navbar-nav navbar-right" *ngIf="!identity">
@@ -23,8 +29,7 @@
             </ul>
             <div ngbDropdown class="d-inline-block">
                 <a class="text-light pointer" id="dropdownBasic1" ngbDropdownToggle>
-                    <img *ngIf="identity && identity.avatar"
-                        [src]="identity.avatar" class="avatar-sm mr-1" alt="">
+                    <img *ngIf="identity && identity.avatar" [src]="identity.avatar" class="avatar-sm mr-1" alt="">
                 </a>
                 <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
                     <a class="dropdown-item" [routerLink]="['/u/', identity.nick]" ngbDropdownItem>
@@ -44,3 +49,18 @@
 </nav>
 
 <router-outlet></router-outlet>
+
+<footer class="w-100">
+    <div class="bg-dark container-fluid">
+        <div class="container text-light">
+            <div class="row">
+                <div class="col-12 text-center text-sm-left col-sm-8">
+                    Copyright © 2019 EPBasic
+                </div>
+                <div class="col-12 text-center text-sm-right col-sm-4">
+                    EPBasic Task v0.0.0
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
