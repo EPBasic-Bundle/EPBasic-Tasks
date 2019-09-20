@@ -51,3 +51,26 @@ export class Homeworks {
     ) { }
 }
 
+export class Timetable {
+    constructor(
+        public id: number,
+        public user_id: number,
+        public rows: number,
+        public created_at?: string,
+        public updated_at?: string,
+        public hours?,
+        public subjects?,
+    ) { }
+}
+
+
+export class TimetableSubject {
+    constructor(
+        public id: number,
+        public name: string,
+        public position: number,
+        public created_at?: string,
+        public updated_at?: string,
+    ) { }
+}
+

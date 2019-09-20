@@ -142,7 +142,7 @@ export class CalendarComponent {
     }
 
     openEventsModal(content) {
-        this.modalService.open(content, { size: 'xl' });
+        this.modal = this.modalService.open(content, { size: 'xl' });
     }
 
     /*** CRUD ***/
