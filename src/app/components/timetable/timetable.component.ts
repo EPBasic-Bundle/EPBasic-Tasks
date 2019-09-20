@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Subject, Timetable, TimetableSubject } from '../../models/model';
+import { Subject, Timetable } from '../../models/model';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'app-timetable',
@@ -8,6 +9,7 @@ import { Subject, Timetable, TimetableSubject } from '../../models/model';
 })
 export class TimetableComponent implements OnInit {
     rows;
+    modal;
 
     subjects: Subject[] =
         [
@@ -50,46 +52,62 @@ export class TimetableComponent implements OnInit {
         subjects: [
             [
                 {
+                    id: 1,
                     subject_id: 1,
                 },
                 {
+                    id: 2,
                     subject_id: 2,
                 },
                 {
+                    id: 3,
                     subject_id: 3,
                 },
                 {
+                    id: 4,
                     subject_id: 6,
                 },
                 {
+                    id: 5,
                     subject_id: 5,
                 }
             ],
             [
                 {
+                    id: 6,
                     subject_id: 1,
                 },
                 {
+                    id: 7,
                     subject_id: 2,
                 },
                 {
+                    id: 8,
                     subject_id: 6,
                 },
                 {
+                    id: 9,
                     subject_id: 4,
                 },
                 {
+                    id: 10,
                     subject_id: 5,
                 }
             ]
         ]
     };
 
-    constructor() {
+    constructor(
+        private modalService: NgbModal
+    ) {
         this.rows = Array(this.timetable.rows).fill(0).map((x, i) => i);
     }
 
     ngOnInit() {
+    }
+
+    openModal(content) {
+        this.modal = this.modalService.open(content, { size: 'xl' });
     }
 
     findSubject(subject_id) {

@@ -1,11 +1,8 @@
 import { Component, ChangeDetectionStrategy, ViewChild, TemplateRef } from '@angular/core';
-import { startOfDay, endOfDay, subDays, addDays, endOfMonth, isSameDay, isSameMonth, addHours } from 'date-fns';
+import { startOfDay, endOfDay, subDays, addDays, isSameDay, isSameMonth, addHours } from 'date-fns';
 import { Subject } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import {
-    CalendarEvent, CalendarDateFormatter, DAYS_OF_WEEK,
-    CalendarEventAction, CalendarEventTimesChangedEvent, CalendarView
-} from 'angular-calendar';
+import { CalendarEvent, CalendarDateFormatter, DAYS_OF_WEEK, CalendarEventTimesChangedEvent, CalendarView } from 'angular-calendar';
 import { CustomDateFormatter } from './date-formatter.provider';
 
 @Component({
@@ -22,7 +19,7 @@ import { CustomDateFormatter } from './date-formatter.provider';
 })
 
 export class CalendarComponent {
-    @ViewChild('modalContent', { static: true }) modalContent: TemplateRef<any>;
+    @ViewChild('eventModal', { static: true }) eventModal: TemplateRef<any>;
 
     locale = 'es';
     weekStartsOn: number = DAYS_OF_WEEK.MONDAY;
@@ -111,7 +108,7 @@ export class CalendarComponent {
 
     handleEvent(action: string, event: CalendarEvent): void {
         this.modalData = { event, action };
-        this.modal = this.modalService.open(this.modalContent, { size: 'xl' });
+        this.modal = this.modalService.open(this.eventModal, { size: 'xl' });
     }
 
     addEvent(): void {

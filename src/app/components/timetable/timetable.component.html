@@ -2,7 +2,7 @@
     <div class="row justify-content-center">
         <div class="col-lg-7">
             <br>
-            <table class="table table-dark">
+            <table class="table table-striped table-dark">
                 <thead>
                     <tr>
                         <th scope="col"></th>
@@ -15,7 +15,7 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let subjectRow of timetable.subjects; let i=index">
-                        <td>{{ timetable.hours[i] }}</td>
+                        <th scope="row">{{ timetable.hours[i] }}</th>
                         <td *ngFor="let subject of subjectRow">
                             {{ subject.name }}
                             {{ findSubject(subject.subject_id) }}
@@ -29,11 +29,53 @@
                 <div class="card-body">
                     <h1>Asignaturas</h1>
                     <hr>
-                    <ng-container *ngFor="let subject of subjects">
-                        {{ subject.name }}
-                    </ng-container>
+                    <button class="btn btn-primary btn-sm mb-3 btn-block" (click)="openModal(timelineModal)">
+                        <i class="fas fa-clock"></i>
+                        Horario
+                    </button>
+                    <div class="list-group w-100 mb-3">
+                        <a href="#" class="list-group-item list-group-item-action" *ngFor="let subject of subjects">
+                            {{ subject.name }}
+                        </a>
+                    </div>
+                    <button class="btn btn-primary btn-sm mb-3 btn-block" (click)="openModal(subjectsModal)">
+                        <i class="fas fa-graduation-cap"></i>
+                        Asignaturas
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<ng-template #timelineModal let-close="close">
+    <div class="modal-header">
+        <h5 class="modal-title"></h5>
+        <button type="button" class="close" (click)="modal.close()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" (click)="modal.close()">
+            Cerrar
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #subjectsModal let-close="close">
+    <div class="modal-header">
+        <h5 class="modal-title"></h5>
+        <button type="button" class="close" (click)="modal.close()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" (click)="modal.close()">
+            Cerrar
+        </button>
+    </div>
+</ng-template>

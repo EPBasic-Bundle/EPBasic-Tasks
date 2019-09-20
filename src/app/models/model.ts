@@ -21,6 +21,27 @@ export class Subject {
     ) { }
 }
 
+export class Timetable {
+    constructor(
+        public id: number,
+        public user_id: number,
+        public rows: number,
+        public created_at?: string,
+        public updated_at?: string,
+        public hours?,
+        public subjects?: TimetableSubject[][],
+    ) { }
+}
+
+export class TimetableSubject {
+    constructor(
+        public id: number,
+        public subject_id: number,
+        public created_at?: string,
+        public updated_at?: string,
+    ) { }
+}
+
 export class Topics {
     constructor(
         public id: number,
@@ -46,29 +67,6 @@ export class Homeworks {
         public id: number,
         public subject_id: number,
         public grade: number,
-        public created_at?: string,
-        public updated_at?: string,
-    ) { }
-}
-
-export class Timetable {
-    constructor(
-        public id: number,
-        public user_id: number,
-        public rows: number,
-        public created_at?: string,
-        public updated_at?: string,
-        public hours?,
-        public subjects?,
-    ) { }
-}
-
-
-export class TimetableSubject {
-    constructor(
-        public id: number,
-        public name: string,
-        public position: number,
         public created_at?: string,
         public updated_at?: string,
     ) { }
