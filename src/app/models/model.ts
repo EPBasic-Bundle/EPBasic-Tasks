@@ -36,7 +36,7 @@ export class Timetable {
 export class TimetableSubject {
     constructor(
         public id: number,
-        public cell: number,
+        public cell: string,
         public subject_id: number,
         public created_at?: string,
         public updated_at?: string,

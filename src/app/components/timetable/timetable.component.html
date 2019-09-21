@@ -17,7 +17,6 @@
                     <tr *ngFor="let subjectsRow of timetable.subjects; let i=index">
                         <th scope="row">
                             {{ timetable.hours[i] }}
-
                         </th>
                         <td *ngFor="let tSubject of subjectsRow">
                             {{ findSubject(tSubject.subject_id).name }}
@@ -59,7 +58,7 @@
     </div>
     <div class="modal-body">
         <div class="row justify-content-center mb-4">
-            <div class="col-lg-6">
+            <div class="col-lg-6" *ngIf="!timetable">
                 <select class="w-75 custom-select mr-2" name="rows" [(ngModel)]="rows">
                     <option [value]="i" *ngFor="let i of [1,2,3,4,5,6,7,8,9,10]">
                         {{ i }} filas
@@ -99,11 +98,11 @@
                     <th scope="row">
                         {{ timetable.hours[i] }}
                     </th>
-                    <td *ngFor="let tSubject of subjectRow; let e=index">
+                    <td *ngFor="let tSubject of subjectRow; let e=index" (click)="activateEdition(i, e)" class="pointer">
+                        <ng-container *ngIf="editionActivated(i, e) != true">
+                            {{ findSubject(tSubject.subject_id).name }}
+                        </ng-container>
                         <div class="input-group">
-                            <ng-container *ngIf="editionActivated(i, e) != true">
-                                <span class="pointer" (click)="activateEdition(i, e)" >{{ findSubject(tSubject.subject_id).name }}</span>
-                            </ng-container>
                             <ng-container *ngIf="editionActivated(i, e) == true">
                                 <select class="custom-select" name="selectedSubject" [(ngModel)]="selectedSubject">
                                     <option selected>
@@ -132,6 +131,7 @@
                 </tr>
             </tbody>
         </table>
+        <button class="btn btn-primary" (click)="store()">Guardar tabla</button>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-outline-secondary" (click)="modal.close()">

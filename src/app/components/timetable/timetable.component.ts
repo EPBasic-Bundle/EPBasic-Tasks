@@ -53,13 +53,83 @@ export class TimetableComponent implements OnInit {
             }
         ];
 
-    timetable: Timetable;
+    timetable: Timetable = {
+        "id": 1,
+        "user_id": 1,
+        "rows": "2",
+        "hours": [
+            "8:30-9:25",
+            "9:25-10:30",
+            "10:20 - 11:15",
+            "11:15 - 11:45",
+            "11:45 - 12:40",
+            "12:40 - 13:35",
+            "13:35 - 14:30"
+        ],
+        "subjects": [
+            [
+                {
+                    "id": null,
+                    "cell": "6524g3lsait",
+                    "subject_id": 5
+                },
+                {
+                    "id": null,
+                    "cell": "hjnskbetkkk",
+                    "subject_id": 3
+                },
+                {
+                    "id": null,
+                    "cell": "ntijq4bia2i",
+                    "subject_id": 5
+                },
+                {
+                    "id": null,
+                    "cell": "xuzjehinwa",
+                    "subject_id": 5
+                },
+                {
+                    "id": null,
+                    "cell": "kagozwnfmht",
+                    "subject_id": 5
+                }
+            ],
+            [
+                {
+                    "id": null,
+                    "cell": "c7njrqx3qmc",
+                    "subject_id": 6
+                },
+                {
+                    "id": null,
+                    "cell": "c9ep36bofc",
+                    "subject_id": 6
+                },
+                {
+                    "id": null,
+                    "cell": "69rviwn9c2o",
+                    "subject_id": 6
+                },
+                {
+                    "id": null,
+                    "cell": "3v118veq3dp",
+                    "subject_id": 6
+                },
+                {
+                    "id": null,
+                    "cell": "edtl25efft9",
+                    "subject_id": 4
+                }
+            ]
+        ]
+    }
+
 
     constructor(
         private modalService: NgbModal
     ) { }
 
-    ngOnInit() {}
+    ngOnInit() { }
 
     openModal(content) {
         this.modal = this.modalService.open(content, { size: 'xl' });
@@ -81,8 +151,6 @@ export class TimetableComponent implements OnInit {
         let subjects;
         this.timetable.subjects;
 
-        let number = 1;
-
         for (let e of Array(rows)) {
             subjects = [];
 
@@ -90,7 +158,7 @@ export class TimetableComponent implements OnInit {
                 subjects.push(
                     {
                         id: null,
-                        cell: number++,
+                        cell: Math.random().toString(36).substring(2, 15),
                         subject_id: 0,
                     }
                 );
@@ -127,4 +195,7 @@ export class TimetableComponent implements OnInit {
         return this.subjects.find(subject => subject.id === subject_id);
     }
 
+    store() {
+        console.log(this.timetable);
+    }
 }
