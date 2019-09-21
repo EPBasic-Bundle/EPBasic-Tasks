@@ -18,31 +18,37 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
 import { ErrorComponent } from './components/error/error.component';
 import { CalendarComponent } from './components/calendar/calendar.component';
+import { ApiService } from './services/api.service';
+import { IdentityGuard } from './guards/identity.guard';
 
 registerLocaleData(localeEs);
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    HomeComponent,
-    ErrorComponent,
-    CalendarComponent,
-    TimetableComponent
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    HttpClientModule,
-    FormsModule,
-    NgbModule,
-    BrowserAnimationsModule,
-    FlatpickrModule.forRoot(),
-    CalendarModule.forRoot({
-      provide: DateAdapter,
-      useFactory: adapterFactory
-    }),
-  ],
-  providers: [{ provide: LOCALE_ID, useValue: 'es' }],
-  bootstrap: [AppComponent]
+    declarations: [
+        AppComponent,
+        HomeComponent,
+        ErrorComponent,
+        CalendarComponent,
+        TimetableComponent
+    ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        HttpClientModule,
+        FormsModule,
+        NgbModule,
+        BrowserAnimationsModule,
+        FlatpickrModule.forRoot(),
+        CalendarModule.forRoot({
+            provide: DateAdapter,
+            useFactory: adapterFactory
+        }),
+    ],
+    providers: [
+        { provide: LOCALE_ID, useValue: 'es' },
+        ApiService,
+        IdentityGuard
+    ],
+    bootstrap: [AppComponent]
 })
 export class AppModule { }

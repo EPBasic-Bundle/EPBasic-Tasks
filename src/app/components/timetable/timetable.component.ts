@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Subject, Timetable } from '../../models/model';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ApiService } from '../../services/api.service';
 
 @Component({
     selector: 'app-timetable',
@@ -8,131 +9,52 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
     styleUrls: ['./timetable.component.scss']
 })
 export class TimetableComponent implements OnInit {
+    subject: Subject;
+    loading: boolean;
+
     rows: number;
     rowIndex: number;
     modal;
-    selectedSubject;
-    editionActivatedInRow;
-    editionActivatedInSubject
 
-    subjects: Subject[] =
-        [
-            {
-                id: 0,
-                name: 'Libre',
+    selectedSubject: number;
+    editionActivatedInRow: number;
+    editionActivatedInSubject: number;
 
-            },
-            {
-                id: 1,
-                name: 'MME',
+    subjects: Subject[];
 
-            },
-            {
-                id: 2,
-                name: 'SOM',
-
-            },
-            {
-                id: 3,
-                name: 'AOF',
-
-            },
-            {
-                id: 4,
-                name: 'Inglés',
-
-            },
-            {
-                id: 5,
-                name: 'FOL',
-
-            },
-            {
-                id: 6,
-                name: 'Redes'
-            }
-        ];
-
-    timetable: Timetable = {
-        "id": 1,
-        "user_id": 1,
-        "rows": "2",
-        "hours": [
-            "8:30-9:25",
-            "9:25-10:30",
-            "10:20 - 11:15",
-            "11:15 - 11:45",
-            "11:45 - 12:40",
-            "12:40 - 13:35",
-            "13:35 - 14:30"
-        ],
-        "subjects": [
-            [
-                {
-                    "id": null,
-                    "cell": "6524g3lsait",
-                    "subject_id": 5
-                },
-                {
-                    "id": null,
-                    "cell": "hjnskbetkkk",
-                    "subject_id": 3
-                },
-                {
-                    "id": null,
-                    "cell": "ntijq4bia2i",
-                    "subject_id": 5
-                },
-                {
-                    "id": null,
-                    "cell": "xuzjehinwa",
-                    "subject_id": 5
-                },
-                {
-                    "id": null,
-                    "cell": "kagozwnfmht",
-                    "subject_id": 5
-                }
-            ],
-            [
-                {
-                    "id": null,
-                    "cell": "c7njrqx3qmc",
-                    "subject_id": 6
-                },
-                {
-                    "id": null,
-                    "cell": "c9ep36bofc",
-                    "subject_id": 6
-                },
-                {
-                    "id": null,
-                    "cell": "69rviwn9c2o",
-                    "subject_id": 6
-                },
-                {
-                    "id": null,
-                    "cell": "3v118veq3dp",
-                    "subject_id": 6
-                },
-                {
-                    "id": null,
-                    "cell": "edtl25efft9",
-                    "subject_id": 4
-                }
-            ]
-        ]
-    }
-
+    timetable: Timetable;
 
     constructor(
+        private apiService: ApiService,
         private modalService: NgbModal
-    ) { }
+    ) {
+        this.subject = new Subject(null, null, null, null);
+    }
 
-    ngOnInit() { }
+    ngOnInit() {
+        this.getSubjects();
+        this.getTimetable();
+    }
 
-    openModal(content) {
-        this.modal = this.modalService.open(content, { size: 'xl' });
+    getSubjects() {
+        this.apiService.get('subjects').subscribe(
+            resp => {
+                this.subjects = resp.subjects;
+            }
+        );
+    }
+
+    getTimetable () {
+        this.apiService.get('timetable').subscribe(
+            resp => {
+                this.timetable = resp.timetable;
+                this.timetable.subjects = resp.subjects;
+            }
+        );
+    }
+
+    openModal(content, size) {
+        this.modal = this.modalService.open(content, { size });
     }
 
     createTable() {
@@ -140,7 +62,7 @@ export class TimetableComponent implements OnInit {
             id: 1,
             user_id: 1,
             rows: this.rows,
-            hours: ['8:30-9:25', '9:25-10:30', '10:20 - 11:15', '11:15 - 11:45', '11:45 - 12:40', '12:40 - 13:35', '13:35 - 14:30'],
+            hours: [],
             subjects: []
         }
 
@@ -148,18 +70,27 @@ export class TimetableComponent implements OnInit {
     }
 
     addRows(rows) {
+        this.rows = +this.rows;
+
         let subjects;
         this.timetable.subjects;
 
         for (let e of Array(rows)) {
             subjects = [];
 
+            this.timetable.hours.push(
+                {
+                    id: null,
+                    hour_start: '00:00',
+                    hour_end: '23:59',
+                }
+            );
+
             for (let i of Array(5)) {
                 subjects.push(
                     {
                         id: null,
-                        cell: Math.random().toString(36).substring(2, 15),
-                        subject_id: 0,
+                        subject_id: this.subjects[0].id,
                     }
                 );
             }
@@ -168,8 +99,13 @@ export class TimetableComponent implements OnInit {
         }
     }
 
+    findSubject(subject_id) {
+        return this.subjects.find(subject => subject.id === subject_id);
+    }
+
     deleteRow(index) {
         this.timetable.subjects.splice(index, 1);
+        this.timetable.hours.splice(index, 1);
     }
 
     activateEdition(rowIndex, subjectIndex) {
@@ -191,11 +127,35 @@ export class TimetableComponent implements OnInit {
         this.selectedSubject = null;
     }
 
-    findSubject(subject_id) {
-        return this.subjects.find(subject => subject.id === subject_id);
+    storeTimetable() {
+        this.loading = true;
+        this.apiService.post('timetable', this.timetable).subscribe(
+            resp => {
+                this.loading = false;
+
+                if (resp.status === 'success') {
+                    this.getTimetable();
+                } else {
+                }
+            }, (error) => {
+                this.loading = false;
+
+            }
+        );
     }
 
-    store() {
-        console.log(this.timetable);
+    storeSubject(form) {
+        this.loading = true;
+        this.apiService.post('subject', this.subject).subscribe(
+            resp => {
+                this.loading = false;
+                if (resp.status === 'success') {
+                    this.getSubjects();
+                    form.reset();
+                }
+            }, () => {
+                this.loading = false;
+            }
+        );
     }
 }

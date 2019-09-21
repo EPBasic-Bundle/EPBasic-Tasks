@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 
 import { environment } from '../../environments/environment';
 
@@ -14,10 +15,11 @@ export class ApiService {
     baseURL: string = environment.server;
 
     constructor(
-        public http: HttpClient
+        public http: HttpClient,
+        private router: Router,
     ) {
-        this.token = this.getToken();
         this.getToken();
+        this.getIdentity();
     }
 
     get(url): Observable<any> {
@@ -102,12 +104,13 @@ export class ApiService {
     }
 
     logout() {
-        // VACIAR EL LOCALSTORAGE
         localStorage.removeItem('identity');
         localStorage.removeItem('token');
-        // VACIAR VARIABLES
+
         this.identity = null;
         this.token = null;
+
+        this.router.navigate(['home']);
     }
 
     external(url): Observable<any> {

@@ -2,7 +2,7 @@
     <div class="row justify-content-center">
         <div class="col-lg-7">
             <br>
-            <table class="table table-striped table-dark" *ngIf="timetable">
+            <table class="table table-striped table-dark" *ngIf="timetable && subjects">
                 <thead>
                     <tr>
                         <th scope="col"></th>
@@ -16,7 +16,7 @@
                 <tbody>
                     <tr *ngFor="let subjectsRow of timetable.subjects; let i=index">
                         <th scope="row">
-                            {{ timetable.hours[i] }}
+                            {{ timetable.hours[i].hour_start + ' - ' + timetable.hours[i].hour_end }}
                         </th>
                         <td *ngFor="let tSubject of subjectsRow">
                             {{ findSubject(tSubject.subject_id).name }}
@@ -30,7 +30,7 @@
                 <div class="card-body">
                     <h1>Asignaturas</h1>
                     <hr>
-                    <button class="btn btn-primary btn-sm mb-3 btn-block" (click)="openModal(timetableModal)">
+                    <button class="btn btn-primary btn-sm mb-3 btn-block" (click)="openModal(timetableModal, 'xl')">
                         <i class="fas fa-clock"></i>
                         Horario
                     </button>
@@ -39,7 +39,7 @@
                             {{ subject.name }}
                         </a>
                     </div>
-                    <button class="btn btn-primary btn-sm mb-3 btn-block" (click)="openModal(subjectsModal)">
+                    <button class="btn btn-primary btn-sm mb-3 btn-block" (click)="openModal(subjectsModal, 'md')">
                         <i class="fas fa-graduation-cap"></i>
                         Asignaturas
                     </button>
@@ -58,7 +58,7 @@
     </div>
     <div class="modal-body">
         <div class="row justify-content-center mb-4">
-            <div class="col-lg-6" *ngIf="!timetable">
+            <div class="col-lg-6" *ngIf="!timetable || timetable.subjects.length == 0">
                 <select class="w-75 custom-select mr-2" name="rows" [(ngModel)]="rows">
                     <option [value]="i" *ngFor="let i of [1,2,3,4,5,6,7,8,9,10]">
                         {{ i }} filas
@@ -81,7 +81,7 @@
             </div>
         </div>
 
-        <table class="table table-striped table-dark" *ngIf="timetable">
+        <table class="table table-striped table-dark" *ngIf="timetable && subjects">
             <thead>
                 <tr>
                     <th scope="col"></th>
@@ -96,16 +96,17 @@
             <tbody>
                 <tr *ngFor="let subjectRow of timetable.subjects; let i=index">
                     <th scope="row">
-                        {{ timetable.hours[i] }}
+                        {{ timetable.hours[i].hour_start + ' - ' + timetable.hours[i].hour_end }}
                     </th>
-                    <td *ngFor="let tSubject of subjectRow; let e=index" (click)="activateEdition(i, e)" class="pointer">
+                    <td *ngFor="let tSubject of subjectRow; let e=index" (click)="activateEdition(i, e)"
+                        class="pointer">
                         <ng-container *ngIf="editionActivated(i, e) != true">
                             {{ findSubject(tSubject.subject_id).name }}
                         </ng-container>
                         <div class="input-group">
                             <ng-container *ngIf="editionActivated(i, e) == true">
                                 <select class="custom-select" name="selectedSubject" [(ngModel)]="selectedSubject">
-                                    <option selected>
+                                    <option disabled>
                                         {{ findSubject(tSubject.subject_id).name }}
                                     </option>
                                     <ng-container *ngFor="let subject of subjects">
@@ -131,7 +132,7 @@
                 </tr>
             </tbody>
         </table>
-        <button class="btn btn-primary" (click)="store()">Guardar tabla</button>
+        <button class="btn btn-primary float-right" (click)="storeTimetable()" *ngIf="timetable">Guardar tabla</button>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-outline-secondary" (click)="modal.close()">
@@ -142,12 +143,31 @@
 
 <ng-template #subjectsModal let-close="close">
     <div class="modal-header">
-        <h5 class="modal-title"></h5>
+        <h5 class="modal-title">Añadir asignaturas</h5>
         <button type="button" class="close" (click)="modal.close()">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
     <div class="modal-body">
+        <form #subjectForm="ngForm" (ngSubmit)="storeSubject(subjectForm)">
+            <div class="form-group">
+                <label>
+                    <i class="fas fa-heading"></i>
+                    Nombre
+                </label>
+                <input name="title" type="text" #title="ngModel" [(ngModel)]="subject.name"
+                    class="form-control" placeholder="Titulo de la aplicación" required>
+                <small *ngIf="!title.valid && title.touched" class="invalid-feedback d-block">
+                    El nombre no es valido
+                </small>
+            </div>
+
+            <button type="submit" class="btn btn-primary float-right"
+                [disabled]="subjectForm.invalid || loading == true">
+                Añadir asignatura
+                <i class="fa fa-spinner fa-spin fa-fw" *ngIf="loading == true"></i>
+            </button>
+        </form>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-outline-secondary" (click)="modal.close()">
