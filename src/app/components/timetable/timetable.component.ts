@@ -19,8 +19,20 @@ export class TimetableComponent implements OnInit {
 
     timetable: Timetable;
 
+    selectedRowIndex: number;
+    subjectSelected: number;
     subjectRow: number;
     subjectCol: number;
+
+    hour_start = {
+        hour: 10,
+        minute: 0
+    };
+
+    hour_end = {
+        hour: 10,
+        minute: 0
+    };
 
     constructor(
         private apiService: ApiService,
@@ -70,6 +82,12 @@ export class TimetableComponent implements OnInit {
         this.subjectCol = data[1];
 
         this.modal = this.modalService.open(content, { size: 'sm', centered: true });
+    }
+
+    openHoursSelectorModal(content, index) {
+        this.selectedRowIndex = index;
+
+        this.modal = this.modalService.open(content, { centered: true });
     }
 
     /*************/
@@ -128,6 +146,22 @@ export class TimetableComponent implements OnInit {
         this.timetable.hours.splice(index, 1);
     }
 
+    setTime() {
+        const hour_start = this.addZero(this.hour_start.hour) + ':' + this.addZero(this.hour_start.minute);
+        const hour_end = this.addZero(this.hour_end.hour) + ':' + this.addZero(this.hour_end.minute);
+
+        this.timetable.hours[this.selectedRowIndex].hour_start = hour_start;
+        this.timetable.hours[this.selectedRowIndex].hour_end = hour_end;
+    }
+
+    addZero(number: number) {
+        if (number < 10) {
+            return '0' + number;
+        } else {
+            return number;
+        }
+    }
+
     /******************/
     /* TIMETABLE CRUD */
     /*****************/
@@ -176,6 +210,10 @@ export class TimetableComponent implements OnInit {
         }
     }
 
+    deleteSubjectFront(index) {
+        this.subjects.splice(index, 1);
+    }
+
     /******************/
     /* SUBJECT CRUD */
     /*****************/
@@ -184,7 +222,6 @@ export class TimetableComponent implements OnInit {
         this.loading = true;
         this.apiService.post('subject', subject).subscribe(
             resp => {
-                console.log(resp);
                 this.loading = false;
                 if (resp.status === 'success') {
                     this.getSubjects();
@@ -229,5 +266,17 @@ export class TimetableComponent implements OnInit {
 
     findSubject(subject_id: number) {
         return this.subjects.find(subject => subject.id === subject_id);
+    }
+
+    markSubjectInTimetable(subject_id) {
+        this.subjectSelected = subject_id;
+    }
+
+    subjectIsSelected(subject_id) {
+        if (this.subjectSelected === subject_id) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

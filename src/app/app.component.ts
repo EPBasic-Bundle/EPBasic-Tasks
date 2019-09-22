@@ -1,12 +1,13 @@
-import { Component, DoCheck } from '@angular/core';
+import { Component, DoCheck, OnInit } from '@angular/core';
 import { ApiService } from './services/api.service';
+import * as AOS from 'aos';
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements DoCheck {
+export class AppComponent implements OnInit, DoCheck {
     isCollapsed = true;
     identity;
 
@@ -14,6 +15,9 @@ export class AppComponent implements DoCheck {
         private apiService: ApiService
     ) {}
 
+    ngOnInit() {
+        AOS.init();
+    }
     toggleMenu() {
         this.isCollapsed = !this.isCollapsed;
     }
