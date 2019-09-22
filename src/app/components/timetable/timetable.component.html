@@ -30,7 +30,7 @@
                 <div class="card-body">
                     <h1>Asignaturas</h1>
                     <hr>
-                    <button class="btn btn-primary btn-sm mb-3 btn-block" (click)="openModal(timetableModal, 'xl')">
+                    <button class="btn btn-primary btn-sm mb-3 btn-block" (click)="openModal(timetableModal, 'xl', false)">
                         <i class="fas fa-clock"></i>
                         Horario
                     </button>
@@ -39,7 +39,7 @@
                             {{ subject.name }}
                         </a>
                     </div>
-                    <button class="btn btn-primary btn-sm mb-3 btn-block" (click)="openModal(subjectsModal, 'lg')">
+                    <button class="btn btn-primary btn-sm mb-3 btn-block" (click)="openModal(subjectsModal, 'lg', false)">
                         <i class="fas fa-graduation-cap"></i>
                         Asignaturas
                     </button>
@@ -98,31 +98,9 @@
                     <th scope="row">
                         {{ timetable.hours[i].hour_start + ' - ' + timetable.hours[i].hour_end }}
                     </th>
-                    <td *ngFor="let tSubject of subjectRow; let e=index" (click)="activateEdition(i, e)"
-                        class="pointer">
-                        <ng-container *ngIf="editionActivated(i, e) != true">
-                            {{ findSubject(tSubject.subject_id).name }}
-                        </ng-container>
-                        <div class="input-group">
-                            <ng-container *ngIf="editionActivated(i, e) == true">
-                                <select class="custom-select" name="selectedSubject" [(ngModel)]="selectedSubject">
-                                    <option disabled>
-                                        {{ findSubject(tSubject.subject_id).name }}
-                                    </option>
-                                    <ng-container *ngFor="let subject of subjects">
-                                        <option [value]="subject.id"
-                                            *ngIf="findSubject(tSubject.subject_id).id !== subject.id">
-                                            {{ subject.name }}
-                                        </option>
-                                    </ng-container>
-                                </select>
-                                <div class="input-group-append">
-                                    <button class="btn btn-outline-primary" type="button" (click)="updateCell(i, e)">
-                                        <i class="fas fa-save"></i>
-                                    </button>
-                                </div>
-                            </ng-container>
-                        </div>
+                    <td *ngFor="let tSubject of subjectRow; let e=index" class="pointer"
+                        (click)="openSubjectSelectorModal(subjectModal, [i,e])">
+                        {{ findSubject(tSubject.subject_id).name }}
                     </td>
                     <td class="d-flex justify-content-center">
                         <button class="btn btn-sm btn-danger rounded-25" (click)="deleteRow(i)">
@@ -165,18 +143,22 @@
                         <input type="text" class="form-control" [(ngModel)]="subject.name" />
                     </td>
                     <td class="p-0">
-                        <app-color-picker [color]="subject.primary_color" heading="Principal" (event)="setColor('primary_color', i, $event)">
+                        <app-color-picker [color]="subject.primary_color" heading="Principal"
+                            (event)="setColor('primary_color', i, $event)">
                         </app-color-picker>
                     </td>
                     <td class="p-0">
-                        <app-color-picker [color]="subject.secondary_color" heading="Secundario" (event)="setColor('secondary_color', i, $event)">
+                        <app-color-picker [color]="subject.secondary_color" heading="Secundario"
+                            (event)="setColor('secondary_color', i, $event)">
                         </app-color-picker>
                     </td>
                     <td>
-                        <button class="btn btn-primary rounded-25 mr-2" (click)="storeSubject(subject)" *ngIf="subject.id == 0">
+                        <button class="btn btn-primary rounded-25 mr-2" (click)="storeSubject(subject)"
+                            *ngIf="subject.id == 0">
                             <i class="fa fa-save"></i>
                         </button>
-                        <button class="btn btn-secondary rounded-25 mr-2" (click)="updateSubject(subject)" *ngIf="subject.id != 0">
+                        <button class="btn btn-secondary rounded-25 mr-2" (click)="updateSubject(subject)"
+                            *ngIf="subject.id != 0">
                             <i class="fas fa-pen"></i>
                         </button>
                         <button class="btn btn-danger rounded-25" (click)="deleteSubject(subject.id)">
@@ -191,5 +173,19 @@
         <button type="button" class="btn btn-outline-secondary" (click)="modal.close()">
             Cerrar
         </button>
+    </div>
+</ng-template>
+
+<ng-template #subjectModal let-close="close">
+    <div class="modal-body">
+        <h2>Selecciona asignatura</h2>
+        <hr>
+        <div class="input-group">
+            <div class="list-group w-100 mb-3">
+                <a class="list-group-item list-group-item-action pointer" *ngFor="let subject of subjects" (click)="updateCell(subject.id)">
+                    {{ subject.name }}
+                </a>
+            </div>
+        </div>
     </div>
 </ng-template>

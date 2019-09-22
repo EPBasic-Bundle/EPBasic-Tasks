@@ -15,23 +15,26 @@ export class TimetableComponent implements OnInit {
     rowIndex: number;
     modal;
 
-    selectedSubject: number;
-    editionActivatedInRow: number;
-    editionActivatedInSubject: number;
-
     subjects: Subject[] = [];
 
     timetable: Timetable;
 
+    subjectRow: number;
+    subjectCol: number;
+
     constructor(
         private apiService: ApiService,
         private modalService: NgbModal
-    ) {}
+    ) { }
 
     ngOnInit() {
         this.getSubjects();
         this.getTimetable();
     }
+
+    /*****************/
+    /* IMPORTACIONES */
+    /*****************/
 
     getSubjects() {
         this.apiService.get('subjects').subscribe(
@@ -54,9 +57,24 @@ export class TimetableComponent implements OnInit {
         );
     }
 
-    openModal(content, size) {
-        this.modal = this.modalService.open(content, { size });
+    /**********/
+    /* MODALS */
+    /**********/
+
+    openModal(content, size, centered) {
+        this.modal = this.modalService.open(content, { size, centered });
     }
+
+    openSubjectSelectorModal(content, data) {
+        this.subjectRow = data[0];
+        this.subjectCol = data[1];
+
+        this.modal = this.modalService.open(content, { size: 'sm', centered: true });
+    }
+
+    /*************/
+    /* TIMETABLE */
+    /*************/
 
     createTable() {
         this.timetable = {
@@ -99,8 +117,10 @@ export class TimetableComponent implements OnInit {
         }
     }
 
-    findSubject(subject_id: number) {
-        return this.subjects.find(subject => subject.id === subject_id);
+    updateCell(subject_id: number) {
+        this.timetable.subjects[this.subjectRow][this.subjectCol].subject_id = subject_id;
+
+        this.modal.close();
     }
 
     deleteRow(index: number) {
@@ -108,24 +128,9 @@ export class TimetableComponent implements OnInit {
         this.timetable.hours.splice(index, 1);
     }
 
-    activateEdition(rowIndex: number, subjectIndex: number) {
-        this.editionActivatedInRow = rowIndex;
-        this.editionActivatedInSubject = subjectIndex;
-    }
-
-    editionActivated(rowIndex: number, subjectIndex: number) {
-        if (this.editionActivatedInRow === +rowIndex && this.editionActivatedInSubject === +subjectIndex) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    updateCell(rowIndex: number, subjectIndex: number) {
-        this.timetable.subjects[rowIndex][subjectIndex].subject_id = +this.selectedSubject;
-
-        this.selectedSubject = null;
-    }
+    /******************/
+    /* TIMETABLE CRUD */
+    /*****************/
 
     storeTimetable() {
         this.loading = true;
@@ -143,16 +148,19 @@ export class TimetableComponent implements OnInit {
         );
     }
 
+    /************/
+    /* SUBJECT */
+    /***********/
 
     createSubject() {
         this.subjects.push(
-        {
-            id: 0,
-            user_id: null,
-            name: '',
-            primary_color: null,
-            secondary_color: null
-        });
+            {
+                id: 0,
+                user_id: null,
+                name: '',
+                primary_color: null,
+                secondary_color: null
+            });
     }
 
     setColor(type: string, i: number, color: string) {
@@ -167,6 +175,10 @@ export class TimetableComponent implements OnInit {
                 break;
         }
     }
+
+    /******************/
+    /* SUBJECT CRUD */
+    /*****************/
 
     storeSubject(subject) {
         this.loading = true;
@@ -209,5 +221,13 @@ export class TimetableComponent implements OnInit {
                 this.loading = false;
             }
         );
+    }
+
+    /*********/
+    /* OTROS */
+    /*********/
+
+    findSubject(subject_id: number) {
+        return this.subjects.find(subject => subject.id === subject_id);
     }
 }
