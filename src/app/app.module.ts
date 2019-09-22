@@ -20,6 +20,7 @@ import { ErrorComponent } from './components/error/error.component';
 import { CalendarComponent } from './components/calendar/calendar.component';
 import { ApiService } from './services/api.service';
 import { IdentityGuard } from './guards/identity.guard';
+import { ColorPickerComponent } from './components/color-picker/color-picker.component';
 
 registerLocaleData(localeEs);
 
@@ -29,7 +30,8 @@ registerLocaleData(localeEs);
         HomeComponent,
         ErrorComponent,
         CalendarComponent,
-        TimetableComponent
+        TimetableComponent,
+        ColorPickerComponent
     ],
     imports: [
         BrowserModule,

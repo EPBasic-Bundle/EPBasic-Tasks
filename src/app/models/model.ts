@@ -13,7 +13,10 @@ export class User {
 export class Subject {
     constructor(
         public id: number,
+        public user_id: number,
         public name: string,
+        public primary_color: string,
+        public secondary_color: string,
         public created_at?: string,
         public updated_at?: string,
     ) { }

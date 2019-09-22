@@ -62,7 +62,7 @@ export class ApiService {
         }
     }
 
-    update(url, data): Observable<any> {
+    put(url, data): Observable<any> {
         if (this.token && this.identity) {
             const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded')
                 .set('Authorization', this.token);

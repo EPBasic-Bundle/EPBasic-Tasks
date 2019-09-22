@@ -9,7 +9,6 @@ import { ApiService } from '../../services/api.service';
     styleUrls: ['./timetable.component.scss']
 })
 export class TimetableComponent implements OnInit {
-    subject: Subject;
     loading: boolean;
 
     rows: number;
@@ -20,16 +19,14 @@ export class TimetableComponent implements OnInit {
     editionActivatedInRow: number;
     editionActivatedInSubject: number;
 
-    subjects: Subject[];
+    subjects: Subject[] = [];
 
     timetable: Timetable;
 
     constructor(
         private apiService: ApiService,
         private modalService: NgbModal
-    ) {
-        this.subject = new Subject(null, null, null, null);
-    }
+    ) {}
 
     ngOnInit() {
         this.getSubjects();
@@ -39,16 +36,20 @@ export class TimetableComponent implements OnInit {
     getSubjects() {
         this.apiService.get('subjects').subscribe(
             resp => {
-                this.subjects = resp.subjects;
+                if (resp.status === 'success') {
+                    this.subjects = resp.subjects;
+                }
             }
         );
     }
 
-    getTimetable () {
+    getTimetable() {
         this.apiService.get('timetable').subscribe(
             resp => {
-                this.timetable = resp.timetable;
-                this.timetable.subjects = resp.subjects;
+                if (resp.status === 'success') {
+                    this.timetable = resp.timetable;
+                    this.timetable.subjects = resp.subjects;
+                }
             }
         );
     }
@@ -64,7 +65,7 @@ export class TimetableComponent implements OnInit {
             rows: this.rows,
             hours: [],
             subjects: []
-        }
+        };
 
         this.addRows(+this.rows);
     }
@@ -73,9 +74,8 @@ export class TimetableComponent implements OnInit {
         this.rows = +this.rows;
 
         let subjects;
-        this.timetable.subjects;
 
-        for (let e of Array(rows)) {
+        for (let i of Array(rows)) {
             subjects = [];
 
             this.timetable.hours.push(
@@ -86,7 +86,7 @@ export class TimetableComponent implements OnInit {
                 }
             );
 
-            for (let i of Array(5)) {
+            for (let e of Array(5)) {
                 subjects.push(
                     {
                         id: null,
@@ -99,29 +99,29 @@ export class TimetableComponent implements OnInit {
         }
     }
 
-    findSubject(subject_id) {
+    findSubject(subject_id: number) {
         return this.subjects.find(subject => subject.id === subject_id);
     }
 
-    deleteRow(index) {
+    deleteRow(index: number) {
         this.timetable.subjects.splice(index, 1);
         this.timetable.hours.splice(index, 1);
     }
 
-    activateEdition(rowIndex, subjectIndex) {
+    activateEdition(rowIndex: number, subjectIndex: number) {
         this.editionActivatedInRow = rowIndex;
         this.editionActivatedInSubject = subjectIndex;
     }
 
-    editionActivated(rowIndex, subjectIndex) {
-        if (this.editionActivatedInRow == rowIndex && this.editionActivatedInSubject == subjectIndex) {
+    editionActivated(rowIndex: number, subjectIndex: number) {
+        if (this.editionActivatedInRow === +rowIndex && this.editionActivatedInSubject === +subjectIndex) {
             return true;
         } else {
             return false;
         }
     }
 
-    updateCell(rowIndex, subjectIndex) {
+    updateCell(rowIndex: number, subjectIndex: number) {
         this.timetable.subjects[rowIndex][subjectIndex].subject_id = +this.selectedSubject;
 
         this.selectedSubject = null;
@@ -139,21 +139,73 @@ export class TimetableComponent implements OnInit {
                 }
             }, (error) => {
                 this.loading = false;
-
             }
         );
     }
 
-    storeSubject(form) {
+
+    createSubject() {
+        this.subjects.push(
+        {
+            id: 0,
+            user_id: null,
+            name: '',
+            primary_color: null,
+            secondary_color: null
+        });
+    }
+
+    setColor(type: string, i: number, color: string) {
+        switch (type) {
+            case 'primary_color':
+                this.subjects[i].primary_color = color;
+                break;
+            case 'secondary_color':
+                this.subjects[i].secondary_color = color;
+                break;
+            default:
+                break;
+        }
+    }
+
+    storeSubject(subject) {
         this.loading = true;
-        this.apiService.post('subject', this.subject).subscribe(
+        this.apiService.post('subject', subject).subscribe(
+            resp => {
+                console.log(resp);
+                this.loading = false;
+                if (resp.status === 'success') {
+                    this.getSubjects();
+                }
+            }, (error) => {
+                this.loading = false;
+            }
+        );
+    }
+
+    updateSubject(subject) {
+        this.loading = true;
+        this.apiService.put('subject/' + subject.id, subject).subscribe(
             resp => {
                 this.loading = false;
                 if (resp.status === 'success') {
                     this.getSubjects();
-                    form.reset();
                 }
-            }, () => {
+            }, (error) => {
+                this.loading = false;
+            }
+        );
+    }
+
+    deleteSubject(subject_id) {
+        this.loading = true;
+        this.apiService.delete('subject/' + subject_id).subscribe(
+            resp => {
+                this.loading = false;
+                if (resp.status === 'success') {
+                    this.getSubjects();
+                }
+            }, (error) => {
                 this.loading = false;
             }
         );

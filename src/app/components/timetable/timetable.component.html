@@ -35,11 +35,11 @@
                         Horario
                     </button>
                     <div class="list-group w-100 mb-3">
-                        <a href="#" class="list-group-item list-group-item-action" *ngFor="let subject of subjects">
+                        <a class="list-group-item list-group-item-action" *ngFor="let subject of subjects">
                             {{ subject.name }}
                         </a>
                     </div>
-                    <button class="btn btn-primary btn-sm mb-3 btn-block" (click)="openModal(subjectsModal, 'md')">
+                    <button class="btn btn-primary btn-sm mb-3 btn-block" (click)="openModal(subjectsModal, 'lg')">
                         <i class="fas fa-graduation-cap"></i>
                         Asignaturas
                     </button>
@@ -149,25 +149,43 @@
         </button>
     </div>
     <div class="modal-body">
-        <form #subjectForm="ngForm" (ngSubmit)="storeSubject(subjectForm)">
-            <div class="form-group">
-                <label>
-                    <i class="fas fa-heading"></i>
-                    Nombre
-                </label>
-                <input name="title" type="text" #title="ngModel" [(ngModel)]="subject.name"
-                    class="form-control" placeholder="Titulo de la aplicación" required>
-                <small *ngIf="!title.valid && title.touched" class="invalid-feedback d-block">
-                    El nombre no es valido
-                </small>
-            </div>
-
-            <button type="submit" class="btn btn-primary float-right"
-                [disabled]="subjectForm.invalid || loading == true">
-                Añadir asignatura
-                <i class="fa fa-spinner fa-spin fa-fw" *ngIf="loading == true"></i>
-            </button>
-        </form>
+        <button class="btn btn-primary float-right mb-4" (click)="createSubject()">Crear asignatura</button>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Color</th>
+                    <th>Color</th>
+                    <th>#</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let subject of subjects; let i=index">
+                    <td>
+                        <input type="text" class="form-control" [(ngModel)]="subject.name" />
+                    </td>
+                    <td class="p-0">
+                        <app-color-picker [color]="subject.primary_color" heading="Principal" (event)="setColor('primary_color', i, $event)">
+                        </app-color-picker>
+                    </td>
+                    <td class="p-0">
+                        <app-color-picker [color]="subject.secondary_color" heading="Secundario" (event)="setColor('secondary_color', i, $event)">
+                        </app-color-picker>
+                    </td>
+                    <td>
+                        <button class="btn btn-primary rounded-25 mr-2" (click)="storeSubject(subject)" *ngIf="subject.id == 0">
+                            <i class="fa fa-save"></i>
+                        </button>
+                        <button class="btn btn-secondary rounded-25 mr-2" (click)="updateSubject(subject)" *ngIf="subject.id != 0">
+                            <i class="fas fa-pen"></i>
+                        </button>
+                        <button class="btn btn-danger rounded-25" (click)="deleteSubject(subject.id)">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-outline-secondary" (click)="modal.close()">
