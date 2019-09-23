@@ -7,6 +7,7 @@ import { HomeComponent } from './components/home/home.component';
 import { ErrorComponent } from './components/error/error.component';
 import { CalendarComponent } from './components/calendar/calendar.component';
 import { TimetableComponent } from './components/timetable/timetable.component';
+import { SubjectComponent } from './components/subject/subject.component';
 
 const routes: Routes = [
     {
@@ -25,6 +26,11 @@ const routes: Routes = [
     {
         path: 'timetable',
         component: TimetableComponent,
+        canActivate: [IdentityGuard]
+    },
+    {
+        path: 'subject/:id',
+        component: SubjectComponent,
         canActivate: [IdentityGuard]
     },
     {

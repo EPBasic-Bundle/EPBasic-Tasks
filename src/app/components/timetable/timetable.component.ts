@@ -95,15 +95,17 @@ export class TimetableComponent implements OnInit {
     /*************/
 
     createTable() {
-        this.timetable = {
-            id: 1,
-            user_id: 1,
-            rows: this.rows,
-            hours: [],
-            subjects: []
-        };
+        if (+this.rows > 0) {
+            this.timetable = {
+                id: 1,
+                user_id: 1,
+                rows: this.rows,
+                hours: [],
+                subjects: []
+            };
 
-        this.addRows(+this.rows);
+            this.addRows(+this.rows);
+        }
     }
 
     addRows(rows) {
@@ -152,6 +154,8 @@ export class TimetableComponent implements OnInit {
 
         this.timetable.hours[this.selectedRowIndex].hour_start = hour_start;
         this.timetable.hours[this.selectedRowIndex].hour_end = hour_end;
+
+        this.modal.close();
     }
 
     addZero(number: number) {
@@ -192,8 +196,8 @@ export class TimetableComponent implements OnInit {
                 id: 0,
                 user_id: null,
                 name: '',
-                primary_color: null,
-                secondary_color: null
+                primary_color: '#fff',
+                secondary_color: '#fff'
             });
     }
 
@@ -256,6 +260,7 @@ export class TimetableComponent implements OnInit {
                 }
             }, (error) => {
                 this.loading = false;
+                console.log(error);
             }
         );
     }

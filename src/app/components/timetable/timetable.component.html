@@ -42,7 +42,7 @@
                     </button>
                     <div class="list-group w-100 mb-3">
                         <a class="list-group-item list-group-item-action" *ngFor="let subject of subjects">
-                            <span>{{ subject.name }}</span>
+                            <span class="pointer" [routerLink]="['/subject', subject.id]">{{ subject.name }}</span>
                             <div class="float-right circle" [ngStyle]="{ background: subject.primary_color }"
                                 (click)="markSubjectInTimetable(subject.id)"></div>
                         </a>
@@ -73,7 +73,7 @@
                         {{ i }} filas
                     </option>
                 </select>
-                <button class="btn btn-primary" (click)="createTable()">Generar</button>
+                <button class="btn btn-primary" (click)="createTable()" [disabled]="rows <= 0 || rows == null">Generar</button>
             </div>
             <div class="col-lg-6" *ngIf="timetable">
                 <select class="w-75 custom-select mr-2" name="rowIndex" [(ngModel)]="rowIndex">

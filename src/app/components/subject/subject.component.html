@@ -1,0 +1,226 @@
+<div class="container">
+    <div class="card rounded-25" *ngIf="subject">
+        <div class="card-header rounded-top-25">
+            <h1 class="mt-2">{{ subject.name }}</h1>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-lg-10">
+                    <div class="d-flex justify-content-between">
+                        <h3>Unidades</h3>
+                        <button class="btn btn-primary" (click)="openModal(unitsModal, 'md', false)">
+                            <i class="fas fa-list-ol"></i>
+                            Unidades
+                        </button>
+                    </div>
+                    <hr>
+                    <div class="accordion mb-4">
+                        <ng-container *ngFor="let unity of units; let fst=first; let lst=last;">
+                            <div class="card" [class.rounded-top-25]="fst == true"
+                                [class.rounded-bottom-25]="lst == true">
+                                <div class="card-header" (click)="collapse(unity.id)">
+                                    <h3 class="m-1">
+                                        Unidad {{ unity.number }}
+                                    </h3>
+                                </div>
+
+                                <div class="collapse show" [ngbCollapse]="isCollapsed(unity.id)">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-lg-4">
+                                                <div class="d-flex justify-content-between">
+                                                    <h3>Tareas</h3>
+                                                    <button class="btn btn-primary btn-sm mb-3"
+                                                        (click)="openModal(tasksModal, 'lg', false)">
+                                                        <i class="fas fa-tasks"></i>
+                                                        Tareas
+                                                    </button>
+                                                </div>
+                                                <hr>
+                                                <div class="card">
+                                                    <ul class="list-group list-group-flush">
+                                                        <li class="list-group-item d-flex justify-content-between"
+                                                            *ngFor="let task of unity.tasks">
+                                                            <span>{{ task.title }}</span>
+                                                            <i class="fas fa-check-circle text-primary mt-1"
+                                                                [class.fas]="task.done == true"
+                                                                [class.far]="task.done == false"></i>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <div class="d-flex justify-content-between">
+                                                    <h3>Examenes</h3>
+                                                    <button class="btn btn-primary btn-sm mb-3"
+                                                        (click)="openModal(examsModal, 'lg', false)">
+                                                        <i class="fas fa-clock"></i>
+                                                        Examenes
+                                                    </button>
+                                                </div>
+                                                <hr>
+                                            </div>
+                                            <div class="col-lg-4"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <button class="btn btn-primary btn-sm mb-3 btn-block" (click)="openModal(booksModal, 'lg', false)">
+                        <i class="fas fa-book"></i>
+                        Libros
+                    </button>
+                    <div class="card rounded-25 mb-3 shadow-sm pointer" *ngFor="let book of books">
+                        <img [src]="book.image" class="card-img-top rounded-top-25" *ngIf="book.image != null">
+                        <img src="https://makitweb.com/demo/broken_image/images/noimage.png"
+                            class="card-img-top rounded-top-25" *ngIf="book.image == null">
+                        <p class="card-text text-center m-1"> {{ book.name }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #booksModal let-close="close">
+    <div class="modal-header">
+        <h5 class="modal-title">Añadir libros</h5>
+        <button type="button" class="close" (click)="modal.close()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <button class="btn btn-primary float-right mb-4" (click)="createBook()">Nuevo libro</button>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Páginas</th>
+                    <th>Imagen URL</th>
+                    <th>#</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let book of books; let i=index">
+                    <td class="col-lg-4">
+                        <input type="text" class="form-control" [(ngModel)]="book.name"/>
+                    </td>
+                    <td class="col-lg-2">
+                        <input type="number" class="form-control" [(ngModel)]="book.pages_quantity"/>
+                    </td>
+                    <td class="col-lg-3">
+                        <input type="url" class="form-control" [(ngModel)]="book.image"/>
+                    </td>
+                    <td class="col-lg-2">
+                        <ng-container *ngIf="book.id == 0">
+                            <button class="btn btn-primary rounded-25 mr-2" (click)="storeBook(book)">
+                                <i class="fa fa-save"></i>
+                            </button>
+                            <button class="btn btn-danger rounded-25" (click)="deleteBookFront(i)">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </ng-container>
+                        <ng-container *ngIf="book.id > 0">
+                            <button class="btn btn-secondary rounded-25 mr-2" (click)="updateBook(book)">
+                                <i class="fas fa-pen"></i>
+                            </button>
+                            <button class="btn btn-danger rounded-25" (click)="deleteBook(book.id)">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </ng-container>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" (click)="modal.close()">
+            Cerrar
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #unitsModal let-close="close">
+    <div class="modal-header">
+        <h5 class="modal-title">Añadir unidades</h5>
+        <button type="button" class="close" (click)="modal.close()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <button class="btn btn-primary float-right mb-4" (click)="createUnit()">Nueva unidad</button>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Numero de unidad</th>
+                    <th>#</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let unit of units; let i=index">
+                    <td class="col-lg-2">
+                        <input type="number" class="form-control" [(ngModel)]="unit.number" />
+                    </td>
+                    <td class="col-lg-2">
+                        <ng-container *ngIf="unit.id == 0">
+                            <button class="btn btn-primary rounded-25 mr-2" (click)="storeUnit(unit)">
+                                <i class="fa fa-save"></i>
+                            </button>
+                            <button class="btn btn-danger rounded-25" (click)="deleteUnitFront(i)">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </ng-container>
+                        <ng-container *ngIf="unit.id > 0">
+                            <button class="btn btn-secondary rounded-25 mr-2" (click)="updateUnit(unit)">
+                                <i class="fas fa-pen"></i>
+                            </button>
+                            <button class="btn btn-danger rounded-25" (click)="deleteUnit(unit.id)">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </ng-container>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" (click)="modal.close()">
+            Cerrar
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #tasksModal let-close="close">
+    <div class="modal-header">
+        <h5 class="modal-title">Añadir tareas</h5>
+        <button type="button" class="close" (click)="modal.close()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" (click)="modal.close()">
+            Cerrar
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #examsModal let-close="close">
+    <div class="modal-header">
+        <h5 class="modal-title">Añadir examenes</h5>
+        <button type="button" class="close" (click)="modal.close()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" (click)="modal.close()">
+            Cerrar
+        </button>
+    </div>
+</ng-template>

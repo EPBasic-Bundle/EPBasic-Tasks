@@ -21,6 +21,7 @@ import { CalendarComponent } from './components/calendar/calendar.component';
 import { ApiService } from './services/api.service';
 import { IdentityGuard } from './guards/identity.guard';
 import { ColorPickerComponent } from './components/color-picker/color-picker.component';
+import { SubjectComponent } from './components/subject/subject.component';
 
 registerLocaleData(localeEs);
 
@@ -31,7 +32,8 @@ registerLocaleData(localeEs);
         ErrorComponent,
         CalendarComponent,
         TimetableComponent,
-        ColorPickerComponent
+        ColorPickerComponent,
+        SubjectComponent
     ],
     imports: [
         BrowserModule,

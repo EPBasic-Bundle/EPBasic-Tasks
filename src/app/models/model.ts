@@ -53,27 +53,45 @@ export class TimetableSubject {
     ) { }
 }
 
-export class Topics {
+export class Unit {
+    constructor(
+        public id: number,
+        public subject_id: number,
+        public number: number,
+        public created_at?: string,
+        public updated_at?: string,
+        public tasks?: Task[],
+        public exams?: Exam[],
+    ) { }
+}
+
+export class Task {
+    constructor(
+        public id: number,
+        public subject_id: number,
+        public book_id: number,
+        public title: string,
+        public description: string,
+        public delivery_date: string,
+        public done: boolean,
+        public created_at?: string,
+        public updated_at?: string,
+    ) { }
+}
+
+export class Book {
     constructor(
         public id: number,
         public subject_id: number,
         public name: string,
+        public pages_quantity: number,
+        public image: string,
         public created_at?: string,
         public updated_at?: string,
     ) { }
 }
 
-export class Exams {
-    constructor(
-        public id: number,
-        public subject_id: number,
-        public grade: number,
-        public created_at?: string,
-        public updated_at?: string,
-    ) { }
-}
-
-export class Homeworks {
+export class Exam {
     constructor(
         public id: number,
         public subject_id: number,
