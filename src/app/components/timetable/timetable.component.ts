@@ -222,13 +222,13 @@ export class TimetableComponent implements OnInit {
     /* SUBJECT CRUD */
     /*****************/
 
-    storeSubject(subject) {
+    storeSubject(subject, index) {
         this.loading = true;
         this.apiService.post('subject', subject).subscribe(
             resp => {
                 this.loading = false;
                 if (resp.status === 'success') {
-                    this.getSubjects();
+                    this.subjects[index] = resp.subject;
                 }
             }, (error) => {
                 this.loading = false;
@@ -236,13 +236,13 @@ export class TimetableComponent implements OnInit {
         );
     }
 
-    updateSubject(subject) {
+    updateSubject(subject, index) {
         this.loading = true;
         this.apiService.put('subject/' + subject.id, subject).subscribe(
             resp => {
                 this.loading = false;
                 if (resp.status === 'success') {
-                    this.getSubjects();
+                    this.subjects[index] = resp.subject;
                 }
             }, (error) => {
                 this.loading = false;
@@ -250,17 +250,16 @@ export class TimetableComponent implements OnInit {
         );
     }
 
-    deleteSubject(subject_id) {
+    deleteSubject(subject_id, index) {
         this.loading = true;
         this.apiService.delete('subject/' + subject_id).subscribe(
             resp => {
                 this.loading = false;
                 if (resp.status === 'success') {
-                    this.getSubjects();
+                    this.subjects.splice(index, 1);
                 }
             }, (error) => {
                 this.loading = false;
-                console.log(error);
             }
         );
     }
@@ -271,6 +270,10 @@ export class TimetableComponent implements OnInit {
 
     findSubject(subject_id: number) {
         return this.subjects.find(subject => subject.id === subject_id);
+    }
+
+    findSubjectIndex(subject_id: number) {
+        return this.subjects.findIndex(subject => subject.id === subject_id);
     }
 
     markSubjectInTimetable(subject_id) {

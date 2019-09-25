@@ -129,7 +129,7 @@
                     </td>
                     <td class="col-lg-2">
                         <ng-container *ngIf="book.id == 0">
-                            <button class="btn btn-primary rounded-25 mr-2" (click)="storeBook(book)">
+                            <button class="btn btn-primary rounded-25 mr-2" (click)="storeBook(book, i)">
                                 <i class="fa fa-save"></i>
                             </button>
                             <button class="btn btn-danger rounded-25" (click)="deleteBookFront(i)">
@@ -137,10 +137,10 @@
                             </button>
                         </ng-container>
                         <ng-container *ngIf="book.id > 0">
-                            <button class="btn btn-secondary rounded-25 mr-2" (click)="updateBook(book)">
+                            <button class="btn btn-secondary rounded-25 mr-2" (click)="updateBook(book, i)">
                                 <i class="fas fa-pen"></i>
                             </button>
-                            <button class="btn btn-danger rounded-25" (click)="deleteBook(book.id)">
+                            <button class="btn btn-danger rounded-25" (click)="deleteBook(book.id, i)">
                                 <i class="fa fa-trash"></i>
                             </button>
                         </ng-container>
@@ -179,7 +179,7 @@
                     </td>
                     <td class="col-lg-2">
                         <ng-container *ngIf="unity.id == 0">
-                            <button class="btn btn-primary rounded-25 mr-2" (click)="storeUnity(unity)">
+                            <button class="btn btn-primary rounded-25 mr-2" (click)="storeUnity(unity, i)">
                                 <i class="fa fa-save"></i>
                             </button>
                             <button class="btn btn-danger rounded-25" (click)="deleteUnityFront(i)">
@@ -187,10 +187,10 @@
                             </button>
                         </ng-container>
                         <ng-container *ngIf="unity.id > 0">
-                            <button class="btn btn-secondary rounded-25 mr-2" (click)="updateUnity(unity)">
+                            <button class="btn btn-secondary rounded-25 mr-2" (click)="updateUnity(unity, i)">
                                 <i class="fas fa-pen"></i>
                             </button>
-                            <button class="btn btn-danger rounded-25" (click)="deleteUnity(unity.id)">
+                            <button class="btn btn-danger rounded-25" (click)="deleteUnity(unity.id, i)">
                                 <i class="fa fa-trash"></i>
                             </button>
                         </ng-container>

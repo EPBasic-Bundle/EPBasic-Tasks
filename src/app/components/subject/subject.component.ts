@@ -124,13 +124,13 @@ export class SubjectComponent implements OnInit {
     /* BOOK CRUD */
     /*****************/
 
-    storeBook(book) {
+    storeBook(book, index) {
         this.loading = true;
         this.apiService.post('book', book).subscribe(
             resp => {
                 this.loading = false;
                 if (resp.status === 'success') {
-                    this.getBooks();
+                    this.books[index] = resp.book;
                 }
             }, (error) => {
                 this.loading = false;
@@ -138,13 +138,13 @@ export class SubjectComponent implements OnInit {
         );
     }
 
-    updateBook(book) {
+    updateBook(book, index) {
         this.loading = true;
         this.apiService.put('book/' + book.id, book).subscribe(
             resp => {
                 this.loading = false;
                 if (resp.status === 'success') {
-                    this.getBooks();
+                    this.books[index] = resp.book;
                 }
             }, (error) => {
                 this.loading = false;
@@ -152,13 +152,13 @@ export class SubjectComponent implements OnInit {
         );
     }
 
-    deleteBook(book_id) {
+    deleteBook(book_id, index) {
         this.loading = true;
         this.apiService.delete('book/' + book_id).subscribe(
             resp => {
                 this.loading = false;
                 if (resp.status === 'success') {
-                    this.getBooks();
+                    this.books.splice(index, 1);
                 }
             }, (error) => {
                 this.loading = false;
@@ -194,13 +194,13 @@ export class SubjectComponent implements OnInit {
     /* UNITS CRUD */
     /*****************/
 
-    storeUnity(unity) {
+    storeUnity(unity, index) {
         this.loading = true;
         this.apiService.post('unity', unity).subscribe(
             resp => {
                 this.loading = false;
                 if (resp.status === 'success') {
-                    this.getUnits();
+                    this.units[index] = resp.unity;
                 }
             }, (error) => {
                 this.loading = false;
@@ -208,13 +208,13 @@ export class SubjectComponent implements OnInit {
         );
     }
 
-    updateUnity(unity) {
+    updateUnity(unity, index) {
         this.loading = true;
         this.apiService.put('unity/' + unity.id, unity).subscribe(
             resp => {
                 this.loading = false;
                 if (resp.status === 'success') {
-                    this.getUnits();
+                    this.units[index] = resp.unity;
                 }
             }, (error) => {
                 this.loading = false;
@@ -222,7 +222,7 @@ export class SubjectComponent implements OnInit {
         );
     }
 
-    deleteUnity(unity_id) {
+    deleteUnity(unity_id, index) {
         if (this.selectedUnity === unity_id) {
             this.selectedUnity = null;
         }
@@ -232,7 +232,7 @@ export class SubjectComponent implements OnInit {
             resp => {
                 this.loading = false;
                 if (resp.status === 'success') {
-                    this.getUnits();
+                    this.units.splice(index, 1);
                 }
             }, (error) => {
                 this.loading = false;

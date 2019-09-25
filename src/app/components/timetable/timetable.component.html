@@ -175,7 +175,7 @@
                     </td>
                     <td>
                         <ng-container *ngIf="subject.id == 0">
-                            <button class="btn btn-primary rounded-25 mr-2" (click)="storeSubject(subject)">
+                            <button class="btn btn-primary rounded-25 mr-2" (click)="storeSubject(subject, i)">
                                 <i class="fa fa-save"></i>
                             </button>
                             <button class="btn btn-danger rounded-25" (click)="deleteSubjectFront(i)">
@@ -183,10 +183,10 @@
                             </button>
                         </ng-container>
                         <ng-container *ngIf="subject.id > 0">
-                            <button class="btn btn-secondary rounded-25 mr-2" (click)="updateSubject(subject)">
+                            <button class="btn btn-secondary rounded-25 mr-2" (click)="updateSubject(subject, i)">
                                 <i class="fas fa-pen"></i>
                             </button>
-                            <button class="btn btn-danger rounded-25" (click)="deleteSubject(subject.id)">
+                            <button class="btn btn-danger rounded-25" (click)="deleteSubject(subject.id, i)">
                                 <i class="fa fa-trash"></i>
                             </button>
                         </ng-container>
