@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ApiService } from '../../services/api.service';
-import { Subject, Unit, Book } from '../../models/model';
+import { Subject, Unity, Book } from '../../models/model';
 import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -11,54 +11,15 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 export class SubjectComponent implements OnInit {
     subject: Subject;
-    units: Unit[] = [
-        {
-            id: 1,
-            subject_id: 1,
-            number: 2,
-            tasks: [
-                {
-                    id: 1,
-                    subject_id: 1,
-                    book_id: 1,
-                    title: 'Elefantes para merendar',
-                    description: 'Elefantes para comer',
-                    delivery_date: '2019-09-23',
-                    done: true,
-                }
-            ]
-        },
-        {
-            id: 2,
-            subject_id: 1,
-            number: 3,
-            tasks: [
-                {
-                    id: 1,
-                    subject_id: 1,
-                    book_id: 1,
-                    title: 'Elefantes para merendar',
-                    description: 'Elefantes para comer',
-                    delivery_date: '2019-09-23',
-                    done: false,
-                },
-                {
-                    id: 1,
-                    subject_id: 1,
-                    book_id: 1,
-                    title: 'Elefantes para merendar',
-                    description: 'Elefantes para comer',
-                    delivery_date: '2019-09-23',
-                    done: true,
-                }
-            ]
-        }
-    ];
+    units: Unity[] = [];
+
+    images = ['books.png', 'paper.png'];
 
     books: Book[] = [];
 
     modal;
-    selectedUnity;
+    selectedUnity: number;
+    selectedBookIndex: number;
     subjectId;
     loading: boolean;
 
@@ -76,6 +37,7 @@ export class SubjectComponent implements OnInit {
 
                 this.getSubject();
                 this.getBooks();
+                this.getUnits();
             }
         );
     }
@@ -99,6 +61,16 @@ export class SubjectComponent implements OnInit {
             resp => {
                 if (resp.status === 'success') {
                     this.books = resp.books;
+                }
+            }
+        );
+    }
+
+    getUnits() {
+        this.apiService.get('units/' + this.subjectId).subscribe(
+            resp => {
+                if (resp.status === 'success') {
+                    this.units = resp.units;
                 }
             }
         );
@@ -134,17 +106,22 @@ export class SubjectComponent implements OnInit {
             name: '',
             subject_id: this.subject.id,
             pages_quantity: 0,
-            image: null
+            image: 'default.png'
         });
     }
 
+    selectImage(image) {
+        this.books[this.selectedBookIndex].image = image;
+
+        this.modal.close();
+    }
 
     deleteBookFront(index) {
         this.books.splice(index, 1);
     }
 
-     /******************/
-    /* SUBJECT CRUD */
+    /******************/
+    /* BOOK CRUD */
     /*****************/
 
     storeBook(book) {
@@ -193,18 +170,74 @@ export class SubjectComponent implements OnInit {
     /* Units */
     /*********/
 
-    createUnit() {
+    createUnity() {
+        let auto_number = 1;
+
+        if (this.units[0]) {
+            auto_number = 1 + this.units[this.units.length - 1].number;
+        }
+
         this.units.push({
             id: 0,
             subject_id: this.subject.id,
-            number: 0,
+            number: auto_number,
             tasks: []
         });
     }
 
 
-    deleteUnitFront(index) {
+    deleteUnityFront(index) {
         this.units.splice(index, 1);
+    }
+
+    /******************/
+    /* UNITS CRUD */
+    /*****************/
+
+    storeUnity(unity) {
+        this.loading = true;
+        this.apiService.post('unity', unity).subscribe(
+            resp => {
+                this.loading = false;
+                if (resp.status === 'success') {
+                    this.getUnits();
+                }
+            }, (error) => {
+                this.loading = false;
+            }
+        );
+    }
+
+    updateUnity(unity) {
+        this.loading = true;
+        this.apiService.put('unity/' + unity.id, unity).subscribe(
+            resp => {
+                this.loading = false;
+                if (resp.status === 'success') {
+                    this.getUnits();
+                }
+            }, (error) => {
+                this.loading = false;
+            }
+        );
+    }
+
+    deleteUnity(unity_id) {
+        if (this.selectedUnity === unity_id) {
+            this.selectedUnity = null;
+        }
+
+        this.loading = true;
+        this.apiService.delete('unity/' + unity_id).subscribe(
+            resp => {
+                this.loading = false;
+                if (resp.status === 'success') {
+                    this.getUnits();
+                }
+            }, (error) => {
+                this.loading = false;
+            }
+        );
     }
 
     /**********/
@@ -215,4 +248,8 @@ export class SubjectComponent implements OnInit {
         this.modal = this.modalService.open(content, { size, centered });
     }
 
+    openImagePickerModal(content, index) {
+        this.selectedBookIndex = index;
+        this.modal = this.modalService.open(content, { size: 'sm', centered: true });
+    }
 }

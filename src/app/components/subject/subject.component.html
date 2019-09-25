@@ -13,9 +13,7 @@
                     <div class="row">
                         <div class="col-lg-6" *ngFor="let book of books">
                             <div class="card rounded-25 mb-3 shadow-sm pointer">
-                                <img [src]="book.image" class="card-img-top rounded-top-25" *ngIf="book.image != null">
-                                <img src="https://makitweb.com/demo/broken_image/images/noimage.png"
-                                    class="card-img-top rounded-top-25" *ngIf="book.image == null">
+                                <img [src]="'./assets/images/' + book.image" class="card-img-top rounded-top-25">
                                 <p class="card-text text-center m-1"> {{ book.name }}</p>
                             </div>
                         </div>
@@ -77,6 +75,17 @@
                                         </div>
                                         <hr>
                                     </div>
+                                    <div class="col-lg-4">
+                                        <div class="d-flex justify-content-between">
+                                            <h3>Proyectos</h3>
+                                            <button class="btn btn-primary btn-sm mb-3"
+                                                (click)="openModal(projectsModal, 'lg', false)">
+                                                <i class="fas fa-clock"></i>
+                                                Proyectos
+                                            </button>
+                                        </div>
+                                        <hr>
+                                    </div>
                                     <div class="col-lg-4"></div>
                                 </div>
                             </div>
@@ -103,20 +112,20 @@
                 <tr>
                     <th>Nombre</th>
                     <th>Páginas</th>
-                    <th>Imagen URL</th>
+                    <th>Imagen</th>
                     <th>#</th>
                 </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let book of books; let i=index">
-                    <td class="col-lg-4">
+                    <td class="col-lg-5">
                         <input type="text" class="form-control" [(ngModel)]="book.name" />
                     </td>
                     <td class="col-lg-2">
                         <input type="number" class="form-control" [(ngModel)]="book.pages_quantity" />
                     </td>
-                    <td class="col-lg-3">
-                        <input type="url" class="form-control" [(ngModel)]="book.image" />
+                    <td class="col-lg-1 pointer" (click)="openImagePickerModal(imagePickerModal, i)">
+                        <img [src]="'./assets/images/' + book.image" alt="..." class="img-thumbnail">
                     </td>
                     <td class="col-lg-2">
                         <ng-container *ngIf="book.id == 0">
@@ -155,7 +164,7 @@
         </button>
     </div>
     <div class="modal-body">
-        <button class="btn btn-primary float-right mb-4" (click)="createUnit()">Nueva unidad</button>
+        <button class="btn btn-primary float-right mb-4" (click)="createUnity()">Nueva unidad</button>
         <table class="table table-bordered">
             <thead>
                 <tr>
@@ -164,24 +173,24 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let unit of units; let i=index">
+                <tr *ngFor="let unity of units; let i=index">
                     <td class="col-lg-2">
-                        <input type="number" class="form-control" [(ngModel)]="unit.number" />
+                        <input type="number" class="form-control" [(ngModel)]="unity.number" />
                     </td>
                     <td class="col-lg-2">
-                        <ng-container *ngIf="unit.id == 0">
-                            <button class="btn btn-primary rounded-25 mr-2" (click)="storeUnit(unit)">
+                        <ng-container *ngIf="unity.id == 0">
+                            <button class="btn btn-primary rounded-25 mr-2" (click)="storeUnity(unity)">
                                 <i class="fa fa-save"></i>
                             </button>
-                            <button class="btn btn-danger rounded-25" (click)="deleteUnitFront(i)">
+                            <button class="btn btn-danger rounded-25" (click)="deleteUnityFront(i)">
                                 <i class="fa fa-trash"></i>
                             </button>
                         </ng-container>
-                        <ng-container *ngIf="unit.id > 0">
-                            <button class="btn btn-secondary rounded-25 mr-2" (click)="updateUnit(unit)">
+                        <ng-container *ngIf="unity.id > 0">
+                            <button class="btn btn-secondary rounded-25 mr-2" (click)="updateUnity(unity)">
                                 <i class="fas fa-pen"></i>
                             </button>
-                            <button class="btn btn-danger rounded-25" (click)="deleteUnit(unit.id)">
+                            <button class="btn btn-danger rounded-25" (click)="deleteUnity(unity.id)">
                                 <i class="fa fa-trash"></i>
                             </button>
                         </ng-container>
@@ -226,5 +235,33 @@
         <button type="button" class="btn btn-outline-secondary" (click)="modal.close()">
             Cerrar
         </button>
+    </div>
+</ng-template>
+
+<ng-template #projectsModal let-close="close">
+    <div class="modal-header">
+        <h5 class="modal-title">Añadir projectos</h5>
+        <button type="button" class="close" (click)="modal.close()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" (click)="modal.close()">
+            Cerrar
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #imagePickerModal let-close="close">
+    <div class="modal-body">
+        <div class="colors">
+            <div class="row">
+                <div class="col-6" (click)="selectImage(image)" *ngFor="let image of images">
+                    <img [src]="'./assets/images/' + image" alt="..." class="img-thumbnail">
+                </div>
+            </div>
+        </div>
     </div>
 </ng-template>
