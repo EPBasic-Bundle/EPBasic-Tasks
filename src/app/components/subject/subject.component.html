@@ -1,6 +1,6 @@
 <div class="container-fluid">
     <div class="row justify-content-center">
-        <div class="col-lg-2">
+        <div class="col-lg-2 mb-4">
             <div class="card rounded-25" *ngIf="subject">
                 <div class="card-header rounded-top-25">
                     <h1 class="mt-2">{{ subject.name }}</h1>
@@ -11,7 +11,7 @@
                         Libros
                     </button>
                     <div class="row">
-                        <div class="col-lg-6" *ngFor="let book of books">
+                        <div class="col-lg-6 col-md-2" *ngFor="let book of books">
                             <div class="card rounded-25 mb-3 shadow-sm pointer">
                                 <img [src]="'./assets/images/' + book.image" class="card-img-top rounded-top-25">
                                 <p class="card-text text-center m-1"> {{ book.name }}</p>
@@ -31,15 +31,15 @@
             </div>
             <hr>
             <div class="accordion mb-4">
-                <ng-container *ngFor="let unity of units; let fst=first; let lst=last;">
+                <ng-container *ngFor="let unity of units; let i=index; let fst=first; let lst=last;">
                     <div class="card" [class.rounded-top-25]="fst == true" [class.rounded-bottom-25]="lst == true">
-                        <div class="card-header pointer" (click)="collapse(unity.id)">
+                        <div class="card-header pointer" (click)="collapse(i)">
                             <h3 class="m-1">
                                 Unidad {{ unity.number }}
                             </h3>
                         </div>
 
-                        <div class="collapse show" [ngbCollapse]="isCollapsed(unity.id)">
+                        <div class="collapse show" [ngbCollapse]="isCollapsed(i)">
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-lg-4">
@@ -52,7 +52,7 @@
                                             </button>
                                         </div>
                                         <hr>
-                                        <div class="card">
+                                        <div class="card" *ngIf="unity.tasks">
                                             <ul class="list-group list-group-flush">
                                                 <li class="list-group-item d-flex justify-content-between"
                                                     *ngFor="let task of unity.tasks">
@@ -214,6 +214,51 @@
         </button>
     </div>
     <div class="modal-body">
+        <button class="btn btn-primary float-right mb-4" (click)="createTask()">Nueva tarea</button>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Datos principales</th>
+                    <th>Ejercicios</th>
+                    <th>Entrega</th>
+                    <th>#</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let task of units[selectedUnityIndex].tasks; let i=index">
+                    <td class="col-lg-5">
+                        <input type="text" class="form-control mb-2" [(ngModel)]="task.title" />
+                        <textarea class="form-control" rows="2" [(ngModel)]="task.description"></textarea>
+                    </td>
+                    <td class="col-lg-3">
+                        <button class="btn btn-sm btn-primary btn-block"
+                            (click)="openExercisesModal(exercisesModal, i)">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </td>
+                    <td class="col-lg-2">
+                    </td>
+                    <td class="col-lg-2">
+                        <ng-container *ngIf="task.id == 0">
+                            <button class="btn btn-primary rounded-25 mr-2" (click)="storeTask(task, i)">
+                                <i class="fa fa-save"></i>
+                            </button>
+                            <button class="btn btn-danger rounded-25" (click)="deleteTaskFront(i)">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </ng-container>
+                        <ng-container *ngIf="task.id > 0">
+                            <button class="btn btn-secondary rounded-25 mr-2" (click)="updateTask(task, i)">
+                                <i class="fas fa-pen"></i>
+                            </button>
+                            <button class="btn btn-danger rounded-25" (click)="deleteTask(task.id, i)">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </ng-container>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-outline-secondary" (click)="modal.close()">
@@ -263,5 +308,22 @@
                 </div>
             </div>
         </div>
+    </div>
+</ng-template>
+
+
+<ng-template #exercisesModal let-close="close">
+    <div class="modal-header">
+        <h5 class="modal-title">Añadir ejercicios</h5>
+        <button type="button" class="close" (click)="modal.close()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" (click)="modal.close()">
+            Cerrar
+        </button>
     </div>
 </ng-template>

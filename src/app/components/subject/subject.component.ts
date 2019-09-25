@@ -18,8 +18,9 @@ export class SubjectComponent implements OnInit {
     books: Book[] = [];
 
     modal;
-    selectedUnity: number;
+    selectedUnityIndex: number;
     selectedBookIndex: number;
+    selectedTaskIndex: number;
     subjectId;
     loading: boolean;
 
@@ -80,16 +81,16 @@ export class SubjectComponent implements OnInit {
     /* COLAPSE */
     /***********/
 
-    collapse(unity_id) {
-        if (this.selectedUnity === unity_id) {
-            this.selectedUnity = null;
+    collapse(unity_index) {
+        if (this.selectedUnityIndex === unity_index) {
+            this.selectedUnityIndex = null;
         } else {
-            this.selectedUnity = unity_id;
+            this.selectedUnityIndex = unity_index;
         }
     }
 
-    isCollapsed(unity_id) {
-        if (this.selectedUnity === unity_id) {
+    isCollapsed(unity_index) {
+        if (this.selectedUnityIndex === unity_index) {
             return false;
         } else {
             return true;
@@ -223,8 +224,8 @@ export class SubjectComponent implements OnInit {
     }
 
     deleteUnity(unity_id, index) {
-        if (this.selectedUnity === unity_id) {
-            this.selectedUnity = null;
+        if (this.selectedUnityIndex === unity_id) {
+            this.selectedUnityIndex = null;
         }
 
         this.loading = true;
@@ -233,6 +234,78 @@ export class SubjectComponent implements OnInit {
                 this.loading = false;
                 if (resp.status === 'success') {
                     this.units.splice(index, 1);
+                }
+            }, (error) => {
+                this.loading = false;
+            }
+        );
+    }
+
+    /*********/
+    /* TASKS */
+    /*********/
+
+    createTask() {
+        const unity_index = this.selectedUnityIndex;
+
+        if (!this.units[unity_index].tasks) {
+            this.units[unity_index].tasks = [];
+        }
+
+        this.units[unity_index].tasks.push({
+            id: 0,
+            subject_id: this.subject.id,
+            book_id: null,
+            title: '',
+            description: '',
+            delivery_date: null,
+            done: false
+        });
+    }
+
+    deleteTaskFront(index) {
+        this.units[this.selectedUnityIndex].tasks.splice(index, 1);
+    }
+
+    /**************/
+    /* TASKS CRUD */
+    /**************/
+
+    storeTask(task, index) {
+        this.loading = true;
+        this.apiService.post('task', task).subscribe(
+            resp => {
+                this.loading = false;
+                if (resp.status === 'success') {
+                    this.units[this.selectedUnityIndex].tasks[index] = resp.task;
+                }
+            }, (error) => {
+                this.loading = false;
+            }
+        );
+    }
+
+    updateTask(task, index) {
+        this.loading = true;
+        this.apiService.put('task/' + task.id, task).subscribe(
+            resp => {
+                this.loading = false;
+                if (resp.status === 'success') {
+                    this.units[this.selectedUnityIndex].tasks[index] = resp.task;
+                }
+            }, (error) => {
+                this.loading = false;
+            }
+        );
+    }
+
+    deleteTask(task_id, index) {
+        this.loading = true;
+        this.apiService.delete('task/' + task_id).subscribe(
+            resp => {
+                this.loading = false;
+                if (resp.status === 'success') {
+                    this.units[this.selectedUnityIndex].tasks.splice(index, 1);
                 }
             }, (error) => {
                 this.loading = false;
@@ -251,5 +324,10 @@ export class SubjectComponent implements OnInit {
     openImagePickerModal(content, index) {
         this.selectedBookIndex = index;
         this.modal = this.modalService.open(content, { size: 'sm', centered: true });
+    }
+
+    openExercisesModal(content, index) {
+        this.selectedTaskIndex = index;
+        this.modal = this.modalService.open(content, { centered: true });
     }
 }

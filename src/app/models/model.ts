@@ -53,7 +53,7 @@ export class TimetableSubject {
     ) { }
 }
 
-export class Unit {
+export class Unity {
     constructor(
         public id: number,
         public subject_id: number,
