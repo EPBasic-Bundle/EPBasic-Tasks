@@ -11,7 +11,7 @@
                         Libros
                     </button>
                     <div class="row">
-                        <div class="col-lg-6 col-md-2" *ngFor="let book of books">
+                        <div class="col-lg-6 col-md-2 col-sm-3" *ngFor="let book of books">
                             <div class="card rounded-25 mb-3 shadow-sm pointer">
                                 <img [src]="'./assets/images/' + book.image" class="card-img-top rounded-top-25">
                                 <p class="card-text text-center m-1"> {{ book.name }}</p>
@@ -304,7 +304,7 @@
         <div class="colors">
             <div class="row">
                 <div class="col-6" (click)="selectImage(image)" *ngFor="let image of images">
-                    <img [src]="'./assets/images/' + image" alt="..." class="img-thumbnail">
+                    <img [src]="'./assets/images/' + image" alt="..." class="img-thumbnail pointer">
                 </div>
             </div>
         </div>
@@ -320,6 +320,59 @@
         </button>
     </div>
     <div class="modal-body">
+        <b>Seleccionar libro</b>
+        <hr>
+        <div class="row mb-4">
+            <div class="col-3" (click)="selectBook(book.id)" *ngFor="let book of books">
+                <img [src]="'./assets/images/' + book.image" alt="..." class="img-thumbnail pointer"
+                    [class.bg-dark]="units[selectedUnityIndex].tasks[selectedTaskIndex].book_id == book.id">
+            </div>
+        </div>
+
+        <b>Ejercicios</b>
+        <button class="btn btn-primary btn-sm float-right" (click)="createPage()"
+            [disabled]="units[selectedUnityIndex].tasks[selectedTaskIndex].book_id == null">
+            Añadir página
+        </button>
+        <hr>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Página</th>
+                    <th>Ejercicios</th>
+                    <th>#</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let page of units[selectedUnityIndex].tasks[selectedTaskIndex].pages; let i=index">
+                    <td class="col-lg-3 col-md-3 col-sm-3">
+                        <input type="number" class="form-control" [(ngModel)]="page.number" />
+                    </td>
+                    <td class="col-lg-7 col-md-7 col-sm-7">
+                        <div class="row">
+                            <div class="col-lg-3 col-md-3 col-sm-3 ml-2 mb-2"
+                                *ngFor="let number of [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]">
+                                <div class="chip" (click)="selectExercise(number, i)"
+                                    *ngIf="findExercise(number, i) == -1">
+                                    <p>{{ number }}</p>
+                                </div>
+                                <div class="chip bg-dark text-light" (click)="deleteExercise(number, i)"
+                                    *ngIf="findExercise(number, i) != -1">
+                                    <p>{{ number }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="col-lg-2 col-md-2">
+                        <ng-container *ngIf="page.id == 0">
+                            <button class="btn btn-danger rounded-25" (click)="deletePageFront(i)">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </ng-container>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-outline-secondary" (click)="modal.close()">

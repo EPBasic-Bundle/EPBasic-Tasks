@@ -76,6 +76,29 @@ export class Task {
         public done: boolean,
         public created_at?: string,
         public updated_at?: string,
+        public pages?: Page[],
+    ) { }
+}
+
+export class Page {
+    constructor(
+        public id: number,
+        public book_id: number,
+        public number: number,
+        public created_at?: string,
+        public updated_at?: string,
+        public exercises?: Exercise[],
+    ) { }
+}
+
+export class Exercise {
+    constructor(
+        public id: number,
+        public page_id: number,
+        public number: number,
+        public done: boolean,
+        public created_at?: string,
+        public updated_at?: string,
     ) { }
 }
 

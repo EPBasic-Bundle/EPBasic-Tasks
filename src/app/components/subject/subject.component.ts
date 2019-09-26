@@ -263,6 +263,60 @@ export class SubjectComponent implements OnInit {
         });
     }
 
+    selectBook(book_id) {
+        this.units[this.selectedUnityIndex].tasks[this.selectedTaskIndex].book_id = book_id;
+    }
+
+    createPage() {
+        const unity_index = this.selectedUnityIndex;
+        const task_index = this.selectedTaskIndex;
+
+        if (!this.units[unity_index].tasks[task_index].pages) {
+            this.units[unity_index].tasks[task_index].pages = [];
+        }
+
+        this.units[unity_index].tasks[task_index].pages.push({
+            id: 0,
+            book_id: this.units[unity_index].tasks[task_index].book_id,
+            number: null,
+        });
+    }
+
+    deletePageFront(index) {
+        this.units[this.selectedUnityIndex].tasks[this.selectedTaskIndex].pages.splice(index, 1);
+    }
+
+    findExercise(number: number, index) {
+        const page = this.units[this.selectedUnityIndex].tasks[this.selectedTaskIndex].pages[index];
+
+        if (page.exercises) {
+            return page.exercises.findIndex(exercise => exercise.number === number);
+        } else {
+            return -1;
+        }
+    }
+
+    selectExercise(number: number, index) {
+        const unity_index = this.selectedUnityIndex;
+        const task_index = this.selectedTaskIndex;
+
+        if (!this.units[unity_index].tasks[task_index].pages[index].exercises) {
+            this.units[unity_index].tasks[task_index].pages[index].exercises = [];
+        }
+
+        this.units[unity_index].tasks[task_index].pages[index].exercises.push({
+            id: 0,
+            page_id: null,
+            number,
+            done: false
+        });
+    }
+
+    deleteExercise(number, index) {
+        const page = this.units[this.selectedUnityIndex].tasks[this.selectedTaskIndex].pages[index];
+        page.exercises.splice(this.findExercise(number, index), 1);
+    }
+
     deleteTaskFront(index) {
         this.units[this.selectedUnityIndex].tasks.splice(index, 1);
     }
@@ -272,17 +326,7 @@ export class SubjectComponent implements OnInit {
     /**************/
 
     storeTask(task, index) {
-        this.loading = true;
-        this.apiService.post('task', task).subscribe(
-            resp => {
-                this.loading = false;
-                if (resp.status === 'success') {
-                    this.units[this.selectedUnityIndex].tasks[index] = resp.task;
-                }
-            }, (error) => {
-                this.loading = false;
-            }
-        );
+        console.log(task);
     }
 
     updateTask(task, index) {
