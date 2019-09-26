@@ -70,6 +70,7 @@ export class Task {
         public id: number,
         public subject_id: number,
         public book_id: number,
+        public unity_id: number,
         public title: string,
         public description: string,
         public delivery_date: string,
@@ -83,7 +84,7 @@ export class Task {
 export class Page {
     constructor(
         public id: number,
-        public book_id: number,
+        public task_id: number,
         public number: number,
         public created_at?: string,
         public updated_at?: string,

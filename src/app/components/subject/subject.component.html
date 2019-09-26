@@ -46,13 +46,13 @@
                                         <div class="d-flex justify-content-between">
                                             <h3>Tareas</h3>
                                             <button class="btn btn-primary btn-sm mb-3"
-                                                (click)="openModal(tasksModal, 'lg', false)">
+                                                (click)="openModal(tasksModal, 'lg', false)" [disabled]="!books[0]">
                                                 <i class="fas fa-tasks"></i>
                                                 Tareas
                                             </button>
                                         </div>
                                         <hr>
-                                        <div class="card" *ngIf="unity.tasks">
+                                        <div class="card" *ngIf="unity.tasks && unity.tasks[0]">
                                             <ul class="list-group list-group-flush">
                                                 <li class="list-group-item d-flex justify-content-between"
                                                     *ngFor="let task of unity.tasks">
@@ -232,6 +232,7 @@
                     </td>
                     <td class="col-lg-3">
                         <button class="btn btn-sm btn-primary btn-block"
+                            [disabled]="task.id != 0"
                             (click)="openExercisesModal(exercisesModal, i)">
                             <i class="fas fa-plus"></i>
                         </button>

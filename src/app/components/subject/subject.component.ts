@@ -86,6 +86,14 @@ export class SubjectComponent implements OnInit {
             this.selectedUnityIndex = null;
         } else {
             this.selectedUnityIndex = unity_index;
+
+            this.apiService.get('tasks/' + this.units[unity_index].id).subscribe(
+                resp => {
+                    if (resp.status === 'success') {
+                        this.units[unity_index].tasks = resp.tasks;
+                    }
+                }
+            );
         }
     }
 
@@ -256,6 +264,7 @@ export class SubjectComponent implements OnInit {
             id: 0,
             subject_id: this.subject.id,
             book_id: null,
+            unity_id: this.units[unity_index].id,
             title: '',
             description: '',
             delivery_date: null,
@@ -277,7 +286,7 @@ export class SubjectComponent implements OnInit {
 
         this.units[unity_index].tasks[task_index].pages.push({
             id: 0,
-            book_id: this.units[unity_index].tasks[task_index].book_id,
+            task_id: this.units[unity_index].tasks[task_index].id,
             number: null,
         });
     }
@@ -327,9 +336,22 @@ export class SubjectComponent implements OnInit {
 
     storeTask(task, index) {
         console.log(task);
+        this.loading = true;
+        this.apiService.post('task', task).subscribe(
+            resp => {
+                this.loading = false;
+                if (resp.status === 'success') {
+                    this.units[this.selectedUnityIndex].tasks[index] = resp.task;
+                }
+            }, (error) => {
+                this.loading = false;
+            }
+        );
     }
 
     updateTask(task, index) {
+        task.pages = [];
+
         this.loading = true;
         this.apiService.put('task/' + task.id, task).subscribe(
             resp => {
