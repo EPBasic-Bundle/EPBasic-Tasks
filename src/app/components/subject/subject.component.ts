@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ApiService } from '../../services/api.service';
-import { Subject, Unity, Book } from '../../models/model';
+import { Subject, Unity, Book, Task } from '../../models/model';
 import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -12,15 +12,20 @@ import { Router, ActivatedRoute } from '@angular/router';
 export class SubjectComponent implements OnInit {
     subject: Subject;
     units: Unity[] = [];
+    books: Book[] = [];
+    tasksToDo: Task[] = [];
 
     images = ['books.png', 'paper.png'];
 
-    books: Book[] = [];
-
     modal;
+    imagePickerModal;
+    exercisesModal;
+    taskModal;
+
     selectedUnityIndex: number;
     selectedBookIndex: number;
     selectedTaskIndex: number;
+    selectedTask: Task;
     subjectId;
     loading: boolean;
 
@@ -39,6 +44,7 @@ export class SubjectComponent implements OnInit {
                 this.getSubject();
                 this.getBooks();
                 this.getUnits();
+                this.getTasksToDo();
             }
         );
     }
@@ -72,6 +78,16 @@ export class SubjectComponent implements OnInit {
             resp => {
                 if (resp.status === 'success') {
                     this.units = resp.units;
+                }
+            }
+        );
+    }
+
+    getTasksToDo() {
+        this.apiService.get('tasks/todo/' + this.subjectId).subscribe(
+            resp => {
+                if (resp.status === 'success') {
+                    this.tasksToDo = resp.tasks;
                 }
             }
         );
@@ -122,7 +138,7 @@ export class SubjectComponent implements OnInit {
     selectImage(image) {
         this.books[this.selectedBookIndex].image = image;
 
-        this.modal.close();
+        this.imagePickerModal.close();
     }
 
     deleteBookFront(index) {
@@ -335,7 +351,6 @@ export class SubjectComponent implements OnInit {
     /**************/
 
     storeTask(task, index) {
-        console.log(task);
         this.loading = true;
         this.apiService.post('task', task).subscribe(
             resp => {
@@ -389,11 +404,32 @@ export class SubjectComponent implements OnInit {
 
     openImagePickerModal(content, index) {
         this.selectedBookIndex = index;
-        this.modal = this.modalService.open(content, { size: 'sm', centered: true });
+        this.imagePickerModal = this.modalService.open(content, { size: 'sm', centered: true });
     }
 
     openExercisesModal(content, index) {
         this.selectedTaskIndex = index;
-        this.modal = this.modalService.open(content, { centered: true });
+        this.exercisesModal = this.modalService.open(content, { centered: true });
+    }
+
+    openTaskModal(content, task: Task) {
+        this.selectedTask = task;
+        this.taskModal = this.modalService.open(content, { size: 'lg' });
+    }
+
+    closeExercisesModal() {
+        this.exercisesModal.close();
+    }
+
+    closeTaskModal() {
+        this.taskModal.close();
+    }
+
+    /*********/
+    /* OTROS */
+    /*********/
+
+    findBook(book_id) {
+        return this.books.find(book => book.id === book_id);
     }
 }

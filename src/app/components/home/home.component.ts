@@ -41,7 +41,6 @@ export class HomeComponent implements OnInit {
                 }
             }, (error) => {
                 this.loading = false;
-                console.log(error);
             }
         );
     }

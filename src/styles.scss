@@ -159,6 +159,16 @@ h3 {
     border-top-right-radius: 0px !important;
 }
 
+.no-rounded-left {
+    border-top-left-radius: 0px !important;
+    border-bottom-left-radius: 0px !important;
+}
+
+.no-rounded-right {
+    border-top-right-radius: 0px !important;
+    border-bottom-right-radius: 0px !important;
+}
+
 .no-rounded-bottom {
     border-bottom-left-radius: 0px !important;
     border-bottom-right-radius: 0px !important;

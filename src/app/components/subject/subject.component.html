@@ -1,12 +1,11 @@
-<div class="container-fluid">
+<div class="container-fluid" *ngIf="subject" data-aos="zoom-in">
     <div class="row justify-content-center">
+
         <div class="col-lg-2 mb-4">
-            <div class="card rounded-25" *ngIf="subject">
-                <div class="card-header rounded-top-25">
-                    <h1 class="mt-2">{{ subject.name }}</h1>
-                </div>
-                <div class="card-body">
-                    <button class="btn btn-primary btn-sm mb-3 btn-block" (click)="openModal(booksModal, 'lg', false)">
+            <div class="card rounded-25 mb-4" *ngIf="books">
+                <div class="card-body pb-0">
+                    <button class="btn btn-primary btn-sm mb-3 btn-block rounded-25"
+                        (click)="openModal(booksModal, 'lg', false)">
                         <i class="fas fa-book"></i>
                         Libros
                     </button>
@@ -20,16 +19,38 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-lg-6">
-            <div class="d-flex justify-content-between">
-                <h3>Unidades</h3>
-                <button class="btn btn-primary" (click)="openModal(unitsModal, 'md', false)">
-                    <i class="fas fa-list-ol"></i>
-                    Unidades
-                </button>
+
+            <div class="card rounded-25" *ngIf="tasksToDo">
+                <div class="card-header rounded-top-25 d-flex justify-content-between">
+                    <h2 class="mt-1 mb-1">Tareas</h2>
+                </div>
+                <div class="card-body pb-0 pt-3" *ngIf="tasksToDo && tasksToDo[0]">
+                    <hr class="mt-0">
+                    <div *ngFor="let task of tasksToDo;" class="pointer" (click)="openTaskModal(taskModal, task)">
+                        <div class="card-body d-flex justify-content-between pt-1 pb-1">
+                            <span>{{ task.title }}</span>
+                            <i class="fas fa-check-circle text-primary mt-1" [class.fas]="task.done == true"
+                                [class.far]="task.done == false">
+                            </i>
+                        </div>
+                        <hr>
+                    </div>
+                </div>
             </div>
-            <hr>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card rounded-25 mb-3">
+                <div class="card-body pt-0 pb-0 pr-0">
+                    <button class="btn btn-primary float-right rounded-right-25 no-rounded-left"
+                        (click)="openModal(unitsModal, 'md', false)">
+                        <i class="fas fa-list-ol"></i>
+                        Unidades
+                    </button>
+                    <h2 class="mt-2 mb-1">{{ subject.name }}</h2>
+                </div>
+            </div>
+
             <div class="accordion mb-4">
                 <ng-container *ngFor="let unity of units; let i=index; let fst=first; let lst=last;">
                     <div class="card" [class.rounded-top-25]="fst == true" [class.rounded-bottom-25]="lst == true">
@@ -52,17 +73,18 @@
                                             </button>
                                         </div>
                                         <hr>
-                                        <div class="card" *ngIf="unity.tasks && unity.tasks[0]">
-                                            <ul class="list-group list-group-flush">
-                                                <li class="list-group-item d-flex justify-content-between"
-                                                    *ngFor="let task of unity.tasks">
+                                        <ng-container *ngIf="unity.tasks && unity.tasks[0]">
+                                            <div class="card rounded-25 pointer mb-2" *ngFor="let task of unity.tasks;"
+                                                (click)="openTaskModal(taskModal, task)">
+                                                <div class="card-body d-flex justify-content-between pt-1 pb-1">
                                                     <span>{{ task.title }}</span>
                                                     <i class="fas fa-check-circle text-primary mt-1"
                                                         [class.fas]="task.done == true"
-                                                        [class.far]="task.done == false"></i>
-                                                </li>
-                                            </ul>
-                                        </div>
+                                                        [class.far]="task.done == false">
+                                                    </i>
+                                                </div>
+                                            </div>
+                                        </ng-container>
                                     </div>
                                     <div class="col-lg-4">
                                         <div class="d-flex justify-content-between">
@@ -95,7 +117,6 @@
             </div>
         </div>
     </div>
-
 </div>
 
 <ng-template #booksModal let-close="close">
@@ -231,8 +252,7 @@
                         <textarea class="form-control" rows="2" [(ngModel)]="task.description"></textarea>
                     </td>
                     <td class="col-lg-3">
-                        <button class="btn btn-sm btn-primary btn-block"
-                            [disabled]="task.id != 0"
+                        <button class="btn btn-sm btn-primary btn-block" [disabled]="task.id != 0"
                             (click)="openExercisesModal(exercisesModal, i)">
                             <i class="fas fa-plus"></i>
                         </button>
@@ -312,7 +332,6 @@
     </div>
 </ng-template>
 
-
 <ng-template #exercisesModal let-close="close">
     <div class="modal-header">
         <h5 class="modal-title">Añadir ejercicios</h5>
@@ -329,7 +348,6 @@
                     [class.bg-dark]="units[selectedUnityIndex].tasks[selectedTaskIndex].book_id == book.id">
             </div>
         </div>
-
         <b>Ejercicios</b>
         <button class="btn btn-primary btn-sm float-right" (click)="createPage()"
             [disabled]="units[selectedUnityIndex].tasks[selectedTaskIndex].book_id == null">
@@ -376,7 +394,61 @@
         </table>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-outline-secondary" (click)="modal.close()">
+        <button type="button" class="btn btn-outline-secondary" (click)="closeExercisesModal()">
+            Cerrar
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #taskModal let-close="close">
+    <div class="modal-header d-flex justify-content-between">
+        <h5 class="modal-title">
+            {{ selectedTask.title }}
+        </h5>
+        <button type="button" class="close" (click)="modal.close()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-lg-2" *ngIf="selectedTask.book_id != null">
+                <img [src]="'./assets/images/' + findBook(selectedTask.book_id).image" alt="..."
+                    class="img-thumbnail pointer">
+            </div>
+            <div class="col-lg-10">
+                <p>{{ selectedTask.description }}</p>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-lg-8">
+                <h3 class="font-weight-bold">Tareas</h3>
+                <hr>
+                <ng-container *ngFor="let page of selectedTask.pages">
+                    <h3>Página
+                        <span class="font-weight-bold">
+                            {{ page.number }}
+                        </span>
+                    </h3>
+                    <div class="row">
+                        <div class="col-lg-1 col-md-1 col-sm-1 m-2" *ngFor="let exercise of page.exercises">
+                            <span class="badge badge-pill badge-dark p-3">
+                                <p>{{ exercise.number }}</p>
+                                <i class="fas fa-check-circle text-primary fa-lg" [class.fas]="exercise.done == true"
+                                    [class.far]="exercise.done == false"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <hr>
+                </ng-container>
+            </div>
+            <div class="col-lg-4 d-flex justify-content-center">
+                <h1 class="delivery_date">21 sep</h1>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" (click)="closeTaskModal()">
             Cerrar
         </button>
     </div>

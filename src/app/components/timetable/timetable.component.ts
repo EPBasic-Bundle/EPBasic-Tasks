@@ -13,7 +13,10 @@ export class TimetableComponent implements OnInit {
 
     rows: number;
     rowIndex: number;
+
     modal;
+    subjectSelectorModal;
+    hoursSelectorModal;
 
     subjects: Subject[] = [];
 
@@ -81,13 +84,13 @@ export class TimetableComponent implements OnInit {
         this.subjectRow = data[0];
         this.subjectCol = data[1];
 
-        this.modal = this.modalService.open(content, { size: 'sm', centered: true });
+        this.subjectSelectorModal = this.modalService.open(content, { size: 'sm', centered: true });
     }
 
     openHoursSelectorModal(content, index) {
         this.selectedRowIndex = index;
 
-        this.modal = this.modalService.open(content, { centered: true });
+        this.hoursSelectorModal = this.modalService.open(content, { centered: true });
     }
 
     /*************/
@@ -140,7 +143,7 @@ export class TimetableComponent implements OnInit {
     updateCell(subject_id: number) {
         this.timetable.subjects[this.subjectRow][this.subjectCol].subject_id = subject_id;
 
-        this.modal.close();
+        this.subjectSelectorModal.close();
     }
 
     deleteRow(index: number) {
@@ -155,7 +158,7 @@ export class TimetableComponent implements OnInit {
         this.timetable.hours[this.selectedRowIndex].hour_start = hour_start;
         this.timetable.hours[this.selectedRowIndex].hour_end = hour_end;
 
-        this.modal.close();
+        this.hoursSelectorModal.close();
     }
 
     addZero(number: number) {
