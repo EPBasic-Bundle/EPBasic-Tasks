@@ -31,7 +31,9 @@
               "src/styles.scss",
               "node_modules/aos/dist/aos.css"
             ],
-            "scripts": []
+            "scripts": [
+                "src/assets/js/auth.js"
+            ]
           },
           "configurations": {
             "production": {

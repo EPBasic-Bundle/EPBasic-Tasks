@@ -23,6 +23,7 @@ import { IdentityGuard } from './guards/identity.guard';
 import { ColorPickerComponent } from './components/color-picker/color-picker.component';
 import { SubjectComponent } from './components/subject/subject.component';
 import { TaskComponent } from './components/task/task.component';
+import { AuthComponent } from './components/auth/auth.component';
 
 registerLocaleData(localeEs);
 
@@ -35,7 +36,8 @@ registerLocaleData(localeEs);
         TimetableComponent,
         ColorPickerComponent,
         SubjectComponent,
-        TaskComponent
+        TaskComponent,
+        AuthComponent
     ],
     imports: [
         BrowserModule,

@@ -9,15 +9,17 @@ import { CalendarComponent } from './components/calendar/calendar.component';
 import { TimetableComponent } from './components/timetable/timetable.component';
 import { SubjectComponent } from './components/subject/subject.component';
 import { TaskComponent } from './components/task/task.component';
+import { AuthComponent } from './components/auth/auth.component';
 
 const routes: Routes = [
     {
         path: '',
-        component: HomeComponent
+        component: AuthComponent
     },
     {
         path: 'home',
-        component: HomeComponent
+        component: HomeComponent,
+        canActivate: [IdentityGuard]
     },
     {
         path: 'calendar',

@@ -47,4 +47,15 @@ export class TaskComponent implements OnInit {
             }
         );
     }
+
+    markAsDoneAll() {
+        this.apiService.post('exercises/done/' + this.taskId, null).subscribe(
+            resp => {
+                if (resp.status === 'success') {
+                    this.task.pages = resp.task.pages;
+                    this.task.done = resp.task.done;
+                }
+            }
+        );
+    }
 }

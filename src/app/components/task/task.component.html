@@ -1,6 +1,10 @@
 <div class="container" *ngIf="task">
     <div class="card rounded-25">
         <div class="card-body">
+            <button class="btn btn-primary btn-sm float-right" (click)="markAsDoneAll()">
+                <i class="fas fa-list-alt"></i>
+                Terminada
+            </button>
             <h1>{{ task.title }}</h1>
             <hr>
             <div class="row">
@@ -23,7 +27,7 @@
                             </span>
                         </h3>
                         <div class="row">
-                            <div class="col-lg-1 col-md-1 col-sm-1 m-2"
+                            <div class="col-lg-1 col-md-1 col-sm-1 m-2 pointer"
                                 *ngFor="let exercise of page.exercises; let e=index;"
                                 (click)="markAsDone(exercise.id, i, e)">
                                 <span class="badge badge-pill badge-dark p-3">

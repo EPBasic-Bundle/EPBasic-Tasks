@@ -9,10 +9,11 @@
         </button>
         <div class="collapse navbar-collapse" id="appNavigation" [ngbCollapse]="isCollapsed">
             <div class="navbar-nav mr-auto">
-                <a class="nav-link" routerLink="home" routerLinkActive="active">
-                    <i class="fas fa-home"></i> Inicio
-                </a>
                 <ng-container *ngIf="identity">
+                    <a class="nav-link" routerLink="home" routerLinkActive="active">
+                        <i class="fas fa-home"></i> Inicio
+                    </a>
+
                     <a class="nav-link" routerLink="calendar" routerLinkActive="active">
                         <i class="fas fa-calendar"></i> Calendario
                     </a>
