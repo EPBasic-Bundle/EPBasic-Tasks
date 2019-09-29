@@ -10,7 +10,7 @@ import { Subject, Timetable } from '../../models/model';
 export class HomeComponent implements OnInit {
     loading: boolean;
     subjects: Subject[] = [];
-    weekdays = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo'];
+    weekdays = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes'];
     timetable: Timetable;
     subjectsOfDay;
     weekDay: number;
