@@ -26,7 +26,7 @@
                 </div>
                 <div class="card-body pb-0 pt-3" *ngIf="tasksToDo && tasksToDo[0]">
                     <hr class="mt-0">
-                    <div *ngFor="let task of tasksToDo;" class="pointer" (click)="openTaskModal(taskModal, task)">
+                    <div *ngFor="let task of tasksToDo;" class="pointer" (click)="collapseAndMark(task)">
                         <div class="card-body d-flex justify-content-between pt-1 pb-1">
                             <span>{{ task.title }}</span>
                             <i class="fas fa-check-circle text-primary mt-1" [class.fas]="task.done == true"
@@ -74,8 +74,8 @@
                                         </div>
                                         <hr>
                                         <ng-container *ngIf="unity.tasks && unity.tasks[0]">
-                                            <div class="card rounded-25 pointer mb-2" *ngFor="let task of unity.tasks;"
-                                                (click)="openTaskModal(taskModal, task)">
+                                            <div class="card rounded-25 pointer mb-2" *ngFor="let task of unity.tasks; let e=index" [class.inverseCard]="task.id == sTaskId"
+                                                (click)="openTaskModal(taskModal, i, e)">
                                                 <div class="card-body d-flex justify-content-between pt-1 pb-1">
                                                     <span>{{ task.title }}</span>
                                                     <i class="fas fa-check-circle text-primary mt-1"
@@ -239,27 +239,27 @@
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th>Datos principales</th>
-                    <th>Ejercicios</th>
-                    <th>Entrega</th>
-                    <th>#</th>
+                    <th class="col-lg-5">Datos principales</th>
+                    <th class="col-lg-3">Ejercicios</th>
+                    <th class="col-lg-2">Entrega</th>
+                    <th class="col-lg-2">#</th>
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let task of units[selectedUnityIndex].tasks; let i=index">
-                    <td class="col-lg-5">
+                <tr *ngFor="let task of units[sUnityIdx].tasks; let i=index">
+                    <td>
                         <input type="text" class="form-control mb-2" [(ngModel)]="task.title" />
                         <textarea class="form-control" rows="2" [(ngModel)]="task.description"></textarea>
                     </td>
-                    <td class="col-lg-3">
+                    <td>
                         <button class="btn btn-sm btn-primary btn-block" [disabled]="task.id != 0"
                             (click)="openExercisesModal(exercisesModal, i)">
                             <i class="fas fa-plus"></i>
                         </button>
                     </td>
-                    <td class="col-lg-2">
+                    <td>
                     </td>
-                    <td class="col-lg-2">
+                    <td>
                         <ng-container *ngIf="task.id == 0">
                             <button class="btn btn-primary rounded-25 mr-2" (click)="storeTask(task, i)">
                                 <i class="fa fa-save"></i>
@@ -345,12 +345,12 @@
         <div class="row mb-4">
             <div class="col-3" (click)="selectBook(book.id)" *ngFor="let book of books">
                 <img [src]="'./assets/images/' + book.image" alt="..." class="img-thumbnail pointer"
-                    [class.bg-dark]="units[selectedUnityIndex].tasks[selectedTaskIndex].book_id == book.id">
+                    [class.bg-dark]="units[sUnityIdx].tasks[sTaskIdx].book_id == book.id">
             </div>
         </div>
         <b>Ejercicios</b>
         <button class="btn btn-primary btn-sm float-right" (click)="createPage()"
-            [disabled]="units[selectedUnityIndex].tasks[selectedTaskIndex].book_id == null">
+            [disabled]="units[sUnityIdx].tasks[sTaskIdx].book_id == null">
             Añadir página
         </button>
         <hr>
@@ -363,7 +363,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let page of units[selectedUnityIndex].tasks[selectedTaskIndex].pages; let i=index">
+                <tr *ngFor="let page of units[sUnityIdx].tasks[sTaskIdx].pages; let i=index">
                     <td class="col-lg-3 col-md-3 col-sm-3">
                         <input type="number" class="form-control" [(ngModel)]="page.number" />
                     </td>
@@ -403,7 +403,7 @@
 <ng-template #taskModal let-close="close">
     <div class="modal-header d-flex justify-content-between">
         <h5 class="modal-title">
-            {{ selectedTask.title }}
+            {{ units[sUnityIdx].tasks[sTaskIdx].title }}
         </h5>
         <button type="button" class="close" (click)="modal.close()">
             <span aria-hidden="true">&times;</span>
@@ -411,12 +411,12 @@
     </div>
     <div class="modal-body">
         <div class="row">
-            <div class="col-lg-2" *ngIf="selectedTask.book_id != null">
-                <img [src]="'./assets/images/' + findBook(selectedTask.book_id).image" alt="..."
+            <div class="col-lg-2" *ngIf="units[sUnityIdx].tasks[sTaskIdx].book_id != null">
+                <img [src]="'./assets/images/' + findBook(units[sUnityIdx].tasks[sTaskIdx].book_id).image" alt="..."
                     class="img-thumbnail pointer">
             </div>
             <div class="col-lg-10">
-                <p>{{ selectedTask.description }}</p>
+                <p>{{ units[sUnityIdx].tasks[sTaskIdx].description }}</p>
             </div>
         </div>
         <hr>
@@ -424,14 +424,14 @@
             <div class="col-lg-8">
                 <h3 class="font-weight-bold">Tareas</h3>
                 <hr>
-                <ng-container *ngFor="let page of selectedTask.pages">
+                <ng-container *ngFor="let page of units[sUnityIdx].tasks[sTaskIdx].pages; let i=index">
                     <h3>Página
                         <span class="font-weight-bold">
                             {{ page.number }}
                         </span>
                     </h3>
                     <div class="row">
-                        <div class="col-lg-1 col-md-1 col-sm-1 m-2" *ngFor="let exercise of page.exercises">
+                        <div class="col-lg-1 col-md-1 col-sm-1 m-2" *ngFor="let exercise of page.exercises; let e=index;" (click)="markAsDone(exercise.id, i, e)">
                             <span class="badge badge-pill badge-dark p-3">
                                 <p>{{ exercise.number }}</p>
                                 <i class="fas fa-check-circle text-primary fa-lg" [class.fas]="exercise.done == true"

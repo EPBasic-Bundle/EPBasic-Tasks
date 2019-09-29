@@ -22,10 +22,11 @@ export class SubjectComponent implements OnInit {
     exercisesModal;
     taskModal;
 
-    selectedUnityIndex: number;
-    selectedBookIndex: number;
-    selectedTaskIndex: number;
-    selectedTask: Task;
+    sUnityIdx: number;
+    sBookIdx: number;
+    sTaskIdx: number;
+    sTaskId: number;
+
     subjectId;
     loading: boolean;
 
@@ -98,10 +99,10 @@ export class SubjectComponent implements OnInit {
     /***********/
 
     collapse(unity_index) {
-        if (this.selectedUnityIndex === unity_index) {
-            this.selectedUnityIndex = null;
+        if (this.sUnityIdx === unity_index) {
+            this.sUnityIdx = null;
         } else {
-            this.selectedUnityIndex = unity_index;
+            this.sUnityIdx = unity_index;
 
             this.apiService.get('tasks/' + this.units[unity_index].id).subscribe(
                 resp => {
@@ -114,7 +115,7 @@ export class SubjectComponent implements OnInit {
     }
 
     isCollapsed(unity_index) {
-        if (this.selectedUnityIndex === unity_index) {
+        if (this.sUnityIdx === unity_index) {
             return false;
         } else {
             return true;
@@ -136,7 +137,7 @@ export class SubjectComponent implements OnInit {
     }
 
     selectImage(image) {
-        this.books[this.selectedBookIndex].image = image;
+        this.books[this.sBookIdx].image = image;
 
         this.imagePickerModal.close();
     }
@@ -248,8 +249,8 @@ export class SubjectComponent implements OnInit {
     }
 
     deleteUnity(unity_id, index) {
-        if (this.selectedUnityIndex === unity_id) {
-            this.selectedUnityIndex = null;
+        if (this.sUnityIdx === unity_id) {
+            this.sUnityIdx = null;
         }
 
         this.loading = true;
@@ -270,7 +271,7 @@ export class SubjectComponent implements OnInit {
     /*********/
 
     createTask() {
-        const unity_index = this.selectedUnityIndex;
+        const unity_index = this.sUnityIdx;
 
         if (!this.units[unity_index].tasks) {
             this.units[unity_index].tasks = [];
@@ -289,12 +290,12 @@ export class SubjectComponent implements OnInit {
     }
 
     selectBook(book_id) {
-        this.units[this.selectedUnityIndex].tasks[this.selectedTaskIndex].book_id = book_id;
+        this.units[this.sUnityIdx].tasks[this.sTaskIdx].book_id = book_id;
     }
 
     createPage() {
-        const unity_index = this.selectedUnityIndex;
-        const task_index = this.selectedTaskIndex;
+        const unity_index = this.sUnityIdx;
+        const task_index = this.sTaskIdx;
 
         if (!this.units[unity_index].tasks[task_index].pages) {
             this.units[unity_index].tasks[task_index].pages = [];
@@ -308,11 +309,11 @@ export class SubjectComponent implements OnInit {
     }
 
     deletePageFront(index) {
-        this.units[this.selectedUnityIndex].tasks[this.selectedTaskIndex].pages.splice(index, 1);
+        this.units[this.sUnityIdx].tasks[this.sTaskIdx].pages.splice(index, 1);
     }
 
     findExercise(number: number, index) {
-        const page = this.units[this.selectedUnityIndex].tasks[this.selectedTaskIndex].pages[index];
+        const page = this.units[this.sUnityIdx].tasks[this.sTaskIdx].pages[index];
 
         if (page.exercises) {
             return page.exercises.findIndex(exercise => exercise.number === number);
@@ -322,8 +323,8 @@ export class SubjectComponent implements OnInit {
     }
 
     selectExercise(number: number, index) {
-        const unity_index = this.selectedUnityIndex;
-        const task_index = this.selectedTaskIndex;
+        const unity_index = this.sUnityIdx;
+        const task_index = this.sTaskIdx;
 
         if (!this.units[unity_index].tasks[task_index].pages[index].exercises) {
             this.units[unity_index].tasks[task_index].pages[index].exercises = [];
@@ -338,12 +339,12 @@ export class SubjectComponent implements OnInit {
     }
 
     deleteExercise(number, index) {
-        const page = this.units[this.selectedUnityIndex].tasks[this.selectedTaskIndex].pages[index];
+        const page = this.units[this.sUnityIdx].tasks[this.sTaskIdx].pages[index];
         page.exercises.splice(this.findExercise(number, index), 1);
     }
 
     deleteTaskFront(index) {
-        this.units[this.selectedUnityIndex].tasks.splice(index, 1);
+        this.units[this.sUnityIdx].tasks.splice(index, 1);
     }
 
     /**************/
@@ -356,7 +357,7 @@ export class SubjectComponent implements OnInit {
             resp => {
                 this.loading = false;
                 if (resp.status === 'success') {
-                    this.units[this.selectedUnityIndex].tasks[index] = resp.task;
+                    this.units[this.sUnityIdx].tasks[index] = resp.task;
                 }
             }, (error) => {
                 this.loading = false;
@@ -372,10 +373,21 @@ export class SubjectComponent implements OnInit {
             resp => {
                 this.loading = false;
                 if (resp.status === 'success') {
-                    this.units[this.selectedUnityIndex].tasks[index] = resp.task;
+                    this.units[this.sUnityIdx].tasks[index] = resp.task;
                 }
             }, (error) => {
                 this.loading = false;
+            }
+        );
+    }
+
+    markAsDone(exercise_id, page_index, exercise_index, taskT) {
+        this.apiService.post('exercise/done/' + exercise_id, null).subscribe(
+            resp => {
+                if (resp.status === 'success') {
+                    const page = this.units[this.sUnityIdx].tasks[this.sTaskIdx].pages[page_index];
+                    page.exercises[exercise_index] = resp.exercise;
+                }
             }
         );
     }
@@ -386,7 +398,7 @@ export class SubjectComponent implements OnInit {
             resp => {
                 this.loading = false;
                 if (resp.status === 'success') {
-                    this.units[this.selectedUnityIndex].tasks.splice(index, 1);
+                    this.units[this.sUnityIdx].tasks.splice(index, 1);
                 }
             }, (error) => {
                 this.loading = false;
@@ -403,17 +415,19 @@ export class SubjectComponent implements OnInit {
     }
 
     openImagePickerModal(content, index) {
-        this.selectedBookIndex = index;
+        this.sBookIdx = index;
         this.imagePickerModal = this.modalService.open(content, { size: 'sm', centered: true });
     }
 
     openExercisesModal(content, index) {
-        this.selectedTaskIndex = index;
+        this.sTaskIdx = index;
         this.exercisesModal = this.modalService.open(content, { centered: true });
     }
 
-    openTaskModal(content, task: Task) {
-        this.selectedTask = task;
+    openTaskModal(content, unity_index, task_index) {
+        this.sUnityIdx = unity_index;
+        this.sTaskIdx = task_index;
+
         this.taskModal = this.modalService.open(content, { size: 'lg' });
     }
 
@@ -432,4 +446,14 @@ export class SubjectComponent implements OnInit {
     findBook(book_id) {
         return this.books.find(book => book.id === book_id);
     }
+
+    findUnityIndex(unity_id) {
+        return this.units.findIndex(unity => unity.id === unity_id);
+    }
+
+    collapseAndMark(task) {
+        this.collapse(this.findUnityIndex(task.unity_id));
+        this.sTaskId = task.id;
+    }
+
 }

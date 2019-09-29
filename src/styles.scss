@@ -44,6 +44,11 @@ h3 {
     font-size: 1.2em;
 }
 
+.inverseCard {
+    background-color: $dark;
+    color: $light;
+}
+
 /* Avatars */
 .avatar-sm {
     width: 40px;
