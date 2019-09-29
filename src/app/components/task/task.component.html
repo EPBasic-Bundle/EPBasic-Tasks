@@ -1,0 +1,46 @@
+<div class="container" *ngIf="task">
+    <div class="card rounded-25">
+        <div class="card-body">
+            <h1>{{ task.title }}</h1>
+            <hr>
+            <div class="row">
+                <div class="col-lg-2" *ngIf="task.book_id != null">
+                    <img [src]="'./assets/images/' + task.book.image" alt="..." class="img-thumbnail pointer">
+                </div>
+                <div class="col-lg-10">
+                    <p>{{ task.description }}</p>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-lg-8">
+                    <h3 class="font-weight-bold">Tareas</h3>
+                    <hr>
+                    <ng-container *ngFor="let page of task.pages; let i=index">
+                        <h3>Página
+                            <span class="font-weight-bold">
+                                {{ page.number }}
+                            </span>
+                        </h3>
+                        <div class="row">
+                            <div class="col-lg-1 col-md-1 col-sm-1 m-2"
+                                *ngFor="let exercise of page.exercises; let e=index;"
+                                (click)="markAsDone(exercise.id, i, e)">
+                                <span class="badge badge-pill badge-dark p-3">
+                                    <p>{{ exercise.number }}</p>
+                                    <i class="fas fa-check-circle text-primary fa-lg"
+                                        [class.fas]="exercise.done == true" [class.far]="exercise.done == false"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <hr>
+                    </ng-container>
+                </div>
+                <div class="col-lg-4 d-flex justify-content-center">
+                    <h1 class="delivery_date">21 sep</h1>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

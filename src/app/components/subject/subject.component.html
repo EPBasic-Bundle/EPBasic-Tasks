@@ -26,7 +26,7 @@
                 </div>
                 <div class="card-body pb-0 pt-3" *ngIf="tasksToDo && tasksToDo[0]">
                     <hr class="mt-0">
-                    <div *ngFor="let task of tasksToDo;" class="pointer" (click)="collapseAndMark(task)">
+                    <div *ngFor="let task of tasksToDo;" class="pointer" [routerLink]="['/task/', task.id]">
                         <div class="card-body d-flex justify-content-between pt-1 pb-1">
                             <span>{{ task.title }}</span>
                             <i class="fas fa-check-circle text-primary mt-1" [class.fas]="task.done == true"
@@ -74,9 +74,8 @@
                                         </div>
                                         <hr>
                                         <ng-container *ngIf="unity.tasks && unity.tasks[0]">
-                                            <div class="card rounded-25 pointer mb-2" *ngFor="let task of unity.tasks; let e=index" [class.inverseCard]="task.id == sTaskId"
-                                                (click)="openTaskModal(taskModal, i, e)">
-                                                <div class="card-body d-flex justify-content-between pt-1 pb-1">
+                                            <div class="card rounded-25 pointer mb-2" *ngFor="let task of unity.tasks; let e=index" [class.inverseCard]="task.id == sTaskId">
+                                                <div class="card-body d-flex justify-content-between pt-1 pb-1" [routerLink]="['/task/', task.id]">
                                                     <span>{{ task.title }}</span>
                                                     <i class="fas fa-check-circle text-primary mt-1"
                                                         [class.fas]="task.done == true"
@@ -395,60 +394,6 @@
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-outline-secondary" (click)="closeExercisesModal()">
-            Cerrar
-        </button>
-    </div>
-</ng-template>
-
-<ng-template #taskModal let-close="close">
-    <div class="modal-header d-flex justify-content-between">
-        <h5 class="modal-title">
-            {{ units[sUnityIdx].tasks[sTaskIdx].title }}
-        </h5>
-        <button type="button" class="close" (click)="modal.close()">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body">
-        <div class="row">
-            <div class="col-lg-2" *ngIf="units[sUnityIdx].tasks[sTaskIdx].book_id != null">
-                <img [src]="'./assets/images/' + findBook(units[sUnityIdx].tasks[sTaskIdx].book_id).image" alt="..."
-                    class="img-thumbnail pointer">
-            </div>
-            <div class="col-lg-10">
-                <p>{{ units[sUnityIdx].tasks[sTaskIdx].description }}</p>
-            </div>
-        </div>
-        <hr>
-        <div class="row">
-            <div class="col-lg-8">
-                <h3 class="font-weight-bold">Tareas</h3>
-                <hr>
-                <ng-container *ngFor="let page of units[sUnityIdx].tasks[sTaskIdx].pages; let i=index">
-                    <h3>Página
-                        <span class="font-weight-bold">
-                            {{ page.number }}
-                        </span>
-                    </h3>
-                    <div class="row">
-                        <div class="col-lg-1 col-md-1 col-sm-1 m-2" *ngFor="let exercise of page.exercises; let e=index;" (click)="markAsDone(exercise.id, i, e)">
-                            <span class="badge badge-pill badge-dark p-3">
-                                <p>{{ exercise.number }}</p>
-                                <i class="fas fa-check-circle text-primary fa-lg" [class.fas]="exercise.done == true"
-                                    [class.far]="exercise.done == false"></i>
-                            </span>
-                        </div>
-                    </div>
-                    <hr>
-                </ng-container>
-            </div>
-            <div class="col-lg-4 d-flex justify-content-center">
-                <h1 class="delivery_date">21 sep</h1>
-            </div>
-        </div>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-outline-secondary" (click)="closeTaskModal()">
             Cerrar
         </button>
     </div>

@@ -78,6 +78,7 @@ export class Task {
         public created_at?: string,
         public updated_at?: string,
         public pages?: Page[],
+        public book?: Book,
     ) { }
 }
 

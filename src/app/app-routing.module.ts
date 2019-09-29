@@ -8,6 +8,7 @@ import { ErrorComponent } from './components/error/error.component';
 import { CalendarComponent } from './components/calendar/calendar.component';
 import { TimetableComponent } from './components/timetable/timetable.component';
 import { SubjectComponent } from './components/subject/subject.component';
+import { TaskComponent } from './components/task/task.component';
 
 const routes: Routes = [
     {
@@ -31,6 +32,11 @@ const routes: Routes = [
     {
         path: 'subject/:id',
         component: SubjectComponent,
+        canActivate: [IdentityGuard]
+    },
+    {
+        path: 'task/:id',
+        component: TaskComponent,
         canActivate: [IdentityGuard]
     },
     {

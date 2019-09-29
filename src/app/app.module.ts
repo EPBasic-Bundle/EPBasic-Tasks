@@ -22,6 +22,7 @@ import { ApiService } from './services/api.service';
 import { IdentityGuard } from './guards/identity.guard';
 import { ColorPickerComponent } from './components/color-picker/color-picker.component';
 import { SubjectComponent } from './components/subject/subject.component';
+import { TaskComponent } from './components/task/task.component';
 
 registerLocaleData(localeEs);
 
@@ -33,7 +34,8 @@ registerLocaleData(localeEs);
         CalendarComponent,
         TimetableComponent,
         ColorPickerComponent,
-        SubjectComponent
+        SubjectComponent,
+        TaskComponent
     ],
     imports: [
         BrowserModule,

@@ -20,12 +20,10 @@ export class SubjectComponent implements OnInit {
     modal;
     imagePickerModal;
     exercisesModal;
-    taskModal;
 
     sUnityIdx: number;
     sBookIdx: number;
     sTaskIdx: number;
-    sTaskId: number;
 
     subjectId;
     loading: boolean;
@@ -381,17 +379,6 @@ export class SubjectComponent implements OnInit {
         );
     }
 
-    markAsDone(exercise_id, page_index, exercise_index, taskT) {
-        this.apiService.post('exercise/done/' + exercise_id, null).subscribe(
-            resp => {
-                if (resp.status === 'success') {
-                    const page = this.units[this.sUnityIdx].tasks[this.sTaskIdx].pages[page_index];
-                    page.exercises[exercise_index] = resp.exercise;
-                }
-            }
-        );
-    }
-
     deleteTask(task_id, index) {
         this.loading = true;
         this.apiService.delete('task/' + task_id).subscribe(
@@ -424,19 +411,8 @@ export class SubjectComponent implements OnInit {
         this.exercisesModal = this.modalService.open(content, { centered: true });
     }
 
-    openTaskModal(content, unity_index, task_index) {
-        this.sUnityIdx = unity_index;
-        this.sTaskIdx = task_index;
-
-        this.taskModal = this.modalService.open(content, { size: 'lg' });
-    }
-
     closeExercisesModal() {
         this.exercisesModal.close();
-    }
-
-    closeTaskModal() {
-        this.taskModal.close();
     }
 
     /*********/
@@ -446,14 +422,4 @@ export class SubjectComponent implements OnInit {
     findBook(book_id) {
         return this.books.find(book => book.id === book_id);
     }
-
-    findUnityIndex(unity_id) {
-        return this.units.findIndex(unity => unity.id === unity_id);
-    }
-
-    collapseAndMark(task) {
-        this.collapse(this.findUnityIndex(task.unity_id));
-        this.sTaskId = task.id;
-    }
-
 }
