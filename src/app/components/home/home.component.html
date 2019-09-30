@@ -1,0 +1,49 @@
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-lg-2">
+            <div class="card rounded-25" *ngIf="subjects && subjects[0]">
+                <div class="card-header rounded-top-25">
+                    <h3>Asignaturas</h3>
+                </div>
+                <div class="card-body pb-0 pt-0">
+                    <hr>
+                    <ng-container *ngFor="let subject of subjects">
+                        <div [routerLink]="['/subject', subject.id]" class="pointer">
+                            <span>{{ subject.name }}</span>
+                            <div class="float-right circle" [ngStyle]="{ background: subject.primary_color }"></div>
+                            <hr>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="card rounded-25">
+                <div class="card-body">
+                    <h1>Bienvenido</h1>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2" *ngIf="timetable && timetable[0]">
+            <div class="card rounded-25 bg-dark text-light">
+                <div class="card-header rounded-top-25 d-flex justify-content-between">
+                    <h3>Horario</h3>
+                    <span>{{ dayHour }}</span>
+                </div>
+                <div class="card-body pb-0 pt-0">
+                    <hr class="bg-light">
+                    <div *ngFor="let subject of subjectsOfDay; let i=index">
+                        <div [routerLink]="['/subject', findSubject(subject.subject_id).id]" class="pointer">
+                            <span [class.subjectNow]="inSubjectTime(this.timetable.hours[i].hour_start, this.timetable.hours[i].hour_end) == true">
+                                {{ findSubject(subject.subject_id).name }}
+                            </span>
+                            <div class="float-right circle"
+                                [ngStyle]="{ background: findSubject(subject.subject_id).primary_color }"></div>
+                        </div>
+                        <hr class="bg-light">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

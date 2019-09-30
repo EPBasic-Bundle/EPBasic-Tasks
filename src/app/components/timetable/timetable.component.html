@@ -115,9 +115,9 @@
                             {{ timetable.hours[i].hour_start + ' - ' + timetable.hours[i].hour_end }}
                         </span>
                     </th>
-                    <td *ngFor="let tSubject of subjectRow; let e=index" class="pointer"
+                    <td *ngFor="let subject of subjectRow; let e=index" class="pointer"
                         (click)="openSubjectSelectorModal(subjectModal, [i,e])">
-                        {{ findSubject(tSubject.subject_id).name }}
+                        {{ findSubject(subject.subject_id).name }}
                     </td>
                     <td class="d-flex justify-content-center">
                         <button class="btn btn-sm btn-danger rounded-25" (click)="deleteRow(i)">

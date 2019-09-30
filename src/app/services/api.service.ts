@@ -110,7 +110,7 @@ export class ApiService {
         this.identity = null;
         this.token = null;
 
-        this.router.navigate(['home']);
+        this.router.navigate(['/']);
     }
 
     external(url): Observable<any> {

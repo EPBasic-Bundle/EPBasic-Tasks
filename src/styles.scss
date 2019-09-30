@@ -218,3 +218,13 @@ h3 {
     width: 35px;
     border-radius: 50%;
 }
+
+.circle {
+    $size: 20px;
+    height: $size;
+    width: $size;
+    box-sizing: border-box;
+    border-radius: 100%;
+    cursor: pointer;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.14);
+}
