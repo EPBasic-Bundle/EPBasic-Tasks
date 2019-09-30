@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ApiService } from '../../services/api.service';
 import { Subject, Unity, Book, Task } from '../../models/model';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-subject',
@@ -26,7 +26,8 @@ export class SubjectComponent implements OnInit {
     sTaskIdx: number;
 
     subjectId;
-    loading: [boolean];
+    // loading: [boolean];
+    loading: boolean;
 
     constructor(
         private apiService: ApiService,
