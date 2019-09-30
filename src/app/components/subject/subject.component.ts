@@ -26,12 +26,11 @@ export class SubjectComponent implements OnInit {
     sTaskIdx: number;
 
     subjectId;
-    loading: boolean;
+    loading: [boolean];
 
     constructor(
         private apiService: ApiService,
         private modalService: NgbModal,
-        private router: Router,
         private route: ActivatedRoute
     ) { }
 

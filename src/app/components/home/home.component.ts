@@ -52,7 +52,7 @@ export class HomeComponent implements OnInit {
 
                     if (lastSubject < this.toMins(this.dayHour)) {
                         this.subjectsOfTomorrow = true;
-    
+
                         this.getSubjectsOfDay(1);
                     } else {
                         this.getSubjectsOfDay();
@@ -69,7 +69,15 @@ export class HomeComponent implements OnInit {
     dayOfWeek() {
         const date = new Date();
         this.weekDay = date.getDay() - 1;
-        this.dayHour = date.getHours() + ':' + date.getMinutes();
+        this.dayHour = date.getHours() + ':' + this.addZero(date.getMinutes());
+    }
+
+    addZero(number: number) {
+        if (number < 10) {
+            return '0' + number;
+        } else {
+            return number;
+        }
     }
 
     getSubjectsOfDay(add = 0) {

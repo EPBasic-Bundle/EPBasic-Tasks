@@ -14,7 +14,6 @@ export class TaskComponent implements OnInit {
 
     constructor(
         private apiService: ApiService,
-        private router: Router,
         private route: ActivatedRoute
     ) { }
 

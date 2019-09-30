@@ -1,7 +1,7 @@
-<div class="container-fluid" data-aos="zoom-in">
+<div class="container-fluid">
     <div class="row justify-content-center">
-        <div class="col-lg-2">
-            <div class="card rounded-25" *ngIf="subjects && subjects[0]">
+        <div class="col-lg-2 mb-4">
+            <div class="card rounded-25" *ngIf="subjects && subjects[0]" data-aos="zoom-in">
                 <div class="card-header rounded-top-25">
                     <h3>Asignaturas</h3>
                 </div>
@@ -17,15 +17,15 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-5">
-            <div class="card rounded-25">
+        <div class="col-lg-5 mb-4">
+            <div class="card rounded-25" data-aos="zoom-in">
                 <div class="card-body">
                     <h1>Bienvenido</h1>
                 </div>
             </div>
         </div>
         <div class="col-lg-2">
-            <div class="card rounded-25 bg-dark text-light" *ngIf="timetable">
+            <div class="card rounded-25 bg-dark text-light" *ngIf="timetable" data-aos="zoom-in">
                 <div class="card-header rounded-top-25 d-flex justify-content-between">
                     <h3>Horario
                         <span *ngIf="subjectsOfTomorrow == true">de mañana</span>

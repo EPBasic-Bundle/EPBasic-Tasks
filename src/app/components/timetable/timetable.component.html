@@ -1,37 +1,32 @@
 <div class="container-fluid">
     <div class="row justify-content-center">
-        <div class="col-lg-7 mb-4">
-            <table class="table table-striped table-dark" *ngIf="timetable && subjects">
-                <thead>
-                    <tr>
-                        <th scope="col"></th>
-                        <th scope="col">Lunes</th>
-                        <th scope="col">Martes</th>
-                        <th scope="col">Miercoles</th>
-                        <th scope="col">Jueves</th>
-                        <th scope="col">Viernes</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let subjectsRow of timetable.subjects; let i=index">
-                        <th scope="row">
-                            {{ timetable.hours[i].hour_start + ' - ' + timetable.hours[i].hour_end }}
-                        </th>
-                        <td *ngFor="let tSubject of subjectsRow">
-                            <span *ngIf="subjectIsSelected(tSubject.subject_id) == true"
-                                [ngStyle]="{ color: findSubject(tSubject.subject_id).primary_color }">
-                                {{ findSubject(tSubject.subject_id).name }}
-                            </span>
-                            <span *ngIf="subjectIsSelected(tSubject.subject_id) == false">
-                                {{ findSubject(tSubject.subject_id).name }}
-                            </span>
+        <div class="col-lg-7 mb-1">
+            <table class="table" *ngIf="timetable && subjects" data-aos="zoom-in">
+                <tr class="days">
+                    <th></th>
+                    <th>Lunes</th>
+                    <th>Martes</th>
+                    <th>Miercoles</th>
+                    <th>Jueves</th>
+                    <th>Viernes</th>
+                </tr>
+                <tr *ngFor="let subjectsRow of timetable.subjects; let i=index">
+                    <th class="th bg-dark">
+                        {{ timetable.hours[i].hour_start + ' - ' + timetable.hours[i].hour_end }}
+                    </th>
+                    <ng-container *ngFor="let tSubject of subjectsRow">
+                        <td class="td bg-dark text-center" *ngIf="subjectIsSelected(tSubject.subject_id) != true">
+                            {{ findSubject(tSubject.subject_id).name }}
                         </td>
-                    </tr>
-                </tbody>
+                        <td class="td text-dark text-center font-weight-bold" *ngIf="subjectIsSelected(tSubject.subject_id) == true" [ngStyle]="{ background: findSubject(tSubject.subject_id).primary_color }">
+                            {{ findSubject(tSubject.subject_id).name }}
+                        </td>
+                    </ng-container>
+                </tr>
             </table>
         </div>
         <div class="col-lg-3">
-            <div class="card rounded-25">
+            <div class="card rounded-25" data-aos="zoom-in">
                 <div class="card-body">
                     <h1>Asignaturas</h1>
                     <hr>
@@ -40,7 +35,7 @@
                         <i class="fas fa-clock"></i>
                         Horario
                     </button>
-                    <button class="btn btn-primary btn-sm mb-3 btn-block" placement="top" ngbTooltip="Añade asignaturas para poder generar el horario" 
+                    <button class="btn btn-primary btn-sm mb-3 btn-block" placement="top" ngbTooltip="Añade asignaturas para poder generar el horario"
                     *ngIf="subjects.length == 0" disabled>
                         <i class="fas fa-clock"></i>
                         Horario
