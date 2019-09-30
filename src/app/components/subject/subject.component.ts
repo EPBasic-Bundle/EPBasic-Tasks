@@ -92,6 +92,16 @@ export class SubjectComponent implements OnInit {
         );
     }
 
+    getTasks(unity_index) {
+        this.apiService.get('tasks/' + this.units[unity_index].id).subscribe(
+            resp => {
+                if (resp.status === 'success') {
+                    this.units[unity_index].tasks = resp.tasks;
+                }
+            }
+        );
+    }
+
     /***********/
     /* COLAPSE */
     /***********/
@@ -102,13 +112,9 @@ export class SubjectComponent implements OnInit {
         } else {
             this.sUnityIdx = unity_index;
 
-            this.apiService.get('tasks/' + this.units[unity_index].id).subscribe(
-                resp => {
-                    if (resp.status === 'success') {
-                        this.units[unity_index].tasks = resp.tasks;
-                    }
-                }
-            );
+            if (this.units[unity_index].id !== 0) {
+                this.getTasks(unity_index);
+            }
         }
     }
 
@@ -198,10 +204,10 @@ export class SubjectComponent implements OnInit {
         let auto_number = 1;
 
         if (this.units[0]) {
-            auto_number = 1 + this.units[this.units.length - 1].number;
+            auto_number = 1 + this.units[0].number;
         }
 
-        this.units.push({
+        this.units.unshift({
             id: 0,
             subject_id: this.subject.id,
             number: auto_number,

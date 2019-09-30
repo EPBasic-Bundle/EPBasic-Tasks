@@ -57,6 +57,9 @@
                         <div class="card-header pointer" (click)="collapse(i)">
                             <h3 class="m-1">
                                 Unidad {{ unity.number }}
+                                <span class="badge badge-warning float-right" container="body" placement="top" ngbTooltip="Unidad sin guardar" *ngIf="unity.id == 0">
+                                    <i class="fas fa-save"></i>
+                                </span>
                             </h3>
                         </div>
 
@@ -66,21 +69,32 @@
                                     <div class="col-lg-4">
                                         <div class="d-flex justify-content-between">
                                             <h3>Tareas</h3>
-                                            <button class="btn btn-primary btn-sm mb-3"
-                                                (click)="openModal(tasksModal, 'lg', false)" [disabled]="!books[0]">
+                                            <button class="btn btn-primary btn-sm mb-3" placement="top" ngbTooltip="Guarda la unidad para poder añadir tareas" 
+                                            *ngIf="!books[0] || unity.id == 0" disabled>
+                                                <i class="fas fa-tasks"></i>
+                                                Tareas
+                                            </button>
+                                            <button class="btn btn-primary btn-sm mb-3" *ngIf="books[0] && unity.id != 0"
+                                                (click)="openModal(tasksModal, 'lg', false)">
                                                 <i class="fas fa-tasks"></i>
                                                 Tareas
                                             </button>
                                         </div>
                                         <hr>
                                         <ng-container *ngIf="unity.tasks && unity.tasks[0]">
-                                            <div class="card rounded-25 pointer mb-2" *ngFor="let task of unity.tasks">
-                                                <div class="card-body d-flex justify-content-between pt-1 pb-1" [routerLink]="['/task/', task.id]">
+                                            <div class="card rounded-25 mb-2" *ngFor="let task of unity.tasks">
+                                                <div class="card-body d-flex justify-content-between pb-1 pt-1 pointer" [routerLink]="['/task/', task.id]" *ngIf="task.id != 0">
                                                     <span>{{ task.title }}</span>
-                                                    <i class="fas fa-check-circle text-primary mt-1"
+                                                    <i class="fas fa-check-circle text-primary mt-1" *ngIf="task.id != 0"
                                                         [class.fas]="task.done == true"
                                                         [class.far]="task.done == false">
                                                     </i>
+                                                </div>
+                                                <div class="card-body d-flex justify-content-between pb-1 pt-1" *ngIf="task.id == 0">
+                                                    <span>{{ task.title }}</span>
+                                                    <span class="badge badge-warning float-right" container="body" placement="top" ngbTooltip="Tarea sin guardar">
+                                                        <i class="fas fa-save"></i>
+                                                    </span>
                                                 </div>
                                             </div>
                                         </ng-container>
@@ -90,7 +104,7 @@
                                             <h3>Examenes</h3>
                                             <button class="btn btn-primary btn-sm mb-3"
                                                 (click)="openModal(examsModal, 'lg', false)">
-                                                <i class="fas fa-clock"></i>
+                                                <i class="fas fa-check-double"></i>
                                                 Examenes
                                             </button>
                                         </div>
@@ -101,7 +115,7 @@
                                             <h3>Proyectos</h3>
                                             <button class="btn btn-primary btn-sm mb-3"
                                                 (click)="openModal(projectsModal, 'lg', false)">
-                                                <i class="fas fa-clock"></i>
+                                                <i class="fas fa-project-diagram"></i>
                                                 Proyectos
                                             </button>
                                         </div>
@@ -260,7 +274,7 @@
                     </td>
                     <td>
                         <ng-container *ngIf="task.id == 0">
-                            <button class="btn btn-primary rounded-25 mr-2" (click)="storeTask(task, i)">
+                            <button class="btn btn-primary rounded-25 mr-2" (click)="storeTask(task, i)" [disabled]="task.title == ''">
                                 <i class="fa fa-save"></i>
                             </button>
                             <button class="btn btn-danger rounded-25" (click)="deleteTaskFront(i)">

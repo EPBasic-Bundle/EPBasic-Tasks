@@ -10,16 +10,16 @@ import { Subject, Timetable } from '../../models/model';
 export class HomeComponent implements OnInit {
     loading: boolean;
     subjects: Subject[] = [];
-    weekdays = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes'];
+    weekDays = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes'];
     timetable: Timetable;
     subjectsOfDay;
     weekDay: number;
     dayHour: string;
 
+    subjectsOfTomorrow: boolean;
     constructor(
         private apiService: ApiService
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.getSubjects();
@@ -47,8 +47,17 @@ export class HomeComponent implements OnInit {
                 if (resp.status === 'success') {
                     this.timetable = resp.timetable;
                     this.timetable.subjects = resp.subjects;
+
+                    const lastSubject = this.toMins(this.timetable.hours[this.timetable.hours.length - 1].hour_end);
+
+                    if (lastSubject < this.toMins(this.dayHour)) {
+                        this.subjectsOfTomorrow = true;
+    
+                        this.getSubjectsOfDay(1);
+                    } else {
+                        this.getSubjectsOfDay();
+                    }
                 }
-                this.getSubjectsOfDay();
             }
         );
     }
@@ -63,12 +72,12 @@ export class HomeComponent implements OnInit {
         this.dayHour = date.getHours() + ':' + date.getMinutes();
     }
 
-    getSubjectsOfDay() {
+    getSubjectsOfDay(add = 0) {
         this.subjectsOfDay = [];
         let subjectRow;
 
         for (subjectRow of this.timetable.subjects) {
-            this.subjectsOfDay.push(subjectRow[this.weekDay]);
+            this.subjectsOfDay.push(subjectRow[this.weekDay + add]);
         }
     }
 

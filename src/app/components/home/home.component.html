@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div class="container-fluid" data-aos="zoom-in">
     <div class="row justify-content-center">
         <div class="col-lg-2">
             <div class="card rounded-25" *ngIf="subjects && subjects[0]">
@@ -25,13 +25,15 @@
             </div>
         </div>
         <div class="col-lg-2">
-            <div class="card rounded-25 bg-dark text-light">
+            <div class="card rounded-25 bg-dark text-light" *ngIf="timetable">
                 <div class="card-header rounded-top-25 d-flex justify-content-between">
-                    <h3>Horario</h3>
+                    <h3>Horario
+                        <span *ngIf="subjectsOfTomorrow == true">de mañana</span>
+                    </h3>
                     <span>{{ dayHour }}</span>
                 </div>
                 <div class="card-body pb-0 pt-0">
-                    <p class="mt-2 text-center" *ngIf="!subjectsOfDay || !subjectsOfDay[0]">¡Disfruta del fin de semana!</p>
+                    <p class="mt-2 text-center" *ngIf="!subjectsOfDay[0]">¡Disfruta del fin de semana!</p>
                     <ng-container *ngIf="subjectsOfDay && subjectsOfDay[0]">
                         <hr class="bg-light">
                         <div *ngFor="let subject of subjectsOfDay; let i=index">
