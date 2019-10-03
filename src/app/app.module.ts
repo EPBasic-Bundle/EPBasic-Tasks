@@ -24,6 +24,7 @@ import { ColorPickerComponent } from './components/color-picker/color-picker.com
 import { SubjectComponent } from './components/subject/subject.component';
 import { TaskComponent } from './components/task/task.component';
 import { AuthComponent } from './components/auth/auth.component';
+import { SettingsComponent } from './components/settings/settings.component';
 
 registerLocaleData(localeEs);
 
@@ -37,7 +38,8 @@ registerLocaleData(localeEs);
         ColorPickerComponent,
         SubjectComponent,
         TaskComponent,
-        AuthComponent
+        AuthComponent,
+        SettingsComponent
     ],
     imports: [
         BrowserModule,

@@ -1,27 +1,48 @@
 <div class="container-fluid">
     <div class="row justify-content-center">
-        <div class="col-lg-2 mb-4">
-            <div class="card rounded-25" *ngIf="subjects && subjects[0]" data-aos="zoom-in">
-                <div class="card-header rounded-top-25">
-                    <h3>Asignaturas</h3>
-                </div>
-                <div class="card-body pb-0 pt-0">
-                    <hr>
-                    <ng-container *ngFor="let subject of subjects">
-                        <div [routerLink]="['/subject', subject.id]" class="pointer">
-                            <span>{{ subject.name }}</span>
-                            <div class="float-right circle" [ngStyle]="{ background: subject.primary_color }"></div>
-                            <hr>
-                        </div>
-                    </ng-container>
-                </div>
-            </div>
-        </div>
         <div class="col-lg-5 mb-4">
-            <div class="card rounded-25" data-aos="zoom-in">
-                <div class="card-body">
-                    <h1>Bienvenido</h1>
-                </div>
+            <div class="accordion mb-4" data-aos="zoom-in">
+                <ng-container *ngFor="let subject of subjects; let fst=first; let lst=last;">
+                    <div class="card" [class.rounded-top-25]="fst == true" [class.rounded-bottom-25]="lst == true">
+                        <div class="card-header pointer d-flex justify-content-between">
+                            <h3 class="m-1" (click)="collapse(subject.id)">
+                                {{ subject.name }}
+                            </h3>
+                            <button class="col-1 btn btn-sm btn-primary rounded-25"
+                                [routerLink]="['/subject', subject.id]">
+                                <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                        <div class="collapse show" [ngbCollapse]="isCollapsed(subject.id)">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <b>Tareas</b>
+                                        <hr class="mt-1">
+                                        <div class="card rounded-25 mb-2" *ngFor="let task of subject.tasks"
+                                            data-aos="zoom-in">
+                                            <div class="card-body d-flex justify-content-between pb-1 pt-1 pointer"
+                                                [routerLink]="['/task/', task.id]" *ngIf="task.id != 0">
+                                                <span>{{ task.title }}</span>
+                                                <i class="fas fa-check-circle text-primary mt-1" *ngIf="task.id != 0"
+                                                    [class.fas]="task.done == true" [class.far]="task.done == false">
+                                                </i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <b>Examenes</b>
+                                        <hr class="mt-1">
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <b>Proyectos</b>
+                                        <hr class="mt-1">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
             </div>
         </div>
         <div class="col-lg-2">
@@ -48,6 +69,18 @@
                             <hr class="bg-light">
                         </div>
                     </ng-container>
+                </div>
+            </div>
+            <div class="card rounded-25" *ngIf="!timetable" data-aos="zoom-in">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <b>Tutorial</b>
+                        <button type="button" class="close">
+                            <span>&times;</span>
+                        </button>
+                    </div>
+                    <hr class="mt-1 mb-1">
+                    Parece que aún no has generado un horario, generalo <b class="pointer" routerLink="/timetable">aquí</b>
                 </div>
             </div>
         </div>

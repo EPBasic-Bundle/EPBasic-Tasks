@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../services/api.service';
-import { Subject, Timetable } from '../../models/model';
+import { Subject, Timetable, Task } from '../../models/model';
 
 @Component({
     selector: 'app-home',
@@ -9,37 +9,28 @@ import { Subject, Timetable } from '../../models/model';
 })
 export class HomeComponent implements OnInit {
     loading: boolean;
-    subjects: Subject[] = [];
     weekDays = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes'];
     timetable: Timetable;
+    subjects: Subject[] = [];
     subjectsOfDay;
-    weekDay: number;
-    dayHour: string;
-
     subjectsOfTomorrow: boolean;
+    cSubjectsIds = [];
+    weekDay;
+    dayHour;
+
     constructor(
         private apiService: ApiService
     ) {}
 
     ngOnInit() {
-        this.getSubjects();
+        this.timeNow();
+        this.getSubjectsWithTasks();
         this.getTimetable();
-        this.dayOfWeek();
     }
 
     /*****************/
     /* IMPORTACIONES */
     /*****************/
-
-    getSubjects() {
-        this.apiService.get('subjects').subscribe(
-            resp => {
-                if (resp.status === 'success') {
-                    this.subjects = resp.subjects;
-                }
-            }
-        );
-    }
 
     getTimetable() {
         this.apiService.get('timetable').subscribe(
@@ -62,15 +53,26 @@ export class HomeComponent implements OnInit {
         );
     }
 
+    getSubjectsWithTasks() {
+        this.apiService.get('subjects/tasks/').subscribe(
+            resp => {
+                if (resp.status === 'success') {
+                    this.subjects = resp.subjects;
+
+                    // tslint:disable-next-line:prefer-for-of
+                    for (let i = 0; i < this.subjects.length; i++) {
+                        if (this.subjects[i].tasks[0]) {
+                            this.collapse(this.subjects[i].id);
+                        }
+                    }
+                }
+            }
+        );
+    }
+
     /*************/
     /* FUNCIONES */
     /*************/
-
-    dayOfWeek() {
-        const date = new Date();
-        this.weekDay = date.getDay() - 1;
-        this.dayHour = date.getHours() + ':' + this.addZero(date.getMinutes());
-    }
 
     addZero(number: number) {
         if (number < 10) {
@@ -102,5 +104,35 @@ export class HomeComponent implements OnInit {
     toMins(h) {
         const b = h.split(':');
         return b[0] * 60 + + b[1];
+    }
+
+    timeNow() {
+        const date = new Date();
+        this.weekDay = date.getDay() - 1;
+        this.dayHour = date.getHours() + ':' + this.addZero(date.getMinutes());
+    }
+
+    /***********/
+    /* COLAPSE */
+    /***********/
+
+    collapse(subject_id) {
+        const cSubjectsIndex = this.cSubjectsIds.findIndex(i => i === subject_id);
+
+        if (cSubjectsIndex >= 0) {
+            this.cSubjectsIds.splice(cSubjectsIndex, 1);
+        } else {
+            this.cSubjectsIds.push(subject_id);
+        }
+    }
+
+    isCollapsed(subject_id) {
+        const cSubjectsIndex = this.cSubjectsIds.findIndex(i => i === subject_id);
+
+        if (cSubjectsIndex >= 0) {
+            return false;
+        } else {
+            return true;
+        }
     }
 }

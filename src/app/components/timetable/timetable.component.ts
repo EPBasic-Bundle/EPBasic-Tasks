@@ -100,7 +100,7 @@ export class TimetableComponent implements OnInit {
     createTable() {
         if (+this.rows > 0) {
             this.timetable = {
-                id: 1,
+                id: 0,
                 user_id: 1,
                 rows: this.rows,
                 hours: [],
@@ -149,6 +149,10 @@ export class TimetableComponent implements OnInit {
     deleteRow(index: number) {
         this.timetable.subjects.splice(index, 1);
         this.timetable.hours.splice(index, 1);
+
+        if (this.timetable.subjects.length === 0) {
+            this.timetable = null;
+        }
     }
 
     setTime() {
@@ -182,6 +186,21 @@ export class TimetableComponent implements OnInit {
                 if (resp.status === 'success') {
                     this.getTimetable();
                 } else {
+                }
+            }, (error) => {
+                this.loading = false;
+            }
+        );
+    }
+
+    deleteTimetable() {
+        this.loading = true;
+        this.apiService.delete('timetable').subscribe(
+            resp => {
+                this.loading = false;
+
+                if (resp.status === 'success') {
+                    this.timetable = null;
                 }
             }, (error) => {
                 this.loading = false;

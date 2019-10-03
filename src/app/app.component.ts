@@ -18,6 +18,7 @@ export class AppComponent implements OnInit, DoCheck {
     ngOnInit() {
         AOS.init();
     }
+
     toggleMenu() {
         this.isCollapsed = !this.isCollapsed;
     }

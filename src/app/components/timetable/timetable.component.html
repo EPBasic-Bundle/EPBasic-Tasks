@@ -131,7 +131,11 @@
             </tbody>
         </table>
         <div class="float-right" *ngIf="timetable">
-            <button class="btn btn-secondary mr-2" (click)="getTimetable()">Borrar cambios</button>
+            <ng-container *ngIf="timetable.id != 0">
+                <button class="btn btn-dark mr-2" (click)="deleteTimetable()">Eliminar horario</button>
+                <button class="btn btn-secondary mr-2" (click)="getTimetable()">Borrar cambios</button>
+            </ng-container>
+
             <button class="btn btn-primary float-right" (click)="storeTimetable()">Guardar tabla</button>
         </div>
 
