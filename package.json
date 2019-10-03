@@ -29,6 +29,7 @@
     "calendar-utils": "0.3.3",
     "date-fns": "1.29.0",
     "flatpickr": "4.6.2",
+    "ng2-pdf-viewer": "^5.3.4",
     "rrule": "2.6.2",
     "rxjs": "~6.4.0",
     "tslib": "^1.10.0",

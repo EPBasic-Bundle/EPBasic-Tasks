@@ -11,6 +11,7 @@ import { SubjectComponent } from './components/subject/subject.component';
 import { TaskComponent } from './components/task/task.component';
 import { AuthComponent } from './components/auth/auth.component';
 import { SettingsComponent } from './components/settings/settings.component';
+import { BookComponent } from './components/book/book.component';
 
 const routes: Routes = [
     {
@@ -40,6 +41,11 @@ const routes: Routes = [
     {
         path: 'task/:id',
         component: TaskComponent,
+        canActivate: [IdentityGuard]
+    },
+    {
+        path: 'books',
+        component: BookComponent,
         canActivate: [IdentityGuard]
     },
     {

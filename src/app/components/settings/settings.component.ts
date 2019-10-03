@@ -10,7 +10,7 @@ export class SettingsComponent implements OnInit {
     identity;
 
     constructor(
-        apiService: ApiService
+        private apiService: ApiService
     ) { }
 
     ngOnInit() {
