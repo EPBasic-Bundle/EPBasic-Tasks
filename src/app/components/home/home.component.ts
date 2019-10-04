@@ -54,7 +54,7 @@ export class HomeComponent implements OnInit {
     }
 
     getSubjectsWithTasks() {
-        this.apiService.get('subjects/all/').subscribe(
+        this.apiService.get('subjects/all').subscribe(
             resp => {
                 if (resp.status === 'success') {
                     this.subjects = resp.subjects;
