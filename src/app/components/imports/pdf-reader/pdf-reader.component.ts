@@ -57,7 +57,7 @@ export class PdfReaderComponent implements OnInit {
 
     moveToPage() {
         if (+this.page < this.pdf.pages_quantity) {
-            this.pdf.page = this.page;
+            this.pdf.page = (+this.page + 1);
         }
     }
 
