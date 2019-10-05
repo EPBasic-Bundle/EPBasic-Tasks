@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { PdfViewerComponent } from 'ng2-pdf-viewer';
+import { ApiService } from '../../../services/api.service';
 
 @Component({
     selector: 'app-pdf-reader',
@@ -11,6 +12,8 @@ export class PdfReaderComponent implements OnInit {
 
     page;
     stringToSearch;
+
+    loading;
 
     sizes = [
         {
@@ -31,13 +34,20 @@ export class PdfReaderComponent implements OnInit {
         },
     ];
 
+    lastPageSave: number;
+
     @ViewChild(PdfViewerComponent, null) private pdfComponent: PdfViewerComponent;
 
-    constructor() { }
+    constructor(
+        private apiService: ApiService
+    ) { }
 
-    ngOnInit() { }
+    ngOnInit() {
+        this.lastPageSave = this.pdf.page;
+    }
 
     search() {
+        // tslint:disable-next-line:triple-equals
         if (this.stringToSearch != '') {
             this.pdfComponent.pdfFindController.executeCommand('find', {
                 caseSensitive: false, findPrevious: undefined, highlightAll: true, phraseSearch: true, query: this.stringToSearch
@@ -46,10 +56,26 @@ export class PdfReaderComponent implements OnInit {
     }
 
     moveToPage() {
-        this.pdf.page = this.page;
+        if (+this.page < this.pdf.pages_quantity) {
+            this.pdf.page = this.page;
+        }
     }
 
     setSize(size) {
         this.pdf.zoom = size;
+    }
+
+    savePage() {
+        this.loading = true;
+        this.apiService.get('pdf/last-seen-page/' + this.pdf.book_id + '/' + this.pdf.page).subscribe(
+            resp => {
+                this.loading = false;
+                if (resp.status === 'success') {
+                    this.lastPageSave = resp.book.last_seen_page;
+                }
+            }, (error) => {
+                this.loading = false;
+            }
+        );
     }
 }

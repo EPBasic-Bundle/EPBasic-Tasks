@@ -40,11 +40,13 @@ export class BookComponent implements OnInit {
 
                     if (this.book.pdf_name != null) {
                         this.pdf = {
+                            book_id: this.book.id,
                             render_text: true,
                             zoom: 0.7,
                             autoresize: true,
                             show_all: false,
-                            page: 1,
+                            pages_quantity: (this.book.pages_quantity * 10),
+                            page: this.book.last_seen_page,
                             src: 'https://api.store.epbasic.eu/api/book/getPDF/' + this.book.pdf_name
                         };
                     }

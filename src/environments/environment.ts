@@ -4,7 +4,7 @@
 
 export const environment = {
     production: false,
-    server: 'https://api.store.epbasic.eu/api/'
+    server: 'http://api.store.epbasic.eu/api/'
 };
 
 /*

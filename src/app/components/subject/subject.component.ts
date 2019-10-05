@@ -1,14 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ApiService } from '../../services/api.service';
 import { Subject, Unity, Book, Task } from '../../models/model';
-import { ActivatedRoute } from '@angular/router';
+import { environment } from '../../../environments/environment';
+import { UploadOutput, UploadInput, UploadFile, humanizeBytes, UploaderOptions } from 'ngx-uploader';
 
 @Component({
     selector: 'app-subject',
     templateUrl: './subject.component.html',
     styleUrls: ['./subject.component.scss']
 })
+
 export class SubjectComponent implements OnInit {
     subject: Subject;
     units: Unity[] = [];
@@ -20,6 +23,7 @@ export class SubjectComponent implements OnInit {
     modal;
     imagePickerModal;
     exercisesModal;
+    pdfUploaderModal;
 
     sUnityIdx: number;
     sBookIdx: number;
@@ -29,11 +33,25 @@ export class SubjectComponent implements OnInit {
     // loading: [boolean];
     loading: boolean;
 
+    options: UploaderOptions;
+    formData: FormData;
+    files: UploadFile[];
+    uploadInput: EventEmitter<UploadInput>;
+    humanizeBytes: Function;
+    dragOver: boolean;
+
+    baseURL: string = environment.server;
+
     constructor(
         private apiService: ApiService,
         private modalService: NgbModal,
         private route: ActivatedRoute
-    ) { }
+    ) {
+        this.options = { concurrency: 1, maxUploads: 3 };
+        this.files = []; // local uploading files array
+        this.uploadInput = new EventEmitter<UploadInput>(); // input events, we use this to emit data to ngx-uploader
+        this.humanizeBytes = humanizeBytes;
+    }
 
     ngOnInit() {
         this.route.params.subscribe(
@@ -136,6 +154,7 @@ export class SubjectComponent implements OnInit {
             name: '',
             subject_id: this.subject.id,
             pages_quantity: 0,
+            last_seen_page: null,
             image: 'default.png',
             pdf_name: null
         });
@@ -196,6 +215,69 @@ export class SubjectComponent implements OnInit {
             }
         );
     }
+
+    // SUBIDA
+    onUploadOutput(output: UploadOutput): void {
+        switch (output.type) {
+            case 'addedToQueue':
+                if (typeof output.file !== 'undefined') {
+                    this.files.push(output.file);
+                }
+                break;
+            case 'uploading':
+                if (typeof output.file !== 'undefined') {
+                    // update current data in files array for uploading file
+                    const index = this.files.findIndex((file) => typeof output.file !== 'undefined' && file.id === output.file.id);
+                    this.files[index] = output.file;
+                }
+                break;
+            case 'removed':
+                // remove file from array when removed
+                this.files = this.files.filter((file: UploadFile) => file !== output.file);
+                break;
+            case 'dragOver':
+                this.dragOver = true;
+                break;
+            case 'dragOut':
+            case 'drop':
+                this.dragOver = false;
+                break;
+            case 'done':
+                this.files.forEach(
+                    file => {
+                        this.books[this.sBookIdx].pdf_name = file.response.pdf;
+                        console.log(file.response);
+                        this.pdfUploaderModal.close();
+                    }
+                );
+                break;
+        }
+    }
+
+    startUpload(url): void {
+        const event: UploadInput = {
+            type: 'uploadAll',
+            url: this.baseURL + url + '/' + this.books[this.sBookIdx].id,
+            method: 'POST',
+            data: { foo: 'file' },
+            headers: { 'Authorization': this.apiService.token }
+        };
+
+        this.uploadInput.emit(event);
+    }
+
+    cancelUpload(id: string): void {
+        this.uploadInput.emit({ type: 'cancel', id });
+    }
+
+    removeFile(id: string): void {
+        this.uploadInput.emit({ type: 'remove', id });
+    }
+
+    removeAllFiles(): void {
+        this.uploadInput.emit({ type: 'removeAll' });
+    }
+
 
     /*********/
     /* Units */
@@ -413,6 +495,12 @@ export class SubjectComponent implements OnInit {
         this.imagePickerModal = this.modalService.open(content, { size: 'sm', centered: true });
     }
 
+    openPDFUploaderModal(content, index) {
+        this.sBookIdx = index;
+        this.pdfUploaderModal = this.modalService.open(content, { centered: true });
+    }
+
+
     openExercisesModal(content, index) {
         this.sTaskIdx = index;
         this.exercisesModal = this.modalService.open(content, { centered: true });
@@ -420,6 +508,10 @@ export class SubjectComponent implements OnInit {
 
     closeExercisesModal() {
         this.exercisesModal.close();
+    }
+
+    closePDFUploaderModal() {
+        this.pdfUploaderModal.close();
     }
 
     /*********/

@@ -111,6 +111,7 @@ export class Book {
         public subject_id: number,
         public name: string,
         public pages_quantity: number,
+        public last_seen_page: number,
         public image: string,
         public pdf_name: string,
         public created_at?: string,

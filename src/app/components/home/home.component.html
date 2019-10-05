@@ -5,7 +5,7 @@
                 <ng-container *ngFor="let subject of subjects; let fst=first; let lst=last;">
                     <div class="card" [class.rounded-top-25]="fst == true" [class.rounded-bottom-25]="lst == true">
                         <div class="card-header pointer d-flex justify-content-between">
-                            <h3 class="m-1" (click)="collapse(subject.id)">
+                            <h3 class="col-lg-11 m-1" (click)="collapse(subject.id)">
                                 {{ subject.name }}
                             </h3>
                             <button class="col-1 btn btn-sm btn-primary rounded-25"

@@ -12,7 +12,8 @@
                 </div>
 
                 <div class="d-flex justify-content-center">
-                    <ngb-pagination [collectionSize]="10000" [(page)]="pdf.page" [maxSize]="5" [ellipses]="false">
+                    <ngb-pagination [collectionSize]="pdf.pages_quantity" [(page)]="pdf.page" [maxSize]="5"
+                        [ellipses]="false">
                         <ng-template ngbPaginationPrevious>
                             <i class="fas fa-angle-left"></i>
                         </ng-template>
@@ -20,7 +21,7 @@
                             <i class="fas fa-angle-right"></i>
                         </ng-template>
                         <ng-template ngbPaginationNumber let-p>
-                            {{ p }}
+                            {{ (p - 1) }}
                         </ng-template>
                     </ngb-pagination>
                 </div>
@@ -34,7 +35,7 @@
                     </div>
                 </div>
 
-                <div class="d-flex justify-content-center">
+                <div class="d-flex justify-content-center mb-4">
                     <div class="btn-group" role="group">
                         <button type="button" class="btn btn-secondary" (click)="setSize((pdf.zoom - 0.25))">
                             <i class="fas fa-search-minus"></i>
@@ -46,6 +47,16 @@
                         </button>
                     </div>
                 </div>
+
+                <button class="btn btn-primary btn-block" *ngIf="lastPageSave == pdf.page">
+                    Guardada
+                    <i class="fas fa-save ml-1"></i>
+                </button>
+                <button class="btn btn-primary btn-block" (click)="savePage()" *ngIf="lastPageSave != pdf.page" container="body" placement="top"
+                    ngbTooltip="La página no está guardada, guardala para volver a la página actual la proxima vez que te conectes">
+                    Guardar
+                    <i class="far fa-save ml-1"></i>
+                </button>
             </div>
         </div>
     </div>

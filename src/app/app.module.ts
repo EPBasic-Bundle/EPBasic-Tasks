@@ -29,6 +29,7 @@ import { TaskComponent } from './components/task/task.component';
 import { AuthComponent } from './components/auth/auth.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { BookComponent } from './components/book/book.component';
+import { NgxUploaderModule } from 'ngx-uploader';
 
 registerLocaleData(localeEs);
 
@@ -60,6 +61,7 @@ registerLocaleData(localeEs);
             useFactory: adapterFactory
         }),
         PdfViewerModule,
+        NgxUploaderModule
     ],
     providers: [
         { provide: LOCALE_ID, useValue: 'es' },
