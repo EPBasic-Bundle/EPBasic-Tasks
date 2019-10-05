@@ -1,1 +1,3 @@
-<app-pdf-reader [pdf]="pdf"></app-pdf-reader>
+<div class="container-fluid">
+    <app-pdf-reader [pdf]="pdf" *ngIf="this.pdf"></app-pdf-reader>
+</div>

@@ -1,2 +1,57 @@
-<pdf-viewer [src]="pdf.src" [(render-text)]="pdf.render_text" [(zoom)]="pdf.zoom" [(autoresize)]="pdf.autoresize"
-    [(show-all)]="pdf.show_all" [(show-borders)]="pdf.show_borders" [(page)]="pdf.page"></pdf-viewer>
+<div class="row justify-content-center" *ngIf="pdf">
+    <div class="col-lg-auto">
+        <div class="card rounded-25 mb-4">
+            <div class="card-body">
+                <div class="input-group mb-3">
+                    <input type="text" [(ngModel)]="stringToSearch" class="form-control" placeholder="Buscar">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" type="button" (click)="search()">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-center">
+                    <ngb-pagination [collectionSize]="10000" [(page)]="pdf.page" [maxSize]="5" [ellipses]="false">
+                        <ng-template ngbPaginationPrevious>
+                            <i class="fas fa-angle-left"></i>
+                        </ng-template>
+                        <ng-template ngbPaginationNext>
+                            <i class="fas fa-angle-right"></i>
+                        </ng-template>
+                        <ng-template ngbPaginationNumber let-p>
+                            {{ p }}
+                        </ng-template>
+                    </ngb-pagination>
+                </div>
+
+                <div class="input-group mb-4">
+                    <input type="text" [(ngModel)]="page" class="form-control" placeholder="Página">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" type="button" (click)="moveToPage()">
+                            <i class="fas fa-arrow-circle-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-center">
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-secondary" (click)="setSize((pdf.zoom - 0.25))">
+                            <i class="fas fa-search-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-secondary" (click)="setSize(size.number)"
+                            *ngFor="let size of sizes">{{ size.percent }}</button>
+                        <button type="button" class="btn btn-secondary" (click)="setSize((pdf.zoom + 0.25))">
+                            <i class="fas fa-search-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-8">
+        <pdf-viewer [src]="pdf.src" [(render-text)]="pdf.render_text" [(zoom)]="pdf.zoom"
+            [(autoresize)]="pdf.autoresize" [(show-all)]="pdf.show_all" [(show-borders)]="pdf.show_borders"
+            [(page)]="pdf.page" [original-size]="false"></pdf-viewer>
+    </div>
+</div>

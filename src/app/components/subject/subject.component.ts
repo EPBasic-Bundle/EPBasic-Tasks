@@ -136,7 +136,8 @@ export class SubjectComponent implements OnInit {
             name: '',
             subject_id: this.subject.id,
             pages_quantity: 0,
-            image: 'default.png'
+            image: 'default.png',
+            pdf_name: null
         });
     }
 

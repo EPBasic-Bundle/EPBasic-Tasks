@@ -20,7 +20,7 @@ export class HomeComponent implements OnInit {
 
     constructor(
         private apiService: ApiService
-    ) {}
+    ) { }
 
     ngOnInit() {
         this.timeNow();
@@ -42,7 +42,9 @@ export class HomeComponent implements OnInit {
                     const lastSubject = this.toMins(this.timetable.hours[this.timetable.hours.length - 1].hour_end);
 
                     if (lastSubject < this.toMins(this.dayHour)) {
-                        this.subjectsOfTomorrow = true;
+                        if (this.weekDay >= 0 && this.weekDay < 4) {
+                            this.subjectsOfTomorrow = true;
+                        }
 
                         this.getSubjectsOfDay(1);
                     } else {

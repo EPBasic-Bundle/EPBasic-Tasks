@@ -12,7 +12,11 @@
                     </button>
                     <div class="row">
                         <div class="col-lg-6 col-md-6 col-6 mb-4" *ngFor="let book of books">
-                            <div class="card rounded-25 mb-3 shadow-sm pointer">
+                            <div class="card rounded-25 mb-3 shadow-sm" *ngIf="book.pdf_name == null" container="body" placement="top" ngbTooltip="Este libro no tiene PDF asignado">
+                                <img [src]="'./assets/images/' + book.image" class="card-img-top rounded-top-25">
+                                <p class="card-text text-center m-1"> {{ book.name }}</p>
+                            </div>
+                            <div class="card rounded-25 mb-3 shadow-sm pointer" [routerLink]="['/book/', book.id]" *ngIf="book.pdf_name != null">
                                 <img [src]="'./assets/images/' + book.image" class="card-img-top rounded-top-25">
                                 <p class="card-text text-center m-1"> {{ book.name }}</p>
                             </div>

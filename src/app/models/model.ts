@@ -112,6 +112,7 @@ export class Book {
         public name: string,
         public pages_quantity: number,
         public image: string,
+        public pdf_name: string,
         public created_at?: string,
         public updated_at?: string,
     ) { }

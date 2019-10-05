@@ -44,7 +44,7 @@ const routes: Routes = [
         canActivate: [IdentityGuard]
     },
     {
-        path: 'books',
+        path: 'book/:id',
         component: BookComponent,
         canActivate: [IdentityGuard]
     },
