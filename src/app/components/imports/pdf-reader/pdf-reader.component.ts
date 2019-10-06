@@ -56,8 +56,10 @@ export class PdfReaderComponent implements OnInit {
     }
 
     moveToPage() {
-        if (+this.page < this.pdf.pages_quantity) {
-            this.pdf.page = (+this.page + 1);
+        const page = +this.page;
+
+        if (page < (this.pdf.pages_quantity  / 10)) {
+            this.pdf.page = (page + 1);
         }
     }
 
