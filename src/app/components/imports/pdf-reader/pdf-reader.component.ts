@@ -13,8 +13,6 @@ export class PdfReaderComponent implements OnInit {
     page;
     stringToSearch;
 
-    loading;
-
     sizes = [
         {
             number: 0.25,
@@ -58,7 +56,7 @@ export class PdfReaderComponent implements OnInit {
     moveToPage() {
         const page = +this.page;
 
-        if (page < (this.pdf.pages_quantity  / 10)) {
+        if (page < (this.pdf.pages_quantity / 10)) {
             this.pdf.page = (page + 1);
         }
     }
@@ -68,15 +66,11 @@ export class PdfReaderComponent implements OnInit {
     }
 
     savePage() {
-        this.loading = true;
         this.apiService.get('pdf/last-seen-page/' + this.pdf.book_id + '/' + this.pdf.page).subscribe(
             resp => {
-                this.loading = false;
                 if (resp.status === 'success') {
                     this.lastPageSave = resp.book.last_seen_page;
                 }
-            }, (error) => {
-                this.loading = false;
             }
         );
     }

@@ -5,6 +5,7 @@ import { ApiService } from '../../services/api.service';
 import { Subject, Unity, Book, Task } from '../../models/model';
 import { environment } from '../../../environments/environment';
 import { UploadOutput, UploadInput, UploadFile, humanizeBytes, UploaderOptions } from 'ngx-uploader';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
     selector: 'app-subject',
@@ -30,8 +31,6 @@ export class SubjectComponent implements OnInit {
     sTaskIdx: number;
 
     subjectId;
-    // loading: [boolean];
-    loading: boolean;
 
     options: UploaderOptions;
     formData: FormData;
@@ -45,7 +44,8 @@ export class SubjectComponent implements OnInit {
     constructor(
         private apiService: ApiService,
         private modalService: NgbModal,
-        private route: ActivatedRoute
+        private route: ActivatedRoute,
+        public toastService: ToastService
     ) {
         this.options = { concurrency: 1, maxUploads: 3 };
         this.files = []; // local uploading files array
@@ -175,43 +175,34 @@ export class SubjectComponent implements OnInit {
     /*****************/
 
     storeBook(book, index) {
-        this.loading = true;
         this.apiService.post('book', book).subscribe(
             resp => {
-                this.loading = false;
                 if (resp.status === 'success') {
                     this.books[index] = resp.book;
+                    this.showToast('Libro añadido correctamente', 'success');
                 }
-            }, (error) => {
-                this.loading = false;
             }
         );
     }
 
     updateBook(book, index) {
-        this.loading = true;
         this.apiService.put('book/' + book.id, book).subscribe(
             resp => {
-                this.loading = false;
                 if (resp.status === 'success') {
                     this.books[index] = resp.book;
+                    this.showToast('Libro actualizado correctamente', 'success');
                 }
-            }, (error) => {
-                this.loading = false;
             }
         );
     }
 
     deleteBook(book_id, index) {
-        this.loading = true;
         this.apiService.delete('book/' + book_id).subscribe(
             resp => {
-                this.loading = false;
                 if (resp.status === 'success') {
                     this.books.splice(index, 1);
+                    this.showToast('Libro eliminado correctamente', 'success');
                 }
-            }, (error) => {
-                this.loading = false;
             }
         );
     }
@@ -308,29 +299,23 @@ export class SubjectComponent implements OnInit {
     /*****************/
 
     storeUnity(unity, index) {
-        this.loading = true;
         this.apiService.post('unity', unity).subscribe(
             resp => {
-                this.loading = false;
                 if (resp.status === 'success') {
                     this.units[index] = resp.unity;
+                    this.showToast('Unidad añadida correctamente', 'success');
                 }
-            }, (error) => {
-                this.loading = false;
             }
         );
     }
 
     updateUnity(unity, index) {
-        this.loading = true;
         this.apiService.put('unity/' + unity.id, unity).subscribe(
             resp => {
-                this.loading = false;
                 if (resp.status === 'success') {
                     this.units[index] = resp.unity;
+                    this.showToast('Unidad actualizada correctamente', 'success');
                 }
-            }, (error) => {
-                this.loading = false;
             }
         );
     }
@@ -340,15 +325,12 @@ export class SubjectComponent implements OnInit {
             this.sUnityIdx = null;
         }
 
-        this.loading = true;
         this.apiService.delete('unity/' + unity_id).subscribe(
             resp => {
-                this.loading = false;
                 if (resp.status === 'success') {
                     this.units.splice(index, 1);
+                    this.showToast('Unidad eliminada correctamente', 'success');
                 }
-            }, (error) => {
-                this.loading = false;
             }
         );
     }
@@ -439,15 +421,12 @@ export class SubjectComponent implements OnInit {
     /**************/
 
     storeTask(task, index) {
-        this.loading = true;
         this.apiService.post('task', task).subscribe(
             resp => {
-                this.loading = false;
                 if (resp.status === 'success') {
                     this.units[this.sUnityIdx].tasks[index] = resp.task;
+                    this.showToast('Tarea añadida correctamente', 'success');
                 }
-            }, (error) => {
-                this.loading = false;
             }
         );
     }
@@ -455,29 +434,23 @@ export class SubjectComponent implements OnInit {
     updateTask(task, index) {
         task.pages = [];
 
-        this.loading = true;
         this.apiService.put('task/' + task.id, task).subscribe(
             resp => {
-                this.loading = false;
                 if (resp.status === 'success') {
                     this.units[this.sUnityIdx].tasks[index] = resp.task;
+                    this.showToast('Tarea actualizada correctamente', 'success');
                 }
-            }, (error) => {
-                this.loading = false;
             }
         );
     }
 
     deleteTask(task_id, index) {
-        this.loading = true;
         this.apiService.delete('task/' + task_id).subscribe(
             resp => {
-                this.loading = false;
                 if (resp.status === 'success') {
                     this.units[this.sUnityIdx].tasks.splice(index, 1);
+                    this.showToast('Tarea eliminada correctamente', 'success');
                 }
-            }, (error) => {
-                this.loading = false;
             }
         );
     }
@@ -520,5 +493,18 @@ export class SubjectComponent implements OnInit {
 
     findBook(book_id) {
         return this.books.find(book => book.id === book_id);
+    }
+
+    showToast(text, type) {
+        switch (type) {
+            case 'success': {
+                this.toastService.show(text, { classname: 'bg-dark text-light', delay: 5000 });
+                break;
+            }
+            case 'danger': {
+                this.toastService.show(text, { classname: 'bg-danger text-light', delay: 5000 });
+                break;
+            }
+        }
     }
 }

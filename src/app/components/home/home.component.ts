@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../services/api.service';
-import { Subject, Timetable, Task } from '../../models/model';
+import { Subject, Timetable } from '../../models/model';
 
 @Component({
     selector: 'app-home',
@@ -8,7 +8,6 @@ import { Subject, Timetable, Task } from '../../models/model';
     styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-    loading: boolean;
     weekDays = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes'];
     timetable: Timetable;
     subjects: Subject[] = [];

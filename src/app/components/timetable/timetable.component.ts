@@ -9,8 +9,6 @@ import { ApiService } from '../../services/api.service';
     styleUrls: ['./timetable.component.scss']
 })
 export class TimetableComponent implements OnInit {
-    loading: boolean;
-
     rows: number;
     rowIndex: number;
 
@@ -178,32 +176,22 @@ export class TimetableComponent implements OnInit {
     /*****************/
 
     storeTimetable() {
-        this.loading = true;
         this.apiService.post('timetable', this.timetable).subscribe(
             resp => {
-                this.loading = false;
-
                 if (resp.status === 'success') {
                     this.getTimetable();
                 } else {
                 }
-            }, (error) => {
-                this.loading = false;
             }
         );
     }
 
     deleteTimetable() {
-        this.loading = true;
         this.apiService.delete('timetable').subscribe(
             resp => {
-                this.loading = false;
-
                 if (resp.status === 'success') {
                     this.timetable = null;
                 }
-            }, (error) => {
-                this.loading = false;
             }
         );
     }
@@ -245,43 +233,31 @@ export class TimetableComponent implements OnInit {
     /*****************/
 
     storeSubject(subject, index) {
-        this.loading = true;
         this.apiService.post('subject', subject).subscribe(
             resp => {
-                this.loading = false;
                 if (resp.status === 'success') {
                     this.subjects[index] = resp.subject;
                 }
-            }, (error) => {
-                this.loading = false;
             }
         );
     }
 
     updateSubject(subject, index) {
-        this.loading = true;
         this.apiService.put('subject/' + subject.id, subject).subscribe(
             resp => {
-                this.loading = false;
                 if (resp.status === 'success') {
                     this.subjects[index] = resp.subject;
                 }
-            }, (error) => {
-                this.loading = false;
             }
         );
     }
 
     deleteSubject(subject_id, index) {
-        this.loading = true;
         this.apiService.delete('subject/' + subject_id).subscribe(
             resp => {
-                this.loading = false;
                 if (resp.status === 'success') {
                     this.subjects.splice(index, 1);
                 }
-            }, (error) => {
-                this.loading = false;
             }
         );
     }
