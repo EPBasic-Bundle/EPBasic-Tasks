@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Subject, Timetable } from '../../models/model';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ApiService } from '../../services/api.service';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
     selector: 'app-timetable',
@@ -37,7 +38,8 @@ export class TimetableComponent implements OnInit {
 
     constructor(
         private apiService: ApiService,
-        private modalService: NgbModal
+        private modalService: NgbModal,
+        public toastService: ToastService
     ) { }
 
     ngOnInit() {
@@ -180,7 +182,7 @@ export class TimetableComponent implements OnInit {
             resp => {
                 if (resp.status === 'success') {
                     this.getTimetable();
-                } else {
+                    this.showToast('Horario creado correctamente', 'success');
                 }
             }
         );
@@ -191,6 +193,7 @@ export class TimetableComponent implements OnInit {
             resp => {
                 if (resp.status === 'success') {
                     this.timetable = null;
+                    this.showToast('Horario delete correctamente', 'success');
                 }
             }
         );
@@ -201,14 +204,13 @@ export class TimetableComponent implements OnInit {
     /***********/
 
     createSubject() {
-        this.subjects.push(
-            {
-                id: 0,
-                user_id: null,
-                name: '',
-                primary_color: '#fff',
-                secondary_color: '#fff'
-            });
+        this.subjects.push({
+            id: 0,
+            user_id: null,
+            name: '',
+            primary_color: '#fff',
+            secondary_color: '#fff'
+        });
     }
 
     setColor(type: string, i: number, color: string) {
@@ -237,6 +239,7 @@ export class TimetableComponent implements OnInit {
             resp => {
                 if (resp.status === 'success') {
                     this.subjects[index] = resp.subject;
+                    this.showToast('Asignatura creada correctamente', 'success');
                 }
             }
         );
@@ -247,6 +250,7 @@ export class TimetableComponent implements OnInit {
             resp => {
                 if (resp.status === 'success') {
                     this.subjects[index] = resp.subject;
+                    this.showToast('Asignatura actualizada correctamente', 'success');
                 }
             }
         );
@@ -257,6 +261,7 @@ export class TimetableComponent implements OnInit {
             resp => {
                 if (resp.status === 'success') {
                     this.subjects.splice(index, 1);
+                    this.showToast('Asignatura eliminada correctamente', 'success');
                 }
             }
         );
@@ -283,6 +288,23 @@ export class TimetableComponent implements OnInit {
             return true;
         } else {
             return false;
+        }
+    }
+
+    showToast(text, type) {
+        switch (type) {
+            case 'success': {
+                this.toastService.show(text, { classname: 'bg-dark text-light', delay: 5000 });
+                break;
+            }
+            case 'warning': {
+                this.toastService.show(text, { classname: 'bg-warning text-light', delay: 5000 });
+                break;
+            }
+            case 'danger': {
+                this.toastService.show(text, { classname: 'bg-danger text-light', delay: 5000 });
+                break;
+            }
         }
     }
 }

@@ -25,6 +25,7 @@ export class SubjectComponent implements OnInit {
     imagePickerModal;
     exercisesModal;
     pdfUploaderModal;
+    unityDeleteModal;
 
     sUnityIdx: number;
     sBookIdx: number;
@@ -330,6 +331,10 @@ export class SubjectComponent implements OnInit {
                 if (resp.status === 'success') {
                     this.units.splice(index, 1);
                     this.showToast('Unidad eliminada correctamente', 'success');
+
+                    if (this.unityDeleteModal) {
+                        this.unityDeleteModal.close();
+                    }
                 }
             }
         );
@@ -479,12 +484,21 @@ export class SubjectComponent implements OnInit {
         this.exercisesModal = this.modalService.open(content, { centered: true });
     }
 
-    closeExercisesModal() {
-        this.exercisesModal.close();
+    openUnityDeleteModal(content, index) {
+        this.sUnityIdx = index;
+        this.unityDeleteModal = this.modalService.open(content, { size: 'sm', centered: true });
+    }
+
+    closeUnityDeleteModal() {
+        this.unityDeleteModal.close();
     }
 
     closePDFUploaderModal() {
         this.pdfUploaderModal.close();
+    }
+
+    closeExercisesModal() {
+        this.exercisesModal.close();
     }
 
     /*********/
@@ -499,6 +513,10 @@ export class SubjectComponent implements OnInit {
         switch (type) {
             case 'success': {
                 this.toastService.show(text, { classname: 'bg-dark text-light', delay: 5000 });
+                break;
+            }
+            case 'warning': {
+                this.toastService.show(text, { classname: 'bg-warning text-light', delay: 5000 });
                 break;
             }
             case 'danger': {

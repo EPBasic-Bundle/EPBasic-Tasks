@@ -1,18 +1,50 @@
-<div class="row justify-content-center" *ngIf="pdf">
-    <div class="col-lg-auto">
-        <div class="card rounded-25 mb-4">
-            <div class="card-body">
-                <div class="input-group mb-3">
-                    <input type="text" [(ngModel)]="stringToSearch" class="form-control" placeholder="Buscar">
-                    <div class="input-group-append">
-                        <button class="btn btn-primary" type="button" (click)="search()">
-                            <i class="fas fa-search"></i>
-                        </button>
+<div class="row" *ngIf="pdf">
+    <div class="col-lg-2 col-md-12 bg-dark m-0" [class.order-2]="menuSide == 2" [class.order-1]="menuSide == 1">
+        <div class="d-flex justify-content-center sticky">
+            <div class="mt-4 mb-4 col-lg-12 col-md-6">
+                <div class="d-flex justify-content-between">
+                    <div class="input-group mr-2">
+                        <input class="col-8" type="text" [(ngModel)]="stringToSearch" class="form-control"
+                            placeholder="Buscar">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="button" (click)="search()">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-sm btn-secondary rounded-left-25"
+                            (click)="changeMenuSide(1)"><i class="fas fa-arrow-circle-left"></i></button>
+                        <button type="button" class="btn btn-sm btn-secondary rounded-right-25"
+                            (click)="changeMenuSide(2)"><i class="fas fa-arrow-circle-right"></i></button>
                     </div>
                 </div>
-
+                <hr class="bg-light">
+                <div class="d-flex">
+                    <div class="input-group mr-2">
+                        <input type="text" [(ngModel)]="page" class="form-control" placeholder="Página">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="button" (click)="moveToPage()">
+                                <i class="fas fa-arrow-circle-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-secondary rounded-left-25"
+                                (click)="setSize((pdf.zoom - 0.25))">
+                                <i class="fas fa-search-minus"></i>
+                            </button>
+                            <button type="button" class="btn btn-secondary rounded-right-25"
+                                (click)="setSize((pdf.zoom + 0.25))">
+                                <i class="fas fa-search-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <hr class="bg-light">
                 <div class="d-flex justify-content-center">
-                    <ngb-pagination [collectionSize]="pdf.pages_quantity" [(page)]="pdf.page" [maxSize]="5"
+                    <ngb-pagination [collectionSize]="pdf.pages_quantity" [(page)]="pdf.page" [maxSize]="4"
                         [ellipses]="false">
                         <ng-template ngbPaginationPrevious>
                             <i class="fas fa-angle-left"></i>
@@ -25,42 +57,47 @@
                         </ng-template>
                     </ngb-pagination>
                 </div>
+                <hr class="bg-light mt-0">
 
-                <div class="input-group mb-4">
-                    <input type="text" [(ngModel)]="page" class="form-control" placeholder="Página">
-                    <div class="input-group-append">
-                        <button class="btn btn-primary" type="button" (click)="moveToPage()">
-                            <i class="fas fa-arrow-circle-right"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="d-flex justify-content-center mb-4">
+                <div class="d-flex justify-content-center">
                     <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-secondary" (click)="setSize((pdf.zoom - 0.25))">
-                            <i class="fas fa-search-minus"></i>
+                        <button class="btn btn-primary rounded-left-25" *ngIf="lastPageSave == pdf.page">
+                            <i class="fas fa-save ml-1"></i>
                         </button>
-                        <button type="button" class="btn btn-secondary" (click)="setSize(size.number)"
-                            *ngFor="let size of sizes">{{ size.percent }}</button>
-                        <button type="button" class="btn btn-secondary" (click)="setSize((pdf.zoom + 0.25))">
-                            <i class="fas fa-search-plus"></i>
+                        <button class="btn btn-primary rounded-left-25" (click)="savePage()" *ngIf="lastPageSave != pdf.page"
+                            container="body" placement="top"
+                            ngbTooltip="La página no está guardada, guardala para volver a la página actual la proxima vez que te conectes">
+                            <i class="far fa-save ml-1"></i>
+                        </button>
+
+                        <button class="btn btn-primary" container="body"
+                            placement="top" ngbTooltip="Añadir página" disabled>
+                            <i class="fas fa-plus"></i>
+                        </button>
+
+                        <button class="btn btn-primary rounded-right-25" (click)="markPagesFrontend()" container="body"
+                            placement="top" ngbTooltip="Marca la página">
+                            <i class="fas fa-directions ml-1"></i>
                         </button>
                     </div>
                 </div>
 
-                <button class="btn btn-primary btn-block" *ngIf="lastPageSave == pdf.page">
-                    Guardada
-                    <i class="fas fa-save ml-1"></i>
-                </button>
-                <button class="btn btn-primary btn-block" (click)="savePage()" *ngIf="lastPageSave != pdf.page" container="body" placement="top"
-                    ngbTooltip="La página no está guardada, guardala para volver a la página actual la proxima vez que te conectes">
-                    Guardar
-                    <i class="far fa-save ml-1"></i>
-                </button>
+                <div class="mt-4" *ngIf="markedPages && markedPages[0]">
+                    <div class="card rounded-25 mt-2" *ngFor="let markedPage of markedPages; let e=index;">
+                        <div class="card-body d-flex justify-content-between p-0">
+                            <span class="mt-1 mb-1 ml-3">Página {{ markedPage - 1 }}</span>
+                            <button class="btn btn-sm btn-primary rounded-right-25 no-rounded-left"
+                                (click)="changePage(markedPage)">
+                                <i class="fas fa-book mr-2"></i>
+                                <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    <div class="col-lg-8">
+    <div class="col-lg-10 col-md-12 mt-4 mb-5" [class.order-2]="menuSide == 1" [class.order-1]="menuSide == 2">
         <pdf-viewer [src]="pdf.src" [(render-text)]="pdf.render_text" [(zoom)]="pdf.zoom"
             [(autoresize)]="pdf.autoresize" [(show-all)]="pdf.show_all" [(show-borders)]="pdf.show_borders"
             [(page)]="pdf.page" [original-size]="false"></pdf-viewer>

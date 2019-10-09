@@ -1,4 +1,4 @@
-<div class="container-fluid" *ngIf="subject" data-aos="zoom-in">
+<div class="container-fluid mt-4" *ngIf="subject" data-aos="zoom-in">
     <div class="row justify-content-center">
 
         <div class="col-lg-2 col-md-4 col-12 mb-4">
@@ -119,11 +119,11 @@
                                     </div>
                                     <div class="col-lg-4">
                                         <div class="d-flex justify-content-between">
-                                            <h3>Examenes</h3>
+                                            <h3>Exámenes</h3>
                                             <button class="btn btn-primary btn-sm mb-3"
                                                 (click)="openModal(examsModal, 'lg', false)">
                                                 <i class="fas fa-check-double"></i>
-                                                Examenes
+                                                Exámenes
                                             </button>
                                         </div>
                                         <hr class="mt-0">
@@ -246,7 +246,11 @@
                             <button class="btn btn-secondary rounded-25 mr-2" (click)="updateUnity(unity, i)">
                                 <i class="fas fa-pen"></i>
                             </button>
-                            <button class="btn btn-danger rounded-25" (click)="deleteUnity(unity.id, i)">
+
+                            <button class="btn btn-danger rounded-25" (click)="openUnityDeleteModal(unityDeleteModal, i)" *ngIf="unity.tasks && unity.tasks[0]">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                            <button class="btn btn-danger rounded-25" (click)="deleteUnity(unity.id, i)" *ngIf="!unity.tasks || !unity.tasks[0]">
                                 <i class="fa fa-trash"></i>
                             </button>
                         </ng-container>
@@ -326,7 +330,7 @@
 
 <ng-template #examsModal let-close="close">
     <div class="modal-header">
-        <h5 class="modal-title">Añadir examenes</h5>
+        <h5 class="modal-title">Añadir exámenes</h5>
         <button type="button" class="close" (click)="modal.close()">
             <span aria-hidden="true">&times;</span>
         </button>
@@ -459,6 +463,24 @@
                     </button>
                 </div>
             </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #unityDeleteModal let-close="close">
+    <div class="modal-header">
+        <h5 class="modal-title">Eliminar unidad</h5>
+        <button type="button" class="close" (click)="closeUnityDeleteModal()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <span class="small">Al eliminar esta unidad se eliminarán todas las tareas, exámenes y proyectos de esta.</span>
+        <hr>
+        <div class="d-flex justify-content-center">
+            <button class="btn btn-danger rounded-25" (click)="deleteUnity(this.units[sUnityIdx].id)">
+                <i class="fa fa-trash mr-1"></i> Confirmar
+            </button>
         </div>
     </div>
 </ng-template>

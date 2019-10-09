@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
-import { PdfViewerComponent } from 'ng2-pdf-viewer';
+import { PdfViewerComponent, PDFProgressData, PDFDocumentProxy } from 'ng2-pdf-viewer';
 import { ApiService } from '../../../services/api.service';
 
 @Component({
@@ -12,27 +12,11 @@ export class PdfReaderComponent implements OnInit {
 
     page;
     stringToSearch;
-
-    sizes = [
-        {
-            number: 0.25,
-            percent: 25
-        },
-        {
-            number: 0.5,
-            percent: 50
-        },
-        {
-            number: 0.75,
-            percent: 75
-        },
-        {
-            number: 1,
-            percent: 100
-        },
-    ];
+    markedPages;
 
     lastPageSave: number;
+
+    menuSide = 1;
 
     @ViewChild(PdfViewerComponent, null) private pdfComponent: PdfViewerComponent;
 
@@ -61,6 +45,10 @@ export class PdfReaderComponent implements OnInit {
         }
     }
 
+    changePage(page) {
+        this.pdf.page = page;
+    }
+
     setSize(size) {
         this.pdf.zoom = size;
     }
@@ -73,5 +61,19 @@ export class PdfReaderComponent implements OnInit {
                 }
             }
         );
+    }
+
+    markPagesFrontend() {
+        if (!this.markedPages || !this.markedPages[0]) {
+            this.markedPages = [this.pdf.page];
+        } else {
+            if (this.markedPages.findIndex(page => page === this.pdf.page) < 0) {
+                this.markedPages.unshift(this.pdf.page);
+            }
+        }
+    }
+
+    changeMenuSide(side) {
+        this.menuSide = side;
     }
 }
