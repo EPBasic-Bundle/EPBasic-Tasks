@@ -478,7 +478,7 @@
         <span class="small">Al eliminar esta unidad se eliminarán todas las tareas, exámenes y proyectos de esta.</span>
         <hr>
         <div class="d-flex justify-content-center">
-            <button class="btn btn-danger rounded-25" (click)="deleteUnity(this.units[sUnityIdx].id)">
+            <button class="btn btn-danger rounded-25" (click)="deleteUnity(this.units[sUnityIdx].id, sUnityIdx)">
                 <i class="fa fa-trash mr-1"></i> Confirmar
             </button>
         </div>

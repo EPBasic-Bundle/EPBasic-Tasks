@@ -36,7 +36,7 @@
     </div>
 
     <div class="form-container sign-in-container">
-        <form #loginForm="ngForm" (ngSubmit)="onSubmitLogin(loginForm)">
+        <form #loginForm="ngForm" (ngSubmit)="onSubmitLogin()">
 
             <ng-container *ngFor="let blockedUser of blockedUsers">
                 <div class="card rounded-25 pointer mb-3" (click)="openUserUnblockModal(userUnblockModal, blockedUser.sub)">
