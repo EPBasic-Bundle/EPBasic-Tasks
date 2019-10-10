@@ -39,7 +39,7 @@
         <form #loginForm="ngForm" (ngSubmit)="onSubmitLogin(loginForm)">
 
             <ng-container *ngFor="let blockedUser of blockedUsers">
-                <div class="card rounded-25 pointer" (click)="openUserUnblockModal(userUnblockModal, blockedUser.sub)">
+                <div class="card rounded-25 pointer mb-3" (click)="openUserUnblockModal(userUnblockModal, blockedUser.sub)">
                     <div class="card-body pr-auto pt-1 pb-1 pl-1 d-flex">
                         <img src="./assets/images/user-image.png" class="avatar-sm" alt="">
                         <h2 class="ml-2 mt-2">

@@ -23,10 +23,6 @@ const routes: Routes = [
         component: AuthComponent
     },
     {
-        path: 'unblock',
-        component: AuthComponent
-    },
-    {
         path: 'home',
         component: HomeComponent,
         canActivate: [IdentityGuard]

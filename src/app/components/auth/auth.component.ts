@@ -21,8 +21,8 @@ export class AuthComponent implements OnInit {
     loading: boolean;
     blockedUsers;
     userUnblockModal;
-    pinCode;
-    sBlockedUserId;
+    pinCode: number;
+    sBlockedUserId: number;
 
     constructor(
         private apiService: ApiService,

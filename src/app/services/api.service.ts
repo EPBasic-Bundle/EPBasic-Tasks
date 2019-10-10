@@ -30,21 +30,48 @@ export class ApiService {
         let tokens = JSON.parse(localStorage.getItem('tokens'));
         let identities = JSON.parse(localStorage.getItem('identities'));
         let userIdx;
+        let set: boolean;
 
         if (tokens && tokens[0] && identities && identities[0]) {
-            tokens.push(resp.token);
-            identities.push(resp.identity);
+            const identityIndex = identities.findIndex(identity => identity.sub === resp.identity.sub);
 
-            userIdx = tokens.length - 1;
+            if (identityIndex < 0 || identityIndex == null) {
+                tokens.push(resp.token);
+                identities.push(resp.identity);
+    
+                userIdx = tokens.length - 1;
+                set = true;
+            }
         } else {
             tokens = [resp.token];
             identities = [resp.identity];
             userIdx = 0;
+            set = true;
         }
 
+        if (set === true) {
+            localStorage.setItem('identities', JSON.stringify(identities));
+            localStorage.setItem('tokens', JSON.stringify(tokens));
+            localStorage.setItem('userIdx', userIdx);
+        }
+    }
+
+    removeUserOfStorage(userIdx) {
+        const tokens = JSON.parse(localStorage.getItem('tokens'));
+        const identities = JSON.parse(localStorage.getItem('identities'));
+
+        identities.splice(userIdx, 1);
+        tokens.splice(userIdx, 1);
+
+        if (userIdx === 0) {
+            userIdx = 0;
+        } else {
+            userIdx = --userIdx;
+        }
+      
         localStorage.setItem('identities', JSON.stringify(identities));
         localStorage.setItem('tokens', JSON.stringify(tokens));
-        localStorage.setItem('userIdx', userIdx);
+        localStorage.setItem('userIdx', JSON.stringify(userIdx));
     }
 
     getUserIdx() {

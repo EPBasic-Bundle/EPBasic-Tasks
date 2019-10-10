@@ -55,8 +55,7 @@ export class AppComponent implements OnInit, DoCheck {
     deleteUser(userIdx) {
         this.loguedUsers.splice(userIdx, 1);
 
-        this.apiService.identity.splice(userIdx, 1);
-        this.apiService.token.splice(userIdx, 1);
+        this.apiService.removeUserOfStorage(userIdx);
     }
 
     goToAddAccountPage() {
