@@ -23,6 +23,9 @@
                 </ng-container>
             </div>
             <div ngbDropdown class="d-inline-block" *ngIf="identity">
+                <span class="text-light mr-3 font-weight-bold">
+                    {{ identity.name + ' ' + identity.surname }}
+                </span>
                 <a class="text-light pointer" id="dropdownBasic1" ngbDropdownToggle>
                     <img src="./assets/images/user-image.png" class="avatar-sm mr-1" alt="">
                 </a>
@@ -30,6 +33,13 @@
                     <a class="dropdown-item" routerLink="/settings" ngbDropdownItem>
                         <i class="fas fa-cog"></i> Ajustes
                     </a>
+                    <a class="dropdown-item pointer" (click)="openUserChangeModal(userChangeModal)" ngbDropdownItem>
+                        <i class="far fa-user-circle"></i> Cuentas
+                    </a>
+                    <a class="dropdown-item pointer" (click)="blockUser()" ngbDropdownItem>
+                        <i class="fas fa-lock"></i> Bloquear cuenta
+                    </a>
+
                     <a class="dropdown-item pointer" (click)="logout()" ngbDropdownItem>
                         <i class="fas fa-sign-out-alt"></i> Salir
                     </a>
@@ -56,3 +66,54 @@
         </div>
     </div>
 </footer>
+
+<ng-template #userChangeModal let-close="close">
+    <div class="modal-header">
+        <h5 class="modal-title">Cuentas</h5>
+        <button type="button" class="close" (click)="closeUserChangeModal()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <ng-container *ngFor="let loguedUser of loguedUsers; let i=index">
+            <div class="card rounded-25 mb-3 bg-dark text-light default-cursor" *ngIf="loguedUser.sub == identity.sub">
+                <div class="card-body p-1 d-flex">
+                    <img src="./assets/images/user-image.png" class="avatar-sm" alt="">
+                    <h2 class="ml-2 mt-2">
+                        {{ loguedUser.name + ' ' + loguedUser.surname }}
+                    </h2>
+                </div>
+            </div>
+
+            <div class="card rounded-25 mb-3 pointer" (click)="changeUser(i)"
+            *ngIf="deleteUsers == false && loguedUser.sub != identity.sub">
+                <div class="card-body p-1 d-flex">
+                    <img src="./assets/images/user-image.png" class="avatar-sm" alt="">
+                    <h2 class="ml-2 mt-2">
+                        {{ loguedUser.name + ' ' + loguedUser.surname }}
+                    </h2>
+                </div>
+            </div>
+
+            <div class="card rounded-25 mb-3 pointer bg-danger text-light"
+            *ngIf="deleteUsers == true && loguedUser.sub != identity.sub" (click)="deleteUser(i)">
+                <div class="card-body p-1 d-flex">
+                    <img src="./assets/images/user-image.png" class="avatar-sm" alt="">
+                    <h2 class="ml-2 mt-2">
+                        {{ loguedUser.name + ' ' + loguedUser.surname }}
+                    </h2>
+                </div>
+            </div>
+        </ng-container>
+
+        <button class="btn btn-primary btn-block" (click)="goToAddAccountPage()">
+            <i class="fas fa-user-plus"></i>
+        </button>
+        <button class="btn btn-danger btn-block" (click)="enableDeleteUsers(1)" *ngIf="deleteUsers == false">
+            <i class="fas fa-user-slash"></i>
+        </button>
+        <button class="btn btn-danger btn-block" (click)="enableDeleteUsers(0)" *ngIf="deleteUsers == true">
+            <i class="fas fa-user-slash"></i>
+        </button>
+    </div>
+</ng-template>

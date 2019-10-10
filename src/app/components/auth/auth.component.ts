@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { User } from '../../models/model';
 import { ApiService } from '../../services/api.service';
 import { Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 declare const auth: any;
 
@@ -18,40 +19,48 @@ export class AuthComponent implements OnInit {
     message: string;
     status: string;
     loading: boolean;
+    blockedUsers;
+    userUnblockModal;
+    pinCode;
+    sBlockedUserId;
 
     constructor(
         private apiService: ApiService,
         private router: Router,
-        ) {
+        private modalService: NgbModal,
+    ) {
         this.user = new User(null, null, null, null, null, 'ROLE_USER', null);
-     }
+    }
 
     ngOnInit() {
-        this.token = this.apiService.getToken();
-        if (this.token !== null) {
-            this.router.navigate(['home']);
+        if (this.router.url !== '/add-account') {
+            this.token = this.apiService.getToken();
+            if (this.token !== null) {
+                this.router.navigate(['home']);
+            }
         }
+
         auth();
+        this.getBlockedUsers();
+    }
+
+    getBlockedUsers() {
+        this.blockedUsers = this.apiService.getBlockedUsers();
     }
 
     // Login
-    onSubmitLogin(form) {
+    onSubmitLogin() {
         this.loading = true;
+
         this.apiService.post('login', this.user).subscribe(
             resp => {
                 this.loading = false;
                 if (resp.status === 'success') {
-                    localStorage.setItem('identity', JSON.stringify(resp.identity));
-                    localStorage.setItem('token', JSON.stringify(resp.token));
-
-                    this.apiService.token = resp.token;
+                    this.apiService.setStorage(resp);
 
                     this.router.navigate(['home']);
-                } else {
                 }
-            }, (error) => {
-                this.loading = false;
-            }
+            }, () => this.loading = false
         );
     }
 
@@ -59,11 +68,40 @@ export class AuthComponent implements OnInit {
     onSubmitRegister(form) {
         this.loading = true;
         this.apiService.post('register', this.user).subscribe(
-            resp => {
+            () => {
                 this.loading = false;
                 form.reset();
             }, () => this.loading = false
         );
     }
 
+    //Desbloquear usuario
+    unBlockUser() {
+        this.apiService.get('user/pinCode/' + this.sBlockedUserId + '/' + +this.pinCode).subscribe(
+            (resp) => {
+                if (resp.status === 'success') {
+                    this.apiService.setStorage(resp);
+
+                    this.apiService.deleteBlockUser(this.sBlockedUserId);
+
+                    this.closeUserUnblockModal();
+
+                    this.router.navigate(['home']);
+                }
+            }
+        );
+    }
+
+    /**********/
+    /* MODALS */
+    /**********/
+
+    openUserUnblockModal(content, id) {
+        this.sBlockedUserId = id;
+        this.userUnblockModal = this.modalService.open(content, { size: 'sm', centered: true });
+    }
+
+    closeUserUnblockModal() {
+        this.userUnblockModal.close();
+    }
 }

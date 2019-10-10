@@ -22,6 +22,89 @@ export class ApiService {
         this.getIdentity();
     }
 
+    /********/
+    /* AUTH */
+    /********/
+
+    setStorage(resp) {
+        let tokens = JSON.parse(localStorage.getItem('tokens'));
+        let identities = JSON.parse(localStorage.getItem('identities'));
+        let userIdx;
+
+        if (tokens && tokens[0] && identities && identities[0]) {
+            tokens.push(resp.token);
+            identities.push(resp.identity);
+
+            userIdx = tokens.length - 1;
+        } else {
+            tokens = [resp.token];
+            identities = [resp.identity];
+            userIdx = 0;
+        }
+
+        localStorage.setItem('identities', JSON.stringify(identities));
+        localStorage.setItem('tokens', JSON.stringify(tokens));
+        localStorage.setItem('userIdx', userIdx);
+    }
+
+    getUserIdx() {
+        const userIdx = JSON.parse(localStorage.getItem('userIdx'));
+
+        if (userIdx != null) {
+            return JSON.parse(localStorage.getItem('userIdx'));
+        }
+
+        return 0;
+    }
+
+    getIdentity() {
+        const identities = JSON.parse(localStorage.getItem('identities'));
+
+        if (identities && identities !== 'undefined') {
+            this.identity = identities[this.getUserIdx()];
+        } else {
+            this.identity = null;
+        }
+
+        return this.identity;
+    }
+
+    getLoguedUsers() {
+        let loguedUsers = JSON.parse(localStorage.getItem('identities'));
+
+        if (!loguedUsers || !loguedUsers[0]) {
+            loguedUsers = null;
+        }
+
+        return loguedUsers;
+    }
+
+    getBlockedUsers() {
+        let blockedUsers = JSON.parse(localStorage.getItem('blockedUsers'));
+
+        if (!blockedUsers || !blockedUsers[0]) {
+            blockedUsers = null;
+        }
+
+        return blockedUsers;
+    }
+
+    getToken() {
+        const tokens = JSON.parse(localStorage.getItem('tokens'));
+
+        if (tokens && tokens !== 'undefined') {
+            this.token = tokens[this.getUserIdx()];
+        } else {
+            this.token = null;
+        }
+
+        return this.token;
+    }
+
+    /********/
+    /* CRUD */
+    /********/
+
     get(url): Observable<any> {
         let headers;
 
@@ -44,6 +127,10 @@ export class ApiService {
 
             return this.http.get(this.baseURL + url, { responseType: 'blob', headers });
         }
+    }
+
+    external(url): Observable<any> {
+        return this.http.get(url);
     }
 
     post(url, params): Observable<any> {
@@ -81,39 +168,60 @@ export class ApiService {
         }
     }
 
-    getIdentity() {
-        const identity = JSON.parse(localStorage.getItem('identity'));
-        if (identity && identity !== 'undefined') {
-            this.identity = identity;
+    /**********/
+    /* LOGOUT */
+    /**********/
+
+    blockUser() {
+        let userIdx = this.getUserIdx();
+        const tokens = JSON.parse(localStorage.getItem('tokens'));
+        const identities = JSON.parse(localStorage.getItem('identities'));
+
+        let blockedUsers = JSON.parse(localStorage.getItem('blockedUsers'));
+        const identity = this.getIdentity();
+
+        if (blockedUsers && blockedUsers[0]) {
+            blockedUsers.push(identity);
         } else {
-            this.identity = null;
+            blockedUsers = [identity];
         }
 
-        return this.identity;
+        localStorage.setItem('blockedUsers', JSON.stringify(blockedUsers));
+
+        tokens.splice(userIdx, 1);
+        identities.splice(userIdx, 1);
+
+        if (userIdx === 0) {
+            userIdx = 0;
+        } else {
+            userIdx = --userIdx;
+        }
+
+        localStorage.setItem('identities', JSON.stringify(identities));
+        localStorage.setItem('tokens', JSON.stringify(tokens));
+        localStorage.setItem('userIdx', userIdx);
+
+        this.router.navigate(['/']);
     }
 
-    getToken() {
-        const token = localStorage.getItem('token');
-        if (token && token !== 'undefined') {
-            this.token = token;
-        } else {
-            this.token = null;
-        }
+    deleteBlockUser(user_id) {
+        const blockedUsers = this.getBlockedUsers();
 
-        return this.token;
+        const blockedUserIndex = blockedUsers.find(user => user.sub === user_id);
+
+        blockedUsers.splice(blockedUserIndex, 1);
+
+        localStorage.setItem('blockedUsers', JSON.stringify(blockedUsers));
     }
 
     logout() {
-        localStorage.removeItem('identity');
-        localStorage.removeItem('token');
+        localStorage.removeItem('identities');
+        localStorage.removeItem('tokens');
+        localStorage.removeItem('userIdx');
 
         this.identity = null;
         this.token = null;
 
         this.router.navigate(['/']);
-    }
-
-    external(url): Observable<any> {
-        return this.http.get(url);
     }
 }

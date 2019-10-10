@@ -93,7 +93,13 @@ export class HomeComponent implements OnInit {
     }
 
     findSubject(subject_id: number) {
-        return this.subjects.find(subject => subject.id === subject_id);
+        const subjectData = this.subjects.find(subject => subject.id === subject_id);
+
+        if (subjectData == null) {
+            return null;
+        }
+
+        return subjectData;
     }
 
     inSubjectTime(h0, h1) {

@@ -19,6 +19,14 @@ const routes: Routes = [
         component: AuthComponent
     },
     {
+        path: 'add-account',
+        component: AuthComponent
+    },
+    {
+        path: 'unblock',
+        component: AuthComponent
+    },
+    {
         path: 'home',
         component: HomeComponent,
         canActivate: [IdentityGuard]

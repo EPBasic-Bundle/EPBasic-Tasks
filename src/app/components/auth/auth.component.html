@@ -37,6 +37,18 @@
 
     <div class="form-container sign-in-container">
         <form #loginForm="ngForm" (ngSubmit)="onSubmitLogin(loginForm)">
+
+            <ng-container *ngFor="let blockedUser of blockedUsers">
+                <div class="card rounded-25 pointer" (click)="openUserUnblockModal(userUnblockModal, blockedUser.sub)">
+                    <div class="card-body pr-auto pt-1 pb-1 pl-1 d-flex">
+                        <img src="./assets/images/user-image.png" class="avatar-sm" alt="">
+                        <h2 class="ml-2 mt-2">
+                            {{ blockedUser.name + ' ' + blockedUser.surname }}
+                        </h2>
+                    </div>
+                </div>
+            </ng-container>
+
             <h1>Iniciar sesión</h1>
 
             <input type="email" name="email" #email="ngModel" [(ngModel)]="user.email" placeholder="name@example.com"
@@ -65,3 +77,17 @@
         </div>
     </div>
 </div>
+
+<ng-template #userUnblockModal let-close="close">
+    <div class="modal-header">
+        <h5 class="modal-title">Desbloquear usuario</h5>
+    </div>
+    <div class="modal-body">
+            <input type="password" name="pinCode" [(ngModel)]="pinCode" class="mb-3" placeholder="Introduce el ping"
+            autofocus>
+
+        <button class="btn btn-primary btn-block" (click)="unBlockUser()">
+            <i class="fas fa-unlock"></i>
+        </button>
+    </div>
+</ng-template>

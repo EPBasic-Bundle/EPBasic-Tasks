@@ -2,7 +2,7 @@
     <div class="col-lg-2 col-md-12 bg-dark m-0" [class.order-2]="menuSide == 2" [class.order-1]="menuSide == 1">
         <div class="d-flex justify-content-center sticky">
             <div class="mt-4 mb-4 col-lg-12 col-md-6">
-                <div class="d-flex justify-content-between">
+                <div class="d-flex justify-content-between mb-4">
                     <div class="input-group mr-2">
                         <input class="col-8" type="text" [(ngModel)]="stringToSearch" class="form-control"
                             placeholder="Buscar">
@@ -12,15 +12,15 @@
                             </button>
                         </div>
                     </div>
-                    <div class="btn-group" role="group">
+                    <div class="btn-group ml-2" role="group">
                         <button type="button" class="btn btn-sm btn-secondary rounded-left-25"
                             (click)="changeMenuSide(1)"><i class="fas fa-arrow-circle-left"></i></button>
                         <button type="button" class="btn btn-sm btn-secondary rounded-right-25"
                             (click)="changeMenuSide(2)"><i class="fas fa-arrow-circle-right"></i></button>
                     </div>
                 </div>
-                <hr class="bg-light">
-                <div class="d-flex">
+
+                <div class="d-flex mb-4">
                     <div class="input-group mr-2">
                         <input type="text" [(ngModel)]="page" class="form-control" placeholder="Página">
                         <div class="input-group-append">
@@ -29,7 +29,7 @@
                             </button>
                         </div>
                     </div>
-                    <div class="d-flex justify-content-center">
+                    <div class="d-flex justify-content-center ml-2">
                         <div class="btn-group" role="group">
                             <button type="button" class="btn btn-secondary rounded-left-25"
                                 (click)="setSize((pdf.zoom - 0.25))">
@@ -43,6 +43,7 @@
                     </div>
                 </div>
                 <hr class="bg-light">
+                
                 <div class="d-flex justify-content-center">
                     <ngb-pagination [collectionSize]="pdf.pages_quantity" [(page)]="pdf.page" [maxSize]="4"
                         [ellipses]="false">

@@ -13,11 +13,16 @@ export class IdentityGuard implements CanActivate {
 
     canActivate() {
         const identity = this.apiService.getIdentity();
+        const token = this.apiService.getToken();
 
         if (identity) {
-            return true;
+            if (token !== null && token !== 'undefined') {
+                return true;
+            } else {
+                return false;
+            }
         } else {
-            this.router.navigate(['/home']);
+            this.router.navigate(['/']);
             return false;
         }
     }
