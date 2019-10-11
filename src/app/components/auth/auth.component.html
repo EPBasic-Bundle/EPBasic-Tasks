@@ -83,10 +83,10 @@
         <h5 class="modal-title">Desbloquear usuario</h5>
     </div>
     <div class="modal-body">
-            <input type="password" name="pinCode" [(ngModel)]="pinCode" class="mb-3" placeholder="Introduce el ping"
+            <input type="password" name="pinCode" [(ngModel)]="pinCode" class="mb-3" placeholder="Introduce el código"
             autofocus>
 
-        <button class="btn btn-primary btn-block" (click)="unBlockUser()">
+        <button class="btn btn-primary btn-block" (click)="unBlockUser()" [disabled]="pinCode == null">
             <i class="fas fa-unlock"></i>
         </button>
     </div>

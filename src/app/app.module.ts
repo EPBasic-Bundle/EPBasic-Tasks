@@ -31,6 +31,7 @@ import { SettingsComponent } from './components/settings/settings.component';
 import { BookComponent } from './components/book/book.component';
 import { NgxUploaderModule } from 'ngx-uploader';
 import { ToastComponent } from './components/imports/toast/toast.component';
+import { SubjectsComponent } from './components/subjects/subjects.component';
 
 registerLocaleData(localeEs);
 
@@ -48,7 +49,8 @@ registerLocaleData(localeEs);
         SettingsComponent,
         PdfReaderComponent,
         BookComponent,
-        ToastComponent
+        ToastComponent,
+        SubjectsComponent
     ],
     imports: [
         BrowserModule,
@@ -71,6 +73,6 @@ registerLocaleData(localeEs);
         IdentityGuard
     ],
     bootstrap: [AppComponent],
-    exports: [ToastComponent]
+    exports: [ToastComponent, SubjectsComponent]
 })
 export class AppModule { }

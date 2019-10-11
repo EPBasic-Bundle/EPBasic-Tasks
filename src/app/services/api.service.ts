@@ -38,7 +38,7 @@ export class ApiService {
             if (identityIndex < 0 || identityIndex == null) {
                 tokens.push(resp.token);
                 identities.push(resp.identity);
-    
+
                 userIdx = tokens.length - 1;
                 set = true;
             }
@@ -68,7 +68,7 @@ export class ApiService {
         } else {
             userIdx = --userIdx;
         }
-      
+
         localStorage.setItem('identities', JSON.stringify(identities));
         localStorage.setItem('tokens', JSON.stringify(tokens));
         localStorage.setItem('userIdx', JSON.stringify(userIdx));
@@ -208,7 +208,11 @@ export class ApiService {
         const identity = this.getIdentity();
 
         if (blockedUsers && blockedUsers[0]) {
-            blockedUsers.push(identity);
+            const blockedUserIndex = blockedUsers.findIndex(blockedUser => blockedUser.sub === identity.sub);
+
+            if (blockedUserIndex < 0 || blockedUserIndex == null) {
+                blockedUsers.push(identity);
+            }
         } else {
             blockedUsers = [identity];
         }
