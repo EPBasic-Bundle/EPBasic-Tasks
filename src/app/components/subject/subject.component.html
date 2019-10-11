@@ -127,6 +127,17 @@
                                             </button>
                                         </div>
                                         <hr class="mt-0">
+                                        <ng-container *ngIf="unity.exams && unity.exams[0]">
+                                            <div class="card rounded-25 mb-2" *ngFor="let exams of unity.exams" data-aos="zoom-in">
+                                                <div class="card-body d-flex justify-content-between pb-1 pt-1">
+                                                    <span>{{ exams.title }}</span>
+                                                    <span class="badge badge-warning float-right" container="body" *ngIf="exams.id == 0"
+                                                        placement="top" ngbTooltip="Examen sin guardar">
+                                                        <i class="fas fa-save"></i>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </ng-container>
                                     </div>
                                     <div class="col-lg-4">
                                         <div class="d-flex justify-content-between">
@@ -247,10 +258,13 @@
                                 <i class="fas fa-pen"></i>
                             </button>
 
-                            <button class="btn btn-danger rounded-25" (click)="openUnityDeleteModal(unityDeleteModal, i)" *ngIf="unity.tasks && unity.tasks[0]">
+                            <button class="btn btn-danger rounded-25"
+                                (click)="openUnityDeleteModal(unityDeleteModal, i)"
+                                *ngIf="unity.tasks && unity.tasks[0]">
                                 <i class="fa fa-trash"></i>
                             </button>
-                            <button class="btn btn-danger rounded-25" (click)="deleteUnity(unity.id, i)" *ngIf="!unity.tasks || !unity.tasks[0]">
+                            <button class="btn btn-danger rounded-25" (click)="deleteUnity(unity.id, i)"
+                                *ngIf="!unity.tasks || !unity.tasks[0]">
                                 <i class="fa fa-trash"></i>
                             </button>
                         </ng-container>
@@ -336,6 +350,49 @@
         </button>
     </div>
     <div class="modal-body">
+        <button class="btn btn-primary float-right mb-4" (click)="createExam()">Nuevo examen</button>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th class="col-lg-5">Titulo</th>
+                    <th class="col-lg-2">Nota</th>
+                    <th class="col-lg-3">Fecha examen</th>
+                    <th class="col-lg-2">#</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let exam of units[sUnityIdx].exams; let i=index">
+                    <td>
+                        <input type="text" class="form-control mb-2" [(ngModel)]="exam.title" />
+                    </td>
+                    <td>
+                        <input type="number" class="form-control mb-2" max="10" min="0" [(ngModel)]="exam.mark"/>
+                    </td>
+                    <td>
+
+                    </td>
+                    <td>
+                        <ng-container *ngIf="exam.id == 0">
+                            <button class="btn btn-primary rounded-25 mr-2" (click)="storeExam(exam, i)"
+                                [disabled]="exam.title == ''">
+                                <i class="fa fa-save"></i>
+                            </button>
+                            <button class="btn btn-danger rounded-25" (click)="deleteExamFront(i)">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </ng-container>
+                        <ng-container *ngIf="exam.id > 0">
+                            <button class="btn btn-secondary rounded-25 mr-2" (click)="updateExam(exam, i)">
+                                <i class="fas fa-pen"></i>
+                            </button>
+                            <button class="btn btn-danger rounded-25" (click)="deleteExam(exam.id, i)">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </ng-container>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-outline-secondary" (click)="modal.close()">

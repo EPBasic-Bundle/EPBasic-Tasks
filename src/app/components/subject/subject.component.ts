@@ -121,6 +121,16 @@ export class SubjectComponent implements OnInit {
         );
     }
 
+    getExams(unity_index) {
+        this.apiService.get('exams/' + this.units[unity_index].id).subscribe(
+            resp => {
+                if (resp.status === 'success') {
+                    this.units[unity_index].exams = resp.exams;
+                }
+            }
+        );
+    }
+
     /***********/
     /* COLAPSE */
     /***********/
@@ -133,6 +143,7 @@ export class SubjectComponent implements OnInit {
 
             if (this.units[unity_index].id !== 0) {
                 this.getTasks(unity_index);
+                this.getExams(unity_index);
             }
         }
     }
@@ -455,6 +466,65 @@ export class SubjectComponent implements OnInit {
                 if (resp.status === 'success') {
                     this.units[this.sUnityIdx].tasks.splice(index, 1);
                     this.showToast('Tarea eliminada correctamente', 'success');
+                }
+            }
+        );
+    }
+
+    /*********/
+    /* EXAMS */
+    /*********/
+
+    createExam() {
+        if (!this.units[this.sUnityIdx].exams) {
+            this.units[this.sUnityIdx].exams = [];
+        }
+
+        this.units[this.sUnityIdx].exams.unshift({
+            id: 0,
+            subject_id: this.subject.id,
+            unity_id: this.units[this.sUnityIdx].id,
+            mark: null
+        });
+    }
+
+
+    deleteExamFront(index) {
+        this.units[this.sUnityIdx].exams.splice(index, 1);
+    }
+
+    /******************/
+    /* UNITS CRUD */
+    /*****************/
+
+    storeExam(exam, index) {
+        this.apiService.post('exam', exam).subscribe(
+            resp => {
+                if (resp.status === 'success') {
+                    this.units[this.sUnityIdx].exams[index] = resp.exam;
+                    this.showToast('Examen añadido correctamente', 'success');
+                }
+            }
+        );
+    }
+
+    updateExam(exam, index) {
+        this.apiService.put('exam/' + exam.id, exam).subscribe(
+            resp => {
+                if (resp.status === 'success') {
+                    this.units[this.sUnityIdx].exams[index] = resp.exam;
+                    this.showToast('Examen actualizado correctamente', 'success');
+                }
+            }
+        );
+    }
+
+    deleteExam(exam_id, index) {
+        this.apiService.delete('exam/' + exam_id).subscribe(
+            resp => {
+                if (resp.status === 'success') {
+                    this.units[this.sUnityIdx].exams.splice(index, 1);
+                    this.showToast('Examen eliminado correctamente', 'success');
                 }
             }
         );

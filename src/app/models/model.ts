@@ -123,7 +123,8 @@ export class Exam {
     constructor(
         public id: number,
         public subject_id: number,
-        public grade: number,
+        public unity_id: number,
+        public mark: number,
         public created_at?: string,
         public updated_at?: string,
     ) { }
