@@ -28,18 +28,27 @@ export class BookComponent implements OnInit {
             params => {
                 this.bookId = params.id;
 
-                this.getBook();
+                if (+params.page > 0) {
+                    this.getBook(+params.page + 1)
+                } else {
+                    this.getBook();
+                }
             }
         );
+
     }
 
-    getBook() {
+    getBook(page = null) {
         this.apiService.get('book/' + this.bookId).subscribe(
             resp => {
                 if (resp.status === 'success') {
                     this.book = resp.book;
 
                     if (this.book.pdf_name != null) {
+                        if (page == null) {
+                            page = this.book.last_seen_page;
+                        }
+
                         this.pdf = {
                             book_id: this.book.id,
                             render_text: true,
@@ -47,7 +56,7 @@ export class BookComponent implements OnInit {
                             autoresize: true,
                             show_all: false,
                             pages_quantity: (this.book.pages_quantity * 10),
-                            page: this.book.last_seen_page,
+                            page,
                             src: 'https://api.store.epbasic.eu/api/book/getPDF/' + this.book.pdf_name
                         };
                     }

@@ -9,7 +9,7 @@
             <hr>
             <div class="row">
                 <div class="col-lg-2" *ngIf="task.book_id != null">
-                    <img [src]="'./assets/images/' + task.book.image" alt="..." class="img-thumbnail pointer">
+                    <img [src]="'./assets/images/' + task.book.image" alt="..." class="img-thumbnail pointer" [routerLink]="['/book/', task.book_id]">
                 </div>
                 <div class="col-lg-10">
                     <p>{{ task.description }}</p>
@@ -22,7 +22,7 @@
                     <hr>
                     <ng-container *ngFor="let page of task.pages; let i=index">
                         <h3>Página
-                            <span class="font-weight-bold">
+                            <span class="font-weight-bold pointer" [routerLink]="['/book/' + task.book_id + '/' + page.number]">
                                 {{ page.number }}
                             </span>
                         </h3>

@@ -584,10 +584,6 @@ export class SubjectComponent implements OnInit {
                 this.toastService.show(text, { classname: 'bg-dark text-light', delay: 5000 });
                 break;
             }
-            case 'warning': {
-                this.toastService.show(text, { classname: 'bg-warning text-light', delay: 5000 });
-                break;
-            }
             case 'danger': {
                 this.toastService.show(text, { classname: 'bg-danger text-light', delay: 5000 });
                 break;

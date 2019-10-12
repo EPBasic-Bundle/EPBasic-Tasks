@@ -21,9 +21,14 @@ export class PdfReaderComponent implements OnInit {
     savedPages = [];
     sPage: number;
     sUnityIdx: number = 0;
+    note: string;
     cUnityIdx: number;
+    loadingPages: boolean = false;
+    sSavedPageIdx: number;
+    activatedEdit: boolean = false;
 
     addPageModal;
+    noteModal;
 
     @ViewChild(PdfViewerComponent, null) private pdfComponent: PdfViewerComponent;
 
@@ -36,6 +41,10 @@ export class PdfReaderComponent implements OnInit {
     ngOnInit() {
         this.lastPageSave = this.pdf.page;
     }
+
+    /***********/
+    /* OPTIONS */
+    /***********/
 
     search() {
         // tslint:disable-next-line:triple-equals
@@ -62,15 +71,13 @@ export class PdfReaderComponent implements OnInit {
         this.pdf.zoom = size;
     }
 
-    savePage() {
-        this.apiService.get('pdf/last-seen-page/' + this.pdf.book_id + '/' + this.pdf.page).subscribe(
-            resp => {
-                if (resp.status === 'success') {
-                    this.lastPageSave = resp.book.last_seen_page;
-                }
-            }
-        );
+    changeMenuSide(side) {
+        this.menuSide = side;
     }
+
+    /***********************/
+    /* DIRECT ACCESS PAGES */
+    /***********************/
 
     markPagesFrontend() {
         if (!this.markedPages || !this.markedPages[0]) {
@@ -82,18 +89,36 @@ export class PdfReaderComponent implements OnInit {
         }
     }
 
-    changeMenuSide(side) {
-        this.menuSide = side;
+    /************/
+    /* LASTPAGE */
+    /************/
+
+    saveLastPage() {
+        this.apiService.get('pdf/last-seen-page/' + this.pdf.book_id + '/' + this.pdf.page).subscribe(
+            resp => {
+                if (resp.status === 'success') {
+                    this.lastPageSave = resp.book.last_seen_page;
+                }
+            }
+        );
     }
 
-    openAddPageModal(content, page) {
-        this.sPage = page;
+    /***************/
+    /* SAVED PAGES */
+    /***************/
 
-        this.addPageModal = this.modalService.open(content, { size: 'sm', centered: true });
+    getSavedPages(unity_index) {
+        this.apiService.get('pdf/saved-pages/' + this.units[unity_index].id).subscribe(
+            resp => {
+                if (resp.status === 'success') {
+                    this.units[unity_index].savedPages = resp.savedPages;
+                }
+            }
+        );
     }
 
-    closeAddPageModal() {
-        this.addPageModal.close();
+    selectUnity(unity_index) {
+        this.sUnityIdx = unity_index;
     }
 
     storePage() {
@@ -106,23 +131,32 @@ export class PdfReaderComponent implements OnInit {
                         const savedPage = {
                             id: 0,
                             unity_id: this.units[this.sUnityIdx].id,
-                            page: this.sPage
+                            page: this.sPage,
+                            note: this.note
                         }
+
+                        this.note = '';
 
                         if (!this.units[this.sUnityIdx].savedPages) {
                             this.units[this.sUnityIdx].savedPages = [];
                         }
 
-                        this.units[this.sUnityIdx].savedPages.push(savedPage);
-
-                        this.apiService.post('pdf/save-page', savedPage).subscribe(
+                        this.apiService.post('pdf/savedPage', savedPage).subscribe(
                             resp => {
                                 if (resp.status === 'success') {
+                                    this.units[this.sUnityIdx].savedPages.push(resp.savedPage);
+                                    
                                     this.showToast('Página guardada correctamente', 'success');
                                 }
                             }
                         );
+                    } else {
+                        this.showToast('La página ya está guardada', 'danger');
+                        this.note = '';
                     }
+                } () => {
+                    this.showToast('La página no se ha guardado correctamente', 'danger');
+                    this.note = '';
                 }
             }
         );
@@ -130,18 +164,63 @@ export class PdfReaderComponent implements OnInit {
         this.closeAddPageModal();
     }
 
-    selectUnity(unity_index) {
-        this.sUnityIdx = unity_index;
-    }
+    updatePage() {
+        const savedPage = this.units[this.sUnityIdx].savedPages[this.sSavedPageIdx];
 
-    getSavedPages(unity_index) {
-        this.apiService.get('pdf/saved-pages/' + this.units[unity_index].id).subscribe(
+        this.apiService.put('pdf/savedPage/' + savedPage.id, savedPage).subscribe(
             resp => {
                 if (resp.status === 'success') {
-                    this.units[unity_index].savedPages = resp.savedPages;
+                    this.units[this.sUnityIdx].savedPages[this.sSavedPageIdx] = resp.savedPage;
+
+                    this.showToast('Página actualizada correctamente', 'success');
                 }
             }
         );
+
+        this.enableEdit(0);
+    }
+
+    isActivatedEdit() {
+        if (this.activatedEdit == true) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    enableEdit(action) {
+        if (action === 1) {
+            this.activatedEdit = true;
+        } else {
+            this.activatedEdit = false;
+        }
+    }
+
+    /**********/
+    /* MODALS */
+    /**********/
+
+    openAddPageModal(content, page) {
+        this.sPage = page;
+
+        this.addPageModal = this.modalService.open(content, { size: 'sm', centered: true });
+    }
+
+    closeAddPageModal() {
+        this.addPageModal.close();
+    }
+
+    openNoteModal(content, unity_index, savedPage_index) {
+        this.sUnityIdx = unity_index;
+        this.sSavedPageIdx = savedPage_index;
+
+        this.enableEdit(0);
+
+        this.noteModal = this.modalService.open(content, { size: 'sm', centered: true });
+    }
+
+    closeNoteModal() {
+        this.noteModal.close();
     }
 
     /***********/
@@ -149,6 +228,10 @@ export class PdfReaderComponent implements OnInit {
     /***********/
 
     collapse(unity_index) {
+        if (this.cUnityIdx != null) {
+            this.units[this.cUnityIdx].savedPages = null;
+        }
+
         if (this.cUnityIdx === unity_index) {
             this.cUnityIdx = null;
         } else {
@@ -166,14 +249,14 @@ export class PdfReaderComponent implements OnInit {
         }
     }
 
+    /**********/
+    /* OTROS */
+    /**********/
+
     showToast(text, type) {
         switch (type) {
             case 'success': {
                 this.toastService.show(text, { classname: 'bg-dark text-light', delay: 5000 });
-                break;
-            }
-            case 'warning': {
-                this.toastService.show(text, { classname: 'bg-warning text-light', delay: 5000 });
                 break;
             }
             case 'danger': {

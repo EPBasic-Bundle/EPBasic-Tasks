@@ -38,9 +38,9 @@ export class AppComponent implements OnInit, DoCheck {
         this.identity = this.apiService.getIdentity();
     }
 
-    logout() {
-        this.apiService.logout();
-    }
+    /*********/
+    /* USERS */
+    /*********/
 
     changeUser(userIdx) {
         this.closeUserChangeModal();
@@ -48,19 +48,17 @@ export class AppComponent implements OnInit, DoCheck {
         this.router.navigate(['/']);
     }
 
+    goToAddAccountPage() {
+        this.closeUserChangeModal();
+        this.router.navigate(['/add-account']);
+    }
+
     blockUser() {
         this.apiService.blockUser();
     }
 
-    deleteUser(userIdx) {
-        this.loguedUsers.splice(userIdx, 1);
-
-        this.apiService.removeUserOfStorage(userIdx);
-    }
-
-    goToAddAccountPage() {
-        this.closeUserChangeModal();
-        this.router.navigate(['/add-account']);
+    logout() {
+        this.apiService.logout();
     }
 
     enableDeleteUsers(action) {
@@ -70,6 +68,18 @@ export class AppComponent implements OnInit, DoCheck {
             this.deleteUsers = false;
         }
     }
+
+    deleteUser(userIdx) {
+        this.loguedUsers.splice(userIdx, 1);
+
+        this.apiService.removeUserOfStorage(userIdx);
+
+        this.deleteUsers = false;
+    }
+
+    /**********/
+    /* MODALS */
+    /**********/
 
     openUserChangeModal(content) {
         this.loguedUsers = this.apiService.getLoguedUsers();
