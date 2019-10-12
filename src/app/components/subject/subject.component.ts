@@ -249,7 +249,6 @@ export class SubjectComponent implements OnInit {
                 this.files.forEach(
                     file => {
                         this.books[this.sBookIdx].pdf_name = file.response.pdf;
-                        console.log(file.response);
                         this.pdfUploaderModal.close();
                     }
                 );

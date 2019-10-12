@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Book } from '../../models/model';
+import { Book, Unity } from '../../models/model';
 import { ApiService } from '../../services/api.service';
 import { ActivatedRoute } from '@angular/router';
 
@@ -10,6 +10,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class BookComponent implements OnInit {
     pdf;
+    units: Unity[];
     stringToSearch;
 
     book: Book;
@@ -50,6 +51,18 @@ export class BookComponent implements OnInit {
                             src: 'https://api.store.epbasic.eu/api/book/getPDF/' + this.book.pdf_name
                         };
                     }
+
+                    this.getUnits();
+                }
+            }
+        );
+    }
+
+    getUnits() {
+        this.apiService.get('units/' + this.book.subject_id).subscribe(
+            resp => {
+                if (resp.status === 'success') {
+                    this.units = resp.units;
                 }
             }
         );

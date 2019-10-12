@@ -1,6 +1,7 @@
 <div class="row" *ngIf="pdf">
     <div class="col-lg-2 col-md-12 bg-dark m-0" [class.order-2]="menuSide == 2" [class.order-1]="menuSide == 1">
-        <div class="d-flex justify-content-center sticky">
+        <div class="row justify-content-center sticky">
+
             <div class="mt-4 mb-4 col-lg-12 col-md-6">
                 <div class="d-flex justify-content-between mb-4">
                     <div class="input-group mr-2">
@@ -43,7 +44,7 @@
                     </div>
                 </div>
                 <hr class="bg-light">
-                
+
                 <div class="d-flex justify-content-center">
                     <ngb-pagination [collectionSize]="pdf.pages_quantity" [(page)]="pdf.page" [maxSize]="4"
                         [ellipses]="false">
@@ -72,7 +73,7 @@
                         </button>
 
                         <button class="btn btn-primary" container="body"
-                            placement="top" ngbTooltip="Añadir página" disabled>
+                            placement="top" ngbTooltip="Añadir página" (click)="openAddPageModal(addPageModal, pdf.page)">
                             <i class="fas fa-plus"></i>
                         </button>
 
@@ -86,7 +87,7 @@
                 <div class="mt-4" *ngIf="markedPages && markedPages[0]">
                     <div class="card rounded-25 mt-2" *ngFor="let markedPage of markedPages; let e=index;">
                         <div class="card-body d-flex justify-content-between p-0">
-                            <span class="mt-1 mb-1 ml-3">Página {{ markedPage - 1 }}</span>
+                            <span class="mt-1 mb-1 ml-3 pointer" (click)="openAddPageModal(addPageModal, markedPage)">Página {{ markedPage - 1 }}</span>
                             <button class="btn btn-sm btn-primary rounded-right-25 no-rounded-left"
                                 (click)="changePage(markedPage)">
                                 <i class="fas fa-book mr-2"></i>
@@ -94,6 +95,40 @@
                             </button>
                         </div>
                     </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-12 col-md-6 mb-4">
+                <div class="accordion">
+                    <ng-container *ngFor="let unity of units; let i=index; let fst=first; let lst=last;">
+                        <div class="card" [class.rounded-top-25]="fst == true" [class.rounded-bottom-25]="lst == true">
+                            <div class="card-header pointer" (click)="collapse(i)">
+                                <h3 class="m-1">
+                                    Unidad {{ unity.number }}
+                                </h3>
+                            </div>
+
+                            <div class="collapse show" [ngbCollapse]="isCollapsed(i)">
+                                <div class="card-body pb-2 pt-3 pl-2 pr-2">
+                                    <ng-container *ngIf="unity.savedPages && unity.savedPages[0]">
+                                        <div class="card rounded-25 mb-2 bg-dark" *ngFor="let savedPage of unity.savedPages; let e=index;">
+                                            <div class="card-body text-light d-flex justify-content-between p-0">
+                                                <span class="mt-1 mb-1 ml-3 pointer">Página {{ savedPage.page - 1 }}</span>
+                                                <button class="btn btn-sm btn-primary rounded-right-25 no-rounded-left"
+                                                    (click)="changePage(savedPage.page)">
+                                                    <i class="fas fa-book mr-2"></i>
+                                                    <i class="fas fa-arrow-right"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </ng-container>
+                                    <ng-container *ngIf="!unity.savedPages || !unity.savedPages[0]">
+                                       Cargando....
+                                    </ng-container>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
                 </div>
             </div>
         </div>
@@ -104,3 +139,32 @@
             [(page)]="pdf.page" [original-size]="false"></pdf-viewer>
     </div>
 </div>
+
+<ng-template #addPageModal let-close="close">
+    <div class="modal-header">
+        <h5 class="modal-title">Añadir página</h5>
+        <button type="button" class="close" (click)="closeAddPageModal()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <span class="small">Selecciona la unidad a la que pertenece la página.</span>
+        <hr>
+        <ng-container *ngFor="let unity of units; let i=index">
+            <div class="card rounded-25 mb-3 pointer" [class.bg-dark]="unity.id == units[sUnityIdx].id" [class.text-light]="unity.id == units[sUnityIdx].id" (click)="selectUnity(i)">
+                <div class="card-body p-1 d-flex">
+                    <img src="./assets/images/books.png" class="avatar-sm" alt="">
+                    <h2 class="ml-2 mt-2">
+                        Unidad {{ unity.number }}
+                    </h2>
+                </div>
+            </div>
+        </ng-container>
+
+        <div class="d-flex justify-content-center">
+            <button class="btn btn-primary btn-block rounded-25" (click)="storePage()">
+                <i class="fa fa-save mr-1"></i> Guardar
+            </button>
+        </div>
+    </div>
+</ng-template>
