@@ -119,7 +119,7 @@ export class TimetableComponent implements OnInit {
         for (let i of Array(rows)) {
             subjects = [];
 
-            this.timetable.hours.push(
+            this.timetable.hours.splice(this.rowIndex, 0,
                 {
                     id: null,
                     hour_start: '00:00',

@@ -23,7 +23,7 @@ export class HomeComponent implements OnInit {
 
     ngOnInit() {
         this.timeNow();
-        this.getSubjectsWithTasks();
+        this.getSubjectsWithAll();
         this.getTimetable();
     }
 
@@ -54,7 +54,7 @@ export class HomeComponent implements OnInit {
         );
     }
 
-    getSubjectsWithTasks() {
+    getSubjectsWithAll() {
         this.apiService.get('subjects/all').subscribe(
             resp => {
                 if (resp.status === 'success') {
@@ -62,7 +62,7 @@ export class HomeComponent implements OnInit {
 
                     // tslint:disable-next-line:prefer-for-of
                     for (let i = 0; i < this.subjects.length; i++) {
-                        if (this.subjects[i].tasks[0]) {
+                        if (this.subjects[i].tasks[0] || this.subjects[i].exams[0]) {
                             this.collapse(this.subjects[i].id);
                         }
                     }
