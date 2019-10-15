@@ -38,7 +38,7 @@ export class TaskComponent implements OnInit {
     }
 
     markAsDone(exercise_id, page_index, exercise_index) {
-        this.apiService.post('exercise/done/' + exercise_id, null).subscribe(
+        this.apiService.get('exercise/done/' + exercise_id).subscribe(
             resp => {
                 if (resp.status === 'success') {
                     this.task.pages[page_index].exercises[exercise_index] = resp.exercise;
@@ -48,7 +48,7 @@ export class TaskComponent implements OnInit {
     }
 
     markAsDoneAll() {
-        this.apiService.post('exercises/done/' + this.taskId, null).subscribe(
+        this.apiService.get('exercises/done/' + this.taskId).subscribe(
             resp => {
                 if (resp.status === 'success') {
                     this.task.pages = resp.task.pages;

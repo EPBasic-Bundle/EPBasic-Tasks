@@ -96,7 +96,7 @@ export class HomeComponent implements OnInit {
         const subjectData = this.subjects.find(subject => subject.id === subject_id);
 
         if (subjectData == null) {
-            return null;
+            return { id: null, name: 'Error' };
         }
 
         return subjectData;
@@ -141,5 +141,17 @@ export class HomeComponent implements OnInit {
         } else {
             return true;
         }
+    }
+
+    markTaskDone(subject_index, task_index) {
+        const taskId = this.subjects[subject_index].tasks[task_index].id;
+
+        this.apiService.get('exercises/done/' + taskId).subscribe(
+            resp => {
+                if (resp.status === 'success') {
+                    this.subjects[subject_index].tasks.splice(task_index, 1);
+                }
+            }
+        );
     }
 }

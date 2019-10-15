@@ -12,6 +12,7 @@ import { ToastService } from '../../../services/toast.service';
 export class PdfReaderComponent implements OnInit {
     @Input() pdf;
     @Input() units;
+    @Input() subject;
 
     page;
     stringToSearch;
@@ -23,9 +24,11 @@ export class PdfReaderComponent implements OnInit {
     sUnityIdx: number = 0;
     note: string;
     cUnityIdx: number;
+    sTypeIdx: number;
     loadingPages: boolean = false;
     sSavedPageIdx: number;
     activatedEdit: boolean = false;
+    savedPagesTypes;
 
     addPageModal;
     noteModal;
@@ -36,10 +39,43 @@ export class PdfReaderComponent implements OnInit {
         private apiService: ApiService,
         private modalService: NgbModal,
         public toastService: ToastService
-    ) { }
+    ) {
+        this.savedPagesTypes = [
+            {
+                icon: 'fas fa-eye',
+                tooltip: 'Interesante'
+            },
+            {
+                icon: 'fas fa-map-marker-alt',
+                tooltip: 'Marcar'
+            },
+            {
+                icon: 'fas fa-align-justify',
+                tooltip: 'Resumir'
+            },
+            {
+                icon: 'fas fa-lightbulb',
+                tooltip: 'Entender'
+            },
+            {
+                icon: 'fas fa-book',
+                tooltip: 'Estudiar'
+            },
+        ]
+    }
 
     ngOnInit() {
         this.lastPageSave = this.pdf.page;
+
+        this.setSelectedUnity();
+    }
+
+    setSelectedUnity() {
+        const currentUnity = this.findUnityIndex(this.subject.current_unity);
+
+        if (currentUnity >= 0) {
+            this.sUnityIdx = currentUnity;
+        }
     }
 
     /***********/
@@ -121,6 +157,16 @@ export class PdfReaderComponent implements OnInit {
         this.sUnityIdx = unity_index;
     }
 
+    selectType(type_index) {
+        this.sTypeIdx = type_index;
+    }
+
+    changeType(type_index) {
+        const savedPage = this.units[this.sUnityIdx].savedPages[this.sSavedPageIdx];
+
+        savedPage.type = type_index;
+    }
+
     storePage() {
         this.apiService.get('pdf/saved-pages/' + this.units[this.sUnityIdx].id).subscribe(
             resp => {
@@ -132,7 +178,8 @@ export class PdfReaderComponent implements OnInit {
                             id: 0,
                             unity_id: this.units[this.sUnityIdx].id,
                             page: this.sPage,
-                            note: this.note
+                            note: this.note,
+                            type: this.sTypeIdx
                         }
 
                         this.note = '';
@@ -145,7 +192,7 @@ export class PdfReaderComponent implements OnInit {
                             resp => {
                                 if (resp.status === 'success') {
                                     this.units[this.sUnityIdx].savedPages.push(resp.savedPage);
-                                    
+
                                     this.showToast('Página guardada correctamente', 'success');
                                 }
                             }
@@ -172,12 +219,32 @@ export class PdfReaderComponent implements OnInit {
                 if (resp.status === 'success') {
                     this.units[this.sUnityIdx].savedPages[this.sSavedPageIdx] = resp.savedPage;
 
+                    this.enableEdit(0);
+
                     this.showToast('Página actualizada correctamente', 'success');
                 }
             }
         );
 
-        this.enableEdit(0);
+
+    }
+
+    deletePage() {
+        const savedPage = this.units[this.sUnityIdx].savedPages[this.sSavedPageIdx];
+
+        this.apiService.delete('pdf/savedPage/' + savedPage.id).subscribe(
+            resp => {
+                if (resp.status === 'success') {
+                    this.units[this.sUnityIdx].savedPages.splice(this.sSavedPageIdx, 1);
+
+                    this.enableEdit(0);
+
+                    this.noteModal.close();
+
+                    this.showToast('Página eliminada correctamente', 'success');
+                }
+            }
+        );
     }
 
     isActivatedEdit() {
@@ -215,6 +282,7 @@ export class PdfReaderComponent implements OnInit {
         this.sSavedPageIdx = savedPage_index;
 
         this.enableEdit(0);
+        this.sTypeIdx = null;
 
         this.noteModal = this.modalService.open(content, { size: 'sm', centered: true });
     }
@@ -252,6 +320,10 @@ export class PdfReaderComponent implements OnInit {
     /**********/
     /* OTROS */
     /**********/
+
+    findUnityIndex(unity_id) {
+        return this.units.findIndex(unity => unity.id === unity_id);
+    }
 
     showToast(text, type) {
         switch (type) {

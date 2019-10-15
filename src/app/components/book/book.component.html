@@ -1,3 +1,3 @@
 <div class="container-fluid">
-    <app-pdf-reader [pdf]="pdf" [units]="units" *ngIf="this.pdf"></app-pdf-reader>
+    <app-pdf-reader [pdf]="pdf" [units]="units" [subject]="subject" *ngIf="pdf && subject && units"></app-pdf-reader>
 </div>

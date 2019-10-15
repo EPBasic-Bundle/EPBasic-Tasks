@@ -57,12 +57,15 @@ export class SubjectComponent implements OnInit {
     ngOnInit() {
         this.route.params.subscribe(
             params => {
-                this.subjectId = params.id;
+                this.subjectId = +params.id;
 
-                this.getSubject();
-                this.getBooks();
-                this.getUnits();
-                this.getTasksToDo();
+                if (this.subjectId > 0) {
+                    this.getSubject();
+                    this.getBooks();
+                    this.getUnits();
+
+                    this.getTasksToDo();
+                }
             }
         );
     }
@@ -96,6 +99,10 @@ export class SubjectComponent implements OnInit {
             resp => {
                 if (resp.status === 'success') {
                     this.units = resp.units;
+
+                    if (this.subject.current_unity > 0) {
+                        this.collapse(this.findUnityIndex(this.subject.current_unity));
+                    }
                 }
             }
         );
@@ -441,6 +448,8 @@ export class SubjectComponent implements OnInit {
                 if (resp.status === 'success') {
                     this.units[this.sUnityIdx].tasks[index] = resp.task;
                     this.showToast('Tarea añadida correctamente', 'success');
+
+                    this.getTasksToDo();
                 }
             }
         );
@@ -454,6 +463,8 @@ export class SubjectComponent implements OnInit {
                 if (resp.status === 'success') {
                     this.units[this.sUnityIdx].tasks[index] = resp.task;
                     this.showToast('Tarea actualizada correctamente', 'success');
+
+                    this.getTasksToDo();
                 }
             }
         );
@@ -465,6 +476,8 @@ export class SubjectComponent implements OnInit {
                 if (resp.status === 'success') {
                     this.units[this.sUnityIdx].tasks.splice(index, 1);
                     this.showToast('Tarea eliminada correctamente', 'success');
+
+                    this.getTasksToDo();
                 }
             }
         );
@@ -574,8 +587,37 @@ export class SubjectComponent implements OnInit {
     /* OTROS */
     /*********/
 
+    markTaskDone(index) {
+        const taskId = this.units[this.sUnityIdx].tasks[index].id;
+
+        this.apiService.get('exercises/done/' + taskId).subscribe(
+            resp => {
+                if (resp.status === 'success') {
+                    this.units[this.sUnityIdx].tasks[index] = resp.task;
+                }
+            }
+        );
+    }
+
+    setCurrentUnity(index) {
+        const unityId = this.units[index].id;
+
+        this.apiService.get('subject/set-current-unity/' + unityId).subscribe(
+            resp => {
+                if (resp.status === 'success') {
+                    this.subject = resp.subject;
+                }
+            }
+        );
+    }
+
     findBook(book_id) {
         return this.books.find(book => book.id === book_id);
+    }
+
+
+    findUnityIndex(unity_id) {
+        return this.units.findIndex(unity => unity.id === unity_id);
     }
 
     showToast(text, type) {

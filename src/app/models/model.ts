@@ -17,6 +17,7 @@ export class Subject {
         public name: string,
         public primary_color: string,
         public secondary_color: string,
+        public current_unity?: number,
         public created_at?: string,
         public updated_at?: string,
         public tasks?: Task[],

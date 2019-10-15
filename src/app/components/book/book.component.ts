@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Book, Unity } from '../../models/model';
+import { Book, Unity, Subject } from '../../models/model';
 import { ApiService } from '../../services/api.service';
 import { ActivatedRoute } from '@angular/router';
 
@@ -9,12 +9,13 @@ import { ActivatedRoute } from '@angular/router';
     styleUrls: ['./book.component.scss']
 })
 export class BookComponent implements OnInit {
-    pdf;
     units: Unity[];
-    stringToSearch;
-
     book: Book;
+    subject: Subject[];
+
     bookId;
+    pdf;
+    stringToSearch;
 
     constructor(
         private apiService: ApiService,
@@ -29,7 +30,7 @@ export class BookComponent implements OnInit {
                 this.bookId = params.id;
 
                 if (+params.page > 0) {
-                    this.getBook(+params.page + 1)
+                    this.getBook(+params.page + 1);
                 } else {
                     this.getBook();
                 }
@@ -62,6 +63,7 @@ export class BookComponent implements OnInit {
                     }
 
                     this.getUnits();
+                    this.getSubject();
                 }
             }
         );
@@ -72,6 +74,16 @@ export class BookComponent implements OnInit {
             resp => {
                 if (resp.status === 'success') {
                     this.units = resp.units;
+                }
+            }
+        );
+    }
+
+    getSubject() {
+        this.apiService.get('subject/' + this.book.subject_id).subscribe(
+            resp => {
+                if (resp.status === 'success') {
+                    this.subject = resp.subject;
                 }
             }
         );

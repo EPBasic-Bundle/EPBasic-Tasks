@@ -181,8 +181,13 @@ export class TimetableComponent implements OnInit {
         this.apiService.post('timetable', this.timetable).subscribe(
             resp => {
                 if (resp.status === 'success') {
+                    if (this.timetable.id != 0) {
+                        this.showToast('Horario actualizado correctamente', 'success');
+                    } else {
+                        this.showToast('Horario creado correctamente', 'success');
+                    }
+
                     this.getTimetable();
-                    this.showToast('Horario creado correctamente', 'success');
                 }
             }
         );
@@ -194,74 +199,6 @@ export class TimetableComponent implements OnInit {
                 if (resp.status === 'success') {
                     this.timetable = null;
                     this.showToast('Horario delete correctamente', 'success');
-                }
-            }
-        );
-    }
-
-    /************/
-    /* SUBJECT */
-    /***********/
-
-    createSubject() {
-        this.subjects.push({
-            id: 0,
-            user_id: null,
-            name: '',
-            primary_color: '#fff',
-            secondary_color: '#fff'
-        });
-    }
-
-    setColor(type: string, i: number, color: string) {
-        switch (type) {
-            case 'primary_color':
-                this.subjects[i].primary_color = color;
-                break;
-            case 'secondary_color':
-                this.subjects[i].secondary_color = color;
-                break;
-            default:
-                break;
-        }
-    }
-
-    deleteSubjectFront(index) {
-        this.subjects.splice(index, 1);
-    }
-
-    /******************/
-    /* SUBJECT CRUD */
-    /*****************/
-
-    storeSubject(subject, index) {
-        this.apiService.post('subject', subject).subscribe(
-            resp => {
-                if (resp.status === 'success') {
-                    this.subjects[index] = resp.subject;
-                    this.showToast('Asignatura creada correctamente', 'success');
-                }
-            }
-        );
-    }
-
-    updateSubject(subject, index) {
-        this.apiService.put('subject/' + subject.id, subject).subscribe(
-            resp => {
-                if (resp.status === 'success') {
-                    this.subjects[index] = resp.subject;
-                    this.showToast('Asignatura actualizada correctamente', 'success');
-                }
-            }
-        );
-    }
-
-    deleteSubject(subject_id, index) {
-        this.apiService.delete('subject/' + subject_id).subscribe(
-            resp => {
-                if (resp.status === 'success') {
-                    this.subjects.splice(index, 1);
-                    this.showToast('Asignatura eliminada correctamente', 'success');
                 }
             }
         );

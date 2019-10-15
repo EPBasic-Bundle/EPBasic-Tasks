@@ -113,11 +113,11 @@
                                 <div class="card-body pb-2 pt-3 pl-2 pr-2">
                                     <ng-container *ngIf="unity.savedPages && unity.savedPages[0]">
                                         <div class="card rounded-25 mb-2 bg-dark"
-                                            *ngFor="let savedPage of unity.savedPages; let e=index;"
-                                            data-aos="zoom-in-right">
+                                            *ngFor="let savedPage of unity.savedPages; let e=index;">
                                             <div class="card-body text-light d-flex justify-content-between p-0">
                                                 <span class="mt-1 mb-1 ml-3 pointer"
                                                     (click)="openNoteModal(noteModal, i , e)">
+                                                    <i [class]="savedPagesTypes[savedPage.type].icon + ' mr-2'"></i>
                                                     Página {{ savedPage.page - 1 }}
                                                 </span>
 
@@ -169,6 +169,18 @@
             </div>
         </ng-container>
 
+        <div class="d-flex justify-content-center mb-3">
+            <div class="btn-group" role="group">
+                <ng-container *ngFor="let type of savedPagesTypes; let i=index">
+                    <button class="btn" [class.btn-primary]="i != sTypeIdx" [class.btn-dark]="i == sTypeIdx"
+                        container="body" placement="top" [ngbTooltip]="type.tooltip" [class.rounded-left-25]="i == 0"
+                        [class.rounded-right-25]="i == 4" (click)="selectType(i)">
+                        <i [class]="type.icon"></i>
+                    </button>
+                </ng-container>
+            </div>
+        </div>
+
         <textarea class="form-control mb-3" rows="2" [(ngModel)]="note" placeholder="Nota"></textarea>
 
         <button class="btn btn-primary btn-block rounded-25" (click)="storePage()">
@@ -179,23 +191,43 @@
 
 <ng-template #noteModal let-close="close">
     <div class="modal-header">
-        <h5 class="modal-title">Página {{ this.units[this.sUnityIdx].savedPages[sSavedPageIdx].page -1 }}</h5>
+        <h5 class="modal-title">
+            <i [class]="savedPagesTypes[units[sUnityIdx].savedPages[sSavedPageIdx].type].icon + ' mr-2'"></i>
+            Página {{ units[sUnityIdx].savedPages[sSavedPageIdx].page -1 }}
+        </h5>
         <button type="button" class="close" (click)="closeNoteModal()">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
     <div class="modal-body">
         <ng-container *ngIf="isActivatedEdit() == false">
-            <p>{{ this.units[this.sUnityIdx].savedPages[sSavedPageIdx].note }}</p>
+            <p>{{ units[sUnityIdx].savedPages[sSavedPageIdx].note }}</p>
             <button class="btn btn-primary btn-block rounded-25" (click)="enableEdit(1)">
                 <i class="fas fa-key"></i> Editar
             </button>
         </ng-container>
 
         <ng-container *ngIf="isActivatedEdit() == true">
-            <textarea class="form-control mb-3" rows="2"
-                [(ngModel)]="this.units[sUnityIdx].savedPages[sSavedPageIdx].note"></textarea>
+            <div class="d-flex justify-content-center mb-3">
+                <div class="btn-group" role="group">
+                    <ng-container *ngFor="let type of savedPagesTypes; let i=index">
+                        <button class="btn" container="body" placement="top" [ngbTooltip]="type.tooltip"
+                            [class.btn-primary]="i != units[sUnityIdx].savedPages[sSavedPageIdx].type"
+                            [class.btn-dark]="i == units[sUnityIdx].savedPages[sSavedPageIdx].type"
+                            [class.rounded-left-25]="i == 0" [class.rounded-right-25]="i == 4" (click)="changeType(i)">
 
+                            <i [class]="type.icon"></i>
+                        </button>
+                    </ng-container>
+                </div>
+            </div>
+
+            <textarea class="form-control mb-3" rows="2"
+                [(ngModel)]="units[sUnityIdx].savedPages[sSavedPageIdx].note"></textarea>
+
+            <button class="btn btn-danger btn-block rounded-25" (click)="deletePage()">
+                <i class="fas fa-trash"></i> Eliminar
+            </button>
             <button class="btn btn-primary btn-block rounded-25" (click)="updatePage()">
                 <i class="fas fa-pen"></i> Actualizar
             </button>

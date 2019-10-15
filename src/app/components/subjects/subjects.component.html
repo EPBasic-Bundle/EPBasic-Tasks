@@ -1,1 +1,106 @@
-<p>subjects works!</p>
+<div class="container-fluid mt-4" data-aos="zoom-in">
+    <div class="row justify-content-center">
+        <div class="col-lg-2">
+            <div class="card rounded-25 mb-5" data-aos="zoom-in">
+                <div class="card-body">
+                    <h1>Asignaturas</h1>
+                    <hr>
+                    <button class="btn btn-primary btn-sm mb-3 btn-block"
+                        (click)="openModal(subjectsModal, 'lg', false)">
+                        <i class="fas fa-graduation-cap"></i>
+                        Asignaturas
+                    </button>
+                    <div class="list-group w-100 mb-3">
+                        <a class="list-group-item list-group-item-action" *ngFor="let subject of subjects">
+                            <div class="row justify-content-between">
+                                <h3 class="col-lg-9 mt-1 pointer">
+                                    {{ subject.name }}
+                                </h3>
+                                <div class="col-lg-3">
+                                    <button class="btn btn-sm btn-primary rounded-25" *ngIf="subject.id > 0"
+                                        [routerLink]="['/subject', subject.id]">
+                                        <i class="fas fa-arrow-right"></i>
+                                    </button>
+                                    <span class="badge badge-warning float-right" container="body" placement="top"
+                                        ngbTooltip="Asignatura sin guardar" *ngIf="subject.id == 0">
+                                        <i class="fas fa-save"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8">
+            <div class="card rounded-25">
+                <div class="card-body">
+                    Hola
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #subjectsModal let-close="close">
+    <div class="modal-header">
+        <h5 class="modal-title">Añadir asignaturas</h5>
+        <button type="button" class="close" (click)="modal.close()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <button class="btn btn-primary float-right mb-4" (click)="createSubject()">Crear asignatura</button>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Color</th>
+                    <th>Color</th>
+                    <th>#</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let subject of subjects; let i=index">
+                    <td>
+                        <input type="text" class="form-control" [(ngModel)]="subject.name" />
+                    </td>
+                    <td class="p-0">
+                        <app-color-picker [color]="subject.primary_color" heading="Principal"
+                            (event)="setColor('primary_color', i, $event)">
+                        </app-color-picker>
+                    </td>
+                    <td class="p-0">
+                        <app-color-picker [color]="subject.secondary_color" heading="Secundario"
+                            (event)="setColor('secondary_color', i, $event)">
+                        </app-color-picker>
+                    </td>
+                    <td>
+                        <ng-container *ngIf="subject.id == 0">
+                            <button class="btn btn-primary rounded-25 mr-2" (click)="storeSubject(subject, i)"
+                                [disabled]="subject.name == ''">
+                                <i class="fa fa-save"></i>
+                            </button>
+                            <button class="btn btn-danger rounded-25" (click)="deleteSubjectFront(i)">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </ng-container>
+                        <ng-container *ngIf="subject.id > 0">
+                            <button class="btn btn-secondary rounded-25 mr-2" (click)="updateSubject(subject, i)">
+                                <i class="fas fa-pen"></i>
+                            </button>
+                            <button class="btn btn-danger rounded-25" (click)="deleteSubject(subject.id, i)">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </ng-container>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" (click)="modal.close()">
+            Cerrar
+        </button>
+    </div>
+</ng-template>
