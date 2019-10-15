@@ -1,6 +1,6 @@
 <div class="container-fluid mt-4">
     <div class="row justify-content-center">
-        <div class="col-lg-5 mb-4">
+        <div class="col-lg-6 mb-4">
             <div class="accordion" data-aos="zoom-in" *ngIf="subjects">
                 <ng-container *ngFor="let subject of subjects; let i=index; let fst=first; let lst=last;">
                     <div class="card" [class.rounded-top-25]="fst == true" [class.rounded-bottom-25]="lst == true">
@@ -32,6 +32,7 @@
                                                 </i>
                                             </div>
                                         </div>
+                                        <span *ngIf="!subject.tasks || !subject.tasks[0]">No tienes tareas pendientes</span>
                                     </div>
                                     <div class="col-lg-4">
                                         <b>Examenes</b>
@@ -45,10 +46,12 @@
                                                 </i>
                                             </div>
                                         </div>
+                                        <span *ngIf="!subject.exams || !subject.exams[0]">No tienes examenes pendientes</span>
                                     </div>
                                     <div class="col-lg-4">
                                         <b>Proyectos</b>
                                         <hr class="mt-1">
+                                        <span *ngIf="!subject.projects || !subject.projects[0]">No tienes proyectos pendientes</span>
                                     </div>
                                 </div>
                             </div>

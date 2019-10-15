@@ -121,6 +121,7 @@
                                                 </div>
                                             </div>
                                         </ng-container>
+                                        <span *ngIf="!unity.tasks || !unity.tasks[0]">No hay tareas en esta unidad</span>
                                     </div>
                                     <div class="col-lg-4">
                                         <div class="d-flex justify-content-between">
@@ -149,6 +150,7 @@
                                                 </div>
                                             </div>
                                         </ng-container>
+                                        <span *ngIf="!unity.exams || !unity.exams[0]">No hay examenes en esta unidad</span>
                                     </div>
                                     <div class="col-lg-4">
                                         <div class="d-flex justify-content-between">
@@ -160,6 +162,7 @@
                                             </button>
                                         </div>
                                         <hr class="mt-0">
+                                        <span *ngIf="!unity.projects || !unity.projects[0]">No hay proyectos en esta unidad</span>
                                     </div>
                                     <div class="col-lg-4"></div>
                                 </div>
