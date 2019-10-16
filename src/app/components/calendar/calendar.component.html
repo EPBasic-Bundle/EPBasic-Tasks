@@ -1,4 +1,4 @@
-<div class="container-fluid mt-4">
+<div class="container-fluid mt-4 mb-5">
     <div class="row d-flex justify-content-center">
         <div class="col-lg-7 mb-4">
             <div class="card rounded-25">
@@ -44,20 +44,35 @@
                             [events]="events" [refresh]="refresh" [activeDayIsOpen]="activeDayIsOpen" [locale]="locale"
                             [weekStartsOn]="weekStartsOn" [weekendDays]="weekendDays"
                             (dayClicked)="dayClicked($event.day)" (eventClicked)="handleEvent('Clicked', $event.event)"
-                            (eventTimesChanged)="eventTimesChanged($event)" [weekStartsOn]="weekStartsOn"
-                            [weekendDays]="weekendDays">
+                            (eventTimesChanged)="eventTimesChanged($event)" [cellTemplate]="customCellTemplate">
                         </mwl-calendar-month-view>
                         <mwl-calendar-week-view *ngSwitchCase="CalendarView.Week" [viewDate]="viewDate"
                             [events]="events" [refresh]="refresh" [locale]="locale" [weekStartsOn]="weekStartsOn"
                             [weekendDays]="weekendDays" (eventClicked)="handleEvent('Clicked', $event.event)"
-                            (eventTimesChanged)="eventTimesChanged($event)" [weekStartsOn]="weekStartsOn"
-                            [weekendDays]="weekendDays">
+                            (eventTimesChanged)="eventTimesChanged($event)">
                         </mwl-calendar-week-view>
                         <mwl-calendar-day-view *ngSwitchCase="CalendarView.Day" [viewDate]="viewDate" [events]="events"
                             [refresh]="refresh" [locale]="locale" (eventClicked)="handleEvent('Clicked', $event.event)"
                             (eventTimesChanged)="eventTimesChanged($event)">
                         </mwl-calendar-day-view>
                     </div>
+
+
+                    <ng-template #customCellTemplate let-day="day" let-locale="locale">
+                        <div class="cal-cell-top">
+                            <span class="cal-day-badge" *ngIf="day.badgeTotal > 0">{{ day.badgeTotal }}</span>
+                            <span
+                                class="cal-day-number">{{ day.date | calendarDate:'monthViewDayNumber':locale }}</span>
+                        </div>
+
+                        <div class="row m-2">
+                            <ng-container *ngFor="let event of day.events">
+                                <i class="fas fa-book mr-1 text-primary" *ngIf="event.exam_id !== null"></i>
+                                <i class="fas fa-tasks mr-1" *ngIf="event.task_id !== null"></i>
+                                <i class="fas fa-sticky-note text-secondary mr-1" *ngIf="event.task_id == null && event.exam_id == null"></i>
+                            </ng-container>
+                        </div>
+                    </ng-template>
                 </div>
             </div>
         </div>
@@ -77,7 +92,7 @@
                                     <span class="small">
                                         {{ event.start | date:'d \'de\' MMM' }}
                                     </span>
-                                     -
+                                    -
                                     <span class="small">
                                         {{ event.end | date:'d \'de\' MMM' }}
                                     </span>
@@ -149,7 +164,7 @@
                 </thead>
 
                 <tbody>
-                    <tr *ngFor="let event of events">
+                    <tr *ngFor="let event of events; let i=index">
                         <td>
                             <input type="text" class="form-control" [(ngModel)]="event.title"
                                 (keyup)="refresh.next()" />
@@ -173,10 +188,13 @@
                                 placeholder="Not set" />
                         </td>
                         <td>
-                            <button class="btn btn-primary rounded-25 mr-2" (click)="storeEvent(event)">
+                            <button class="btn btn-primary rounded-25 mr-2" (click)="storeEvent(event, i)" *ngIf="event['id'] == null">
                                 <i class="fa fa-save"></i>
                             </button>
-                            <button class="btn btn-danger rounded-25" (click)="deleteEvent(event)">
+                            <button class="btn btn-secondary rounded-25 mr-2" (click)="updateEvent(event, i)" *ngIf="event['id'] > 0">
+                                <i class="fas fa-pen"></i>
+                            </button>
+                            <button class="btn btn-danger rounded-25" (click)="deleteEvent(event, i)">
                                 <i class="fa fa-trash"></i>
                             </button>
                         </td>

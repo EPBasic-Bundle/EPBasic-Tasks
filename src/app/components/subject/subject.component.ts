@@ -194,9 +194,9 @@ export class SubjectComponent implements OnInit {
         this.books.splice(index, 1);
     }
 
-    /******************/
+    /**************/
     /* BOOK CRUD */
-    /*****************/
+    /*************/
 
     storeBook(book, index) {
         this.apiService.post('book', book).subscribe(
@@ -261,6 +261,8 @@ export class SubjectComponent implements OnInit {
                 this.files.forEach(
                     file => {
                         this.books[this.sBookIdx].pdf_name = file.response.pdf;
+
+                        this.updateBook(this.books[this.sBookIdx], this.sBookIdx);
                         this.pdfUploaderModal.close();
                     }
                 );

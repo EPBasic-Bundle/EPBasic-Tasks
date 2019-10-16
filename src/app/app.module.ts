@@ -50,7 +50,7 @@ registerLocaleData(localeEs);
         PdfReaderComponent,
         BookComponent,
         ToastComponent,
-        SubjectsComponent
+        SubjectsComponent,
     ],
     imports: [
         BrowserModule,
@@ -65,7 +65,7 @@ registerLocaleData(localeEs);
             useFactory: adapterFactory
         }),
         PdfViewerModule,
-        NgxUploaderModule
+        NgxUploaderModule,
     ],
     providers: [
         { provide: LOCALE_ID, useValue: 'es' },
