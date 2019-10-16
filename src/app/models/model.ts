@@ -124,6 +124,7 @@ export class Book {
 export class Exam {
     constructor(
         public id: number,
+        public title: string,
         public subject_id: number,
         public unity_id: number,
         public mark: number,
