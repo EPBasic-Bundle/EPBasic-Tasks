@@ -497,6 +497,7 @@ export class SubjectComponent implements OnInit {
 
         this.exams.unshift({
             id: 0,
+            title: '',
             subject_id: this.subject.id,
             unity_id: this.units[this.sUnityIdx].id,
             mark: null
