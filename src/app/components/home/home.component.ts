@@ -96,7 +96,18 @@ export class HomeComponent implements OnInit {
         const subjectData = this.subjects.find(subject => subject.id === subject_id);
 
         if (subjectData == null) {
-            return { id: null, name: 'Error' };
+            return {
+                id: null,
+                name: 'Error',
+                primary_color: [{
+                    id: null,
+                    name: null
+                }],
+                secondary_color: [{
+                    id: null,
+                    name: null
+                }]
+            };
         }
 
         return subjectData;

@@ -2,7 +2,7 @@ import { Component, OnInit, EventEmitter } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ApiService } from '../../services/api.service';
-import { Subject, Unity, Book, Task } from '../../models/model';
+import { Subject, Unity, Book, Task, Exam } from '../../models/model';
 import { environment } from '../../../environments/environment';
 import { UploadOutput, UploadInput, UploadFile, humanizeBytes, UploaderOptions } from 'ngx-uploader';
 import { ToastService } from '../../services/toast.service';
@@ -18,6 +18,8 @@ export class SubjectComponent implements OnInit {
     units: Unity[] = [];
     books: Book[] = [];
     tasksToDo: Task[] = [];
+    tasks: Task[];
+    exams: Exam[];
 
     images = ['books.png', 'paper.png'];
 
@@ -122,7 +124,7 @@ export class SubjectComponent implements OnInit {
         this.apiService.get('tasks/' + this.units[unity_index].id).subscribe(
             resp => {
                 if (resp.status === 'success') {
-                    this.units[unity_index].tasks = resp.tasks;
+                    this.tasks = resp.tasks;
                 }
             }
         );
@@ -132,7 +134,7 @@ export class SubjectComponent implements OnInit {
         this.apiService.get('exams/' + this.units[unity_index].id).subscribe(
             resp => {
                 if (resp.status === 'success') {
-                    this.units[unity_index].exams = resp.exams;
+                    this.exams = resp.exams;
                 }
             }
         );
@@ -143,6 +145,9 @@ export class SubjectComponent implements OnInit {
     /***********/
 
     collapse(unity_index) {
+        this.exams = [];
+        this.tasks = [];
+
         if (this.sUnityIdx === unity_index) {
             this.sUnityIdx = null;
         } else {
@@ -362,17 +367,15 @@ export class SubjectComponent implements OnInit {
     /*********/
 
     createTask() {
-        const unity_index = this.sUnityIdx;
-
-        if (!this.units[unity_index].tasks) {
-            this.units[unity_index].tasks = [];
+        if (!this.tasks) {
+            this.tasks = [];
         }
 
-        this.units[unity_index].tasks.push({
+        this.tasks.push({
             id: 0,
             subject_id: this.subject.id,
             book_id: null,
-            unity_id: this.units[unity_index].id,
+            unity_id: this.units[this.sUnityIdx].id,
             title: '',
             description: '',
             delivery_date: null,
@@ -381,30 +384,29 @@ export class SubjectComponent implements OnInit {
     }
 
     selectBook(book_id) {
-        this.units[this.sUnityIdx].tasks[this.sTaskIdx].book_id = book_id;
+        this.tasks[this.sTaskIdx].book_id = book_id;
     }
 
     createPage() {
-        const unity_index = this.sUnityIdx;
         const task_index = this.sTaskIdx;
 
-        if (!this.units[unity_index].tasks[task_index].pages) {
-            this.units[unity_index].tasks[task_index].pages = [];
+        if (!this.tasks[task_index].pages) {
+            this.tasks[task_index].pages = [];
         }
 
-        this.units[unity_index].tasks[task_index].pages.push({
+        this.tasks[task_index].pages.push({
             id: 0,
-            task_id: this.units[unity_index].tasks[task_index].id,
+            task_id: this.tasks[task_index].id,
             number: null,
         });
     }
 
     deletePageFront(index) {
-        this.units[this.sUnityIdx].tasks[this.sTaskIdx].pages.splice(index, 1);
+        this.tasks[this.sTaskIdx].pages.splice(index, 1);
     }
 
     findExercise(number: number, index) {
-        const page = this.units[this.sUnityIdx].tasks[this.sTaskIdx].pages[index];
+        const page = this.tasks[this.sTaskIdx].pages[index];
 
         if (page.exercises) {
             return page.exercises.findIndex(exercise => exercise.number === number);
@@ -414,14 +416,13 @@ export class SubjectComponent implements OnInit {
     }
 
     selectExercise(number: number, index) {
-        const unity_index = this.sUnityIdx;
         const task_index = this.sTaskIdx;
 
-        if (!this.units[unity_index].tasks[task_index].pages[index].exercises) {
-            this.units[unity_index].tasks[task_index].pages[index].exercises = [];
+        if (!this.tasks[task_index].pages[index].exercises) {
+            this.tasks[task_index].pages[index].exercises = [];
         }
 
-        this.units[unity_index].tasks[task_index].pages[index].exercises.push({
+        this.tasks[task_index].pages[index].exercises.push({
             id: 0,
             page_id: null,
             number,
@@ -430,12 +431,12 @@ export class SubjectComponent implements OnInit {
     }
 
     deleteExercise(number, index) {
-        const page = this.units[this.sUnityIdx].tasks[this.sTaskIdx].pages[index];
+        const page = this.tasks[this.sTaskIdx].pages[index];
         page.exercises.splice(this.findExercise(number, index), 1);
     }
 
     deleteTaskFront(index) {
-        this.units[this.sUnityIdx].tasks.splice(index, 1);
+        this.tasks.splice(index, 1);
     }
 
     /**************/
@@ -446,7 +447,7 @@ export class SubjectComponent implements OnInit {
         this.apiService.post('task', task).subscribe(
             resp => {
                 if (resp.status === 'success') {
-                    this.units[this.sUnityIdx].tasks[index] = resp.task;
+                    this.tasks[index] = resp.task;
                     this.showToast('Tarea añadida correctamente', 'success');
 
                     this.getTasksToDo();
@@ -461,7 +462,7 @@ export class SubjectComponent implements OnInit {
         this.apiService.put('task/' + task.id, task).subscribe(
             resp => {
                 if (resp.status === 'success') {
-                    this.units[this.sUnityIdx].tasks[index] = resp.task;
+                    this.tasks[index] = resp.task;
                     this.showToast('Tarea actualizada correctamente', 'success');
 
                     this.getTasksToDo();
@@ -474,7 +475,7 @@ export class SubjectComponent implements OnInit {
         this.apiService.delete('task/' + task_id).subscribe(
             resp => {
                 if (resp.status === 'success') {
-                    this.units[this.sUnityIdx].tasks.splice(index, 1);
+                    this.tasks.splice(index, 1);
                     this.showToast('Tarea eliminada correctamente', 'success');
 
                     this.getTasksToDo();
@@ -488,11 +489,11 @@ export class SubjectComponent implements OnInit {
     /*********/
 
     createExam() {
-        if (!this.units[this.sUnityIdx].exams) {
-            this.units[this.sUnityIdx].exams = [];
+        if (!this.exams) {
+            this.exams = [];
         }
 
-        this.units[this.sUnityIdx].exams.unshift({
+        this.exams.unshift({
             id: 0,
             subject_id: this.subject.id,
             unity_id: this.units[this.sUnityIdx].id,
@@ -502,7 +503,7 @@ export class SubjectComponent implements OnInit {
 
 
     deleteExamFront(index) {
-        this.units[this.sUnityIdx].exams.splice(index, 1);
+        this.exams.splice(index, 1);
     }
 
     /******************/
@@ -513,7 +514,7 @@ export class SubjectComponent implements OnInit {
         this.apiService.post('exam', exam).subscribe(
             resp => {
                 if (resp.status === 'success') {
-                    this.units[this.sUnityIdx].exams[index] = resp.exam;
+                    this.exams[index] = resp.exam;
                     this.showToast('Examen añadido correctamente', 'success');
                 }
             }
@@ -524,7 +525,7 @@ export class SubjectComponent implements OnInit {
         this.apiService.put('exam/' + exam.id, exam).subscribe(
             resp => {
                 if (resp.status === 'success') {
-                    this.units[this.sUnityIdx].exams[index] = resp.exam;
+                    this.exams[index] = resp.exam;
                     this.showToast('Examen actualizado correctamente', 'success');
                 }
             }
@@ -535,7 +536,7 @@ export class SubjectComponent implements OnInit {
         this.apiService.delete('exam/' + exam_id).subscribe(
             resp => {
                 if (resp.status === 'success') {
-                    this.units[this.sUnityIdx].exams.splice(index, 1);
+                    this.exams.splice(index, 1);
                     this.showToast('Examen eliminado correctamente', 'success');
                 }
             }
@@ -588,12 +589,14 @@ export class SubjectComponent implements OnInit {
     /*********/
 
     markTaskDone(index) {
-        const taskId = this.units[this.sUnityIdx].tasks[index].id;
+        const taskId = this.tasks[index].id;
 
         this.apiService.get('exercises/done/' + taskId).subscribe(
             resp => {
                 if (resp.status === 'success') {
-                    this.units[this.sUnityIdx].tasks[index] = resp.task;
+                    this.tasks[index] = resp.task;
+
+                    this.getTasksToDo();
                 }
             }
         );
