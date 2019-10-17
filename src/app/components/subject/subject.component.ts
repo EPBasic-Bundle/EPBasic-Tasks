@@ -35,7 +35,11 @@ export class SubjectComponent implements OnInit {
     sUnityIdx: number;
     sBookIdx: number;
     sTaskIdx: number;
+    sExamIdx: number;
     sTSubjectIdxs;
+
+    dateSelectorType: number;
+    settedDateTime: string;
 
     subjectId;
 
@@ -529,7 +533,8 @@ export class SubjectComponent implements OnInit {
             title: '',
             subject_id: this.subject.id,
             unity_id: this.units[this.sUnityIdx].id,
-            mark: null
+            mark: null,
+            exam_date: null
         });
     }
 
@@ -580,12 +585,14 @@ export class SubjectComponent implements OnInit {
     /*****************/
 
     selectTSubject(rowIndex, subjectIndex) {
+        const date = new Date();
+
         this.sTSubjectIdxs = [subjectIndex, rowIndex];
 
-        console.log('Día de la semana', this.sTSubjectIdxs[0]);
+        let year = date.getFullYear();
+        let month = date.getMonth() + 1;
 
-        const date = new Date();
-        const monthDaysQ = new Date(2019, 10, 0).getDate();
+        const monthDaysQ = new Date(year, month, 0).getDate();
 
         const diference = this.sTSubjectIdxs[0] - (date.getDay() - 1);
 
@@ -597,19 +604,48 @@ export class SubjectComponent implements OnInit {
 
         let nextSubjectsDays = [];
 
-        nextSubjectsDays.push(nextSubjectDay);
-
-        for (let e of Array(4)) {
-            nextSubjectDay = nextSubjectDay + 7;
+        for (let e of [1, 2, 3, 4, 5, 6]) {
+            if (e !== 1) {
+                nextSubjectDay = nextSubjectDay + 7;
+            }
 
             if (nextSubjectDay > monthDaysQ) {
                 nextSubjectDay = nextSubjectDay - monthDaysQ;
+                ++month;
+
+                if (month > 12) {
+                    month = 1;
+                    ++year;
+                }
             }
 
-            nextSubjectsDays.push(nextSubjectDay);
+            nextSubjectsDays.push(
+                {
+                    year,
+                    month,
+                    day: nextSubjectDay,
+                    hour_start: this.timetable.hours[rowIndex].hour_start,
+                    hour_end: this.timetable.hours[rowIndex].hour_end
+                }
+            );
         }
 
         this.selectableDays = nextSubjectsDays;
+    }
+
+    setDate(selectedDay) {
+        const settedDate = (selectedDay.year + '/' + selectedDay.month + '/' + selectedDay.day);
+
+        this.settedDateTime = (settedDate + ' ' + selectedDay.hour_start);
+
+        switch (this.dateSelectorType) {
+            case 1:
+                this.tasks[this.sTaskIdx].delivery_date = settedDate;
+                break;
+            case 2:
+                this.exams[this.sExamIdx].exam_date = settedDate;
+                break;
+        }
     }
 
     /**********/
@@ -641,7 +677,18 @@ export class SubjectComponent implements OnInit {
         this.unityDeleteModal = this.modalService.open(content, { size: 'sm', centered: true });
     }
 
-    openDateSelectorModal(content, index) {
+    openDateSelectorModal(content, index, type) {
+        this.dateSelectorType = type;
+
+        switch (type) {
+            case 1:
+                this.sTaskIdx = index;
+                break;
+            case 2:
+                this.sExamIdx = index;
+                break;
+        }
+
         this.dateSelectorModal = this.modalService.open(content, { size: 'xl', centered: true });
     }
 

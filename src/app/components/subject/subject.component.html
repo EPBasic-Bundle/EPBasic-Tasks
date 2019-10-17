@@ -174,6 +174,10 @@
     </div>
 </div>
 
+<!-- *********
+    MODALS
+*************** -->
+
 <ng-template #booksModal let-close="close">
     <div class="modal-header">
         <h5 class="modal-title">Añadir libros</h5>
@@ -331,9 +335,9 @@
                     </td>
                     <td>
                         <button class="btn btn-primary btn-sm rounded-25"
-                            (click)="openDateSelectorModal(dateSelectorModal)">
-                            <i class="fas fa-book"></i>
-                            Seleccionar Día
+                            (click)="openDateSelectorModal(dateSelectorModal, i, 1)">
+                            <i class="far fa-calendar-check"></i>
+                            Seleccionar
                         </button>
                     </td>
                     <td>
@@ -393,7 +397,11 @@
                         <input type="number" class="form-control mb-2" max="10" min="0" [(ngModel)]="exam.mark" />
                     </td>
                     <td>
-
+                        <button class="btn btn-primary btn-sm rounded-25"
+                            (click)="openDateSelectorModal(dateSelectorModal, i, 2)">
+                            <i class="far fa-calendar-check"></i>
+                            Seleccionar
+                        </button>
                     </td>
                     <td>
                         <ng-container *ngIf="exam.id == 0">
@@ -574,7 +582,7 @@
         </button>
     </div>
     <div class="modal-body">
-        <table class="timetable table-responsive" *ngIf="timetable && subjects" data-aos="zoom-in">
+        <table class="timetable table-responsive mb-4" *ngIf="timetable && subjects" data-aos="zoom-in">
             <tr class="days">
                 <th></th>
                 <th>Lunes</th>
@@ -597,8 +605,14 @@
                 </ng-container>
             </tr>
         </table>
-        <ng-container *ngFor="let selectableDay of selectableDays">
-            {{ selectableDay }}
-        </ng-container>
+
+        <div class="row">
+            <div class="col" *ngFor="let selectableDay of selectableDays">
+                {{ selectableDay.day }} del {{ selectableDay.month }} de {{ selectableDay.year }}
+                <hr>
+                <button class="btn btn-sm btn-block btn-primary mt-2 mb-2"
+                (click)="setDate(selectableDay)">Seleccionar</button>
+            </div>
+        </div>
     </div>
 </ng-template>

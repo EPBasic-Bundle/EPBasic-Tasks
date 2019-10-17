@@ -128,6 +128,7 @@ export class Exam {
         public subject_id: number,
         public unity_id: number,
         public mark: number,
+        public exam_date: string,
         public created_at?: string,
         public updated_at?: string,
     ) { }
