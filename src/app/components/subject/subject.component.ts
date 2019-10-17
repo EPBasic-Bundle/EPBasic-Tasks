@@ -39,7 +39,9 @@ export class SubjectComponent implements OnInit {
     sTSubjectIdxs;
 
     dateSelectorType: number;
-    settedDateTime: string;
+
+    settedDateTimeStart: string;
+    settedDateTimeEnd: string;
 
     subjectId;
 
@@ -485,6 +487,8 @@ export class SubjectComponent implements OnInit {
                     this.tasks[index] = resp.task;
                     this.showToast('Tarea añadida correctamente', 'success');
 
+                    this.storeEvent(1);
+
                     this.getTasksToDo();
                 }
             }
@@ -553,6 +557,8 @@ export class SubjectComponent implements OnInit {
                 if (resp.status === 'success') {
                     this.exams[index] = resp.exam;
                     this.showToast('Examen añadido correctamente', 'success');
+
+                    this.storeEvent(2);
                 }
             }
         );
@@ -636,7 +642,8 @@ export class SubjectComponent implements OnInit {
     setDate(selectedDay) {
         const settedDate = (selectedDay.year + '/' + selectedDay.month + '/' + selectedDay.day);
 
-        this.settedDateTime = (settedDate + ' ' + selectedDay.hour_start);
+        this.settedDateTimeStart = (settedDate + ' ' + selectedDay.hour_start);
+        this.settedDateTimeEnd = (settedDate + ' ' + selectedDay.hour_end);
 
         switch (this.dateSelectorType) {
             case 1:
@@ -646,6 +653,48 @@ export class SubjectComponent implements OnInit {
                 this.exams[this.sExamIdx].exam_date = settedDate;
                 break;
         }
+
+        this.dateSelectorModal.close();
+    }
+
+    generateEvent(type) {
+        let event = {
+            id: null,
+            start: this.settedDateTimeStart,
+            end: this.settedDateTimeEnd,
+            title: null,
+            primary_color: this.subject.primary_color,
+            secondary_color: this.subject.secondary_color,
+            task_id: null,
+            exam_id: null,
+        }
+
+        switch (type) {
+            case 1:
+                event.task_id = this.tasks[this.sTaskIdx].id;
+                event.title = 'Tarea ' + this.subject.name;
+                break;
+            case 2:
+                event.exam_id = this.exams[this.sExamIdx].id;
+                event.title = 'Examen ' + this.subject.name;
+                break;
+        }
+
+        return event;
+    }
+
+    /**************/
+    /* EVENT CRUD */
+    /*************/
+
+    storeEvent(type) {
+        this.apiService.post('event', this.generateEvent(type)).subscribe(
+            resp => {
+                if (resp.status === 'success') {
+                    this.showToast('Evento creado correctamente', 'success');
+                }
+            }
+        );
     }
 
     /**********/
@@ -709,6 +758,22 @@ export class SubjectComponent implements OnInit {
     }
 
     /*********/
+    /* FINDS */
+    /*********/
+
+    findBook(book_id) {
+        return this.books.find(book => book.id === book_id);
+    }
+
+    findUnityIndex(unity_id) {
+        return this.units.findIndex(unity => unity.id === unity_id);
+    }
+
+    findSubject(subject_id: number) {
+        return this.subjects.find(subject => subject.id === subject_id);
+    }
+
+    /*********/
     /* OTROS */
     /*********/
 
@@ -738,15 +803,6 @@ export class SubjectComponent implements OnInit {
         );
     }
 
-    findBook(book_id) {
-        return this.books.find(book => book.id === book_id);
-    }
-
-
-    findUnityIndex(unity_id) {
-        return this.units.findIndex(unity => unity.id === unity_id);
-    }
-
     showToast(text, type) {
         switch (type) {
             case 'success': {
@@ -758,9 +814,5 @@ export class SubjectComponent implements OnInit {
                 break;
             }
         }
-    }
-
-    findSubject(subject_id: number) {
-        return this.subjects.find(subject => subject.id === subject_id);
     }
 }

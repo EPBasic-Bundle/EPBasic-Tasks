@@ -334,7 +334,7 @@
                         </button>
                     </td>
                     <td>
-                        <button class="btn btn-primary btn-sm rounded-25"
+                        <button class="btn btn-primary btn-sm rounded-25" [disabled]="task.id != 0"
                             (click)="openDateSelectorModal(dateSelectorModal, i, 1)">
                             <i class="far fa-calendar-check"></i>
                             Seleccionar
@@ -397,7 +397,7 @@
                         <input type="number" class="form-control mb-2" max="10" min="0" [(ngModel)]="exam.mark" />
                     </td>
                     <td>
-                        <button class="btn btn-primary btn-sm rounded-25"
+                        <button class="btn btn-primary btn-sm rounded-25" [disabled]="exam.id != 0"
                             (click)="openDateSelectorModal(dateSelectorModal, i, 2)">
                             <i class="far fa-calendar-check"></i>
                             Seleccionar
