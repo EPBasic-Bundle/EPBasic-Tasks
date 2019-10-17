@@ -208,7 +208,10 @@
                     <td class="col-lg-1 pointer" (click)="openImagePickerModal(imagePickerModal, i)">
                         <img [src]="'./assets/images/' + book.image" alt="..." class="img-thumbnail">
                     </td>
-                    <td class="pointer" (click)="openPDFUploaderModal(pdfUploaderModal, i)">
+                    <td class="default-cursor" *ngIf="book.id == 0">
+                        <h1>PDF <i class="fas fa-file-pdf"></i></h1>
+                    </td>
+                    <td class="pointer" (click)="openPDFUploaderModal(pdfUploaderModal, i)" *ngIf="book.id > 0">
                         <h1>PDF <i class="fas fa-file-pdf"></i></h1>
                     </td>
                     <td class="col-lg-2">
@@ -406,7 +409,7 @@
                     <td>
                         <ng-container *ngIf="exam.id == 0">
                             <button class="btn btn-primary rounded-25 mr-2" (click)="storeExam(exam, i)"
-                                [disabled]="exam.title == ''">
+                                [disabled]="exam.title == '' || exam.mark > 10">
                                 <i class="fa fa-save"></i>
                             </button>
                             <button class="btn btn-danger rounded-25" (click)="deleteExamFront(i)">
