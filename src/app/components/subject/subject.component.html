@@ -95,8 +95,8 @@
                                         </div>
                                         <hr class="mt-0">
                                         <ng-container *ngIf="tasks && tasks[0]">
-                                            <div class="card rounded-25 mb-2"
-                                                *ngFor="let task of tasks; let i=index" data-aos="zoom-in">
+                                            <div class="card rounded-25 mb-2" *ngFor="let task of tasks; let i=index"
+                                                data-aos="zoom-in">
                                                 <div class="card-body d-flex justify-content-between pb-1 pt-1"
                                                     *ngIf="task.id != 0">
                                                     <div class="col-lg-10 pointer pl-0"
@@ -330,6 +330,11 @@
                         </button>
                     </td>
                     <td>
+                        <button class="btn btn-primary btn-sm rounded-25"
+                            (click)="openDateSelectorModal(dateSelectorModal)">
+                            <i class="fas fa-book"></i>
+                            Seleccionar Día
+                        </button>
                     </td>
                     <td>
                         <ng-container *ngIf="task.id == 0">
@@ -558,5 +563,42 @@
                 <i class="fa fa-trash mr-1"></i> Confirmar
             </button>
         </div>
+    </div>
+</ng-template>
+
+<ng-template #dateSelectorModal let-close="close">
+    <div class="modal-header">
+        <h5 class="modal-title">Seleccionar día</h5>
+        <button type="button" class="close" (click)="closeDateSelectorModal()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <table class="timetable table-responsive" *ngIf="timetable && subjects" data-aos="zoom-in">
+            <tr class="days">
+                <th></th>
+                <th>Lunes</th>
+                <th>Martes</th>
+                <th>Miercoles</th>
+                <th>Jueves</th>
+                <th>Viernes</th>
+            </tr>
+            <tr *ngFor="let subjectsRow of timetable.subjects; let i=index">
+                <th class="th bg-dark">
+                    {{ timetable.hours[i].hour_start + ' - ' + timetable.hours[i].hour_end }}
+                </th>
+                <ng-container *ngFor="let tSubject of subjectsRow; let e=index">
+                    <td class="td bg-dark text-center" *ngIf="tSubject.subject_id != subjectId">
+                        {{ findSubject(tSubject.subject_id).name }}
+                    </td>
+                    <td class="td bg-secondary text-center pointer" *ngIf="tSubject.subject_id == subjectId" (click)="selectTSubject(i, e)">
+                        {{ findSubject(tSubject.subject_id).name }}
+                    </td>
+                </ng-container>
+            </tr>
+        </table>
+        <ng-container *ngFor="let selectableDay of selectableDays">
+            {{ selectableDay }}
+        </ng-container>
     </div>
 </ng-template>

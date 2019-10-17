@@ -2,7 +2,7 @@ import { Component, OnInit, EventEmitter } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ApiService } from '../../services/api.service';
-import { Subject, Unity, Book, Task, Exam } from '../../models/model';
+import { Subject, Unity, Book, Task, Exam, Timetable } from '../../models/model';
 import { environment } from '../../../environments/environment';
 import { UploadOutput, UploadInput, UploadFile, humanizeBytes, UploaderOptions } from 'ngx-uploader';
 import { ToastService } from '../../services/toast.service';
@@ -20,6 +20,8 @@ export class SubjectComponent implements OnInit {
     tasksToDo: Task[] = [];
     tasks: Task[];
     exams: Exam[];
+    timetable: Timetable;
+    subjects: Subject[];
 
     images = ['books.png', 'paper.png'];
 
@@ -28,12 +30,16 @@ export class SubjectComponent implements OnInit {
     exercisesModal;
     pdfUploaderModal;
     unityDeleteModal;
+    dateSelectorModal;
 
     sUnityIdx: number;
     sBookIdx: number;
     sTaskIdx: number;
+    sTSubjectIdxs;
 
     subjectId;
+
+    selectableDays;
 
     options: UploaderOptions;
     formData: FormData;
@@ -65,8 +71,10 @@ export class SubjectComponent implements OnInit {
                     this.getSubject();
                     this.getBooks();
                     this.getUnits();
-
                     this.getTasksToDo();
+
+                    this.getSubjects();
+                    this.getTimetable();
                 }
             }
         );
@@ -135,6 +143,27 @@ export class SubjectComponent implements OnInit {
             resp => {
                 if (resp.status === 'success') {
                     this.exams = resp.exams;
+                }
+            }
+        );
+    }
+
+    getSubjects() {
+        this.apiService.get('subjects').subscribe(
+            resp => {
+                if (resp.status === 'success') {
+                    this.subjects = resp.subjects;
+                }
+            }
+        );
+    }
+
+    getTimetable() {
+        this.apiService.get('timetable').subscribe(
+            resp => {
+                if (resp.status === 'success') {
+                    this.timetable = resp.timetable;
+                    this.timetable.subjects = resp.subjects;
                 }
             }
         );
@@ -546,6 +575,43 @@ export class SubjectComponent implements OnInit {
         );
     }
 
+    /******************/
+    /* DATE SELECTOR */
+    /*****************/
+
+    selectTSubject(rowIndex, subjectIndex) {
+        this.sTSubjectIdxs = [subjectIndex, rowIndex];
+
+        console.log('Día de la semana', this.sTSubjectIdxs[0]);
+
+        const date = new Date();
+        const monthDaysQ = new Date(2019, 10, 0).getDate();
+
+        const diference = this.sTSubjectIdxs[0] - (date.getDay() - 1);
+
+        let nextSubjectDay = date.getDate() + diference;
+
+        if (diference <= 0) {
+            nextSubjectDay = nextSubjectDay + 7;
+        }
+
+        let nextSubjectsDays = [];
+
+        nextSubjectsDays.push(nextSubjectDay);
+
+        for (let e of Array(4)) {
+            nextSubjectDay = nextSubjectDay + 7;
+
+            if (nextSubjectDay > monthDaysQ) {
+                nextSubjectDay = nextSubjectDay - monthDaysQ;
+            }
+
+            nextSubjectsDays.push(nextSubjectDay);
+        }
+
+        this.selectableDays = nextSubjectsDays;
+    }
+
     /**********/
     /* MODALS */
     /**********/
@@ -575,6 +641,10 @@ export class SubjectComponent implements OnInit {
         this.unityDeleteModal = this.modalService.open(content, { size: 'sm', centered: true });
     }
 
+    openDateSelectorModal(content, index) {
+        this.dateSelectorModal = this.modalService.open(content, { size: 'xl', centered: true });
+    }
+
     closeUnityDeleteModal() {
         this.unityDeleteModal.close();
     }
@@ -585,6 +655,10 @@ export class SubjectComponent implements OnInit {
 
     closeExercisesModal() {
         this.exercisesModal.close();
+    }
+
+    closeDateSelectorModal() {
+        this.dateSelectorModal.close();
     }
 
     /*********/
@@ -637,5 +711,9 @@ export class SubjectComponent implements OnInit {
                 break;
             }
         }
+    }
+
+    findSubject(subject_id: number) {
+        return this.subjects.find(subject => subject.id === subject_id);
     }
 }
