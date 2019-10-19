@@ -1,0 +1,59 @@
+<div class="row justify-content-center mt-2">
+    <div class="col-md-6">
+        <div class="card shadow-sm rounded-25" data-aos="zoom-in">
+            <div class="card-body">
+                <div class="container">
+                    <h4>Usuario</h4>
+                    <p>Modifica lo datos personales de tu usuario</p>
+                    <hr>
+
+                    <div class="row">
+                        <div class="col-lg-2 mb-3">
+                            <div class="mb-2 ml-1">
+                                <img src="./assets/images/user-image.png" class="avatar-lg" alt="">
+                            </div>
+                        </div>
+                        <div class="col-lg-10">
+                            <form #userEditForm="ngForm" (ngSubmit)="onSubmit()">
+                                <div class="form-group">
+                                    <label>Nombre</label>
+                                    <input name="name" type="text" #name="ngModel" [(ngModel)]="user.name"
+                                        class="form-control rounded" placeholder="Juan" required pattern="[a-zA-Z]+">
+                                    <small *ngIf="!name.valid && name.touched" class="invalid-feedback d-block">
+                                        El nombre no es valido
+                                    </small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Apellidos</label>
+                                    <input name="surname" type="text" #surname="ngModel" [(ngModel)]="user.surname"
+                                        class="form-control rounded" placeholder="García" required pattern="[a-zA-z]+">
+                                    <small *ngIf="!surname.valid && surname.touched" class="invalid-feedback d-block">
+                                        Los apellidos no son validos
+                                    </small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Email</label>
+                                    <input name="email" type="email" #email="ngModel" [(ngModel)]="user.email"
+                                        class="form-control rounded" placeholder="name@example.com" required
+                                        pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$">
+                                    <small *ngIf="!email.valid && email.touched" class="invalid-feedback d-block">
+                                        El email no es valido
+                                    </small>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary rounded float-right"
+                                    [disabled]="userEditForm.invalid || loading == true">
+                                    <i class="fas fa-user-edit"></i>
+                                    Actualizar <i class="fa fa-spinner fa-spin fa-fw" *ngIf="loading == true"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

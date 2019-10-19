@@ -2,7 +2,12 @@
     <div class="row justify-content-center">
 
         <div class="col-lg-2 col-md-4 col-12 mb-4">
-            <div class="card rounded-25 mb-4" *ngIf="books">
+            <button class="btn btn-primary btn-sm mb-3 btn-block rounded-25" *ngIf="!books || !books[0]"
+                (click)="openModal(booksModal, 'lg', false)">
+                <i class="fas fa-book"></i>
+                Libros
+            </button>
+            <div class="card rounded-25 mb-4" *ngIf="books && books[0]">
                 <div class="card-body pb-0">
                     <button class="btn btn-primary btn-sm mb-3 btn-block rounded-25"
                         (click)="openModal(booksModal, 'lg', false)">
@@ -26,7 +31,7 @@
                 </div>
             </div>
 
-            <div class="card rounded-25" *ngIf="tasksToDo">
+            <div class="card rounded-25 mb-4" *ngIf="tasksToDo">
                 <div class="card-header rounded-top-25 d-flex justify-content-between">
                     <h2 class="mt-1 mb-1">Tareas</h2>
                 </div>
@@ -44,6 +49,28 @@
                         </div>
                     </ng-container>
                     <p class="text-center" *ngIf="!tasksToDo[0]">¡Felicidades, no tienes tareas!</p>
+                </div>
+            </div>
+
+            <div class="card rounded-25" *ngIf="examsToDo">
+                <div class="card-header rounded-top-25 d-flex justify-content-between">
+                    <h2 class="mt-1 mb-1">Examenes</h2>
+                </div>
+                <div class="card-body pb-0 pt-3">
+                    <ng-container *ngIf="examsToDo[0]">
+                        <hr class="mt-0">
+                        <div *ngFor="let exam of examsToDo;" class="pointer" [routerLink]="['/exam/', exam.id]">
+                            <div class="card-body d-flex justify-content-between pt-1 pb-1">
+                                <span>{{ exam.title }}</span>
+                                <i class="fas fa-check-circle text-primary mt-1" [class.fas]="exam.done == true" [class.far]="exam.done == false" 
+                                [class.text-danger]="exam.mark < 5 && exam.done == true" [class.text-warning]="exam.mark == 5 && exam.done == true" 
+                                [class.text-success]="exam.mark > 5 && exam.done == true">
+                                </i>
+                            </div>
+                            <hr>
+                        </div>
+                    </ng-container>
+                    <p class="text-center" *ngIf="!examsToDo[0]">¡Felicidades, no tienes examenes!</p>
                 </div>
             </div>
 
@@ -82,12 +109,11 @@
                                             <h3>Tareas</h3>
                                             <button class="btn btn-primary btn-sm mb-3" placement="top"
                                                 ngbTooltip="Guarda la unidad para poder añadir tareas"
-                                                *ngIf="!books[0] || unity.id == 0" disabled>
+                                                *ngIf="unity.id == 0" disabled>
                                                 <i class="fas fa-tasks"></i>
                                                 Tareas
                                             </button>
-                                            <button class="btn btn-primary btn-sm mb-3"
-                                                *ngIf="books[0] && unity.id != 0"
+                                            <button class="btn btn-primary btn-sm mb-3" *ngIf="unity.id != 0"
                                                 (click)="openModal(tasksModal, 'lg', false)">
                                                 <i class="fas fa-tasks"></i>
                                                 Tareas
@@ -142,9 +168,9 @@
                                                         ngbTooltip="Examen sin guardar">
                                                         <i class="fas fa-save"></i>
                                                     </span>
-                                                    <i class="fas fa-check-circle text-primary mt-1"
-                                                        *ngIf="exam.id != 0" [class.fas]="exam.mark >= 0"
-                                                        [class.far]="exam.mark == null">
+                                                    <i class="fas fa-check-circle text-primary mt-1" [class.fas]="exam.done == true" [class.far]="exam.done == false" 
+                                                        [class.text-danger]="exam.mark < 5 && exam.done == true" [class.text-warning]="exam.mark == 5 && exam.done == true" 
+                                                        [class.text-success]="exam.mark > 5 && exam.done == true">
                                                     </i>
                                                 </div>
                                             </div>
@@ -208,7 +234,8 @@
                     <td class="col-lg-1 pointer" (click)="openImagePickerModal(imagePickerModal, i)">
                         <img [src]="'./assets/images/' + book.image" alt="..." class="img-thumbnail">
                     </td>
-                    <td class="default-cursor" *ngIf="book.id == 0">
+                    <td class="default-cursor" *ngIf="book.id == 0" container="body" placement="top"
+                        ngbTooltip="Guarda el libro para poder subir el PDF">
                         <h1>PDF <i class="fas fa-file-pdf"></i></h1>
                     </td>
                     <td class="pointer" (click)="openPDFUploaderModal(pdfUploaderModal, i)" *ngIf="book.id > 0">
@@ -332,13 +359,27 @@
                     </td>
                     <td>
                         <button class="btn btn-sm btn-primary btn-block" [disabled]="task.id != 0"
-                            (click)="openExercisesModal(exercisesModal, i)">
+                            *ngIf="books && books[0]" (click)="openExercisesModal(exercisesModal, i)">
                             <i class="fas fa-plus"></i>
+                        </button>
+                        <button class="btn btn-sm btn-primary btn-block" *ngIf="!books || !books[0]" container="body"
+                            placement="top" ngbTooltip="Añade libros para poder añadir ejercicios" disabled>
+                            <i class="fas fa-plus"></i>
+                        </button>
+                        <button class="btn btn-sm btn-secondary btn-block" *ngIf="!books || !books[0]"
+                            (click)="changeToModal(modal, booksModal, 'lg', false)">
+                            <i class="fas fa-book"></i> Libros
                         </button>
                     </td>
                     <td>
-                        <button class="btn btn-primary btn-sm rounded-25" [disabled]="task.id != 0"
+                        <button class="btn btn-primary btn-sm rounded-25" [disabled]="task.id != 0" *ngIf="timetable && timetable.subjects"
                             (click)="openDateSelectorModal(dateSelectorModal, i, 1)">
+                            <i class="far fa-calendar-check"></i>
+                            Seleccionar
+                        </button>
+                        <button class="btn btn-primary btn-sm rounded-25" container="body" placement="top" 
+                            ngbTooltip="Genera un horario para poder seleccionar la fecha de entrega"
+                            *ngIf="!timetable|| !timetable.subjects" disabled>
                             <i class="far fa-calendar-check"></i>
                             Seleccionar
                         </button>
@@ -400,8 +441,14 @@
                         <input type="number" class="form-control mb-2" max="10" min="0" [(ngModel)]="exam.mark" />
                     </td>
                     <td>
-                        <button class="btn btn-primary btn-sm rounded-25" [disabled]="exam.id != 0"
+                        <button class="btn btn-primary btn-sm rounded-25" [disabled]="exam.id != 0" *ngIf="timetable && timetable.subjects"
                             (click)="openDateSelectorModal(dateSelectorModal, i, 2)">
+                            <i class="far fa-calendar-check"></i>
+                            Seleccionar
+                        </button>
+                        <button class="btn btn-primary btn-sm rounded-25" container="body" placement="top" 
+                            ngbTooltip="Genera un horario para poder seleccionar la fecha del examen"
+                            *ngIf="!timetable|| !timetable.subjects" disabled>
                             <i class="far fa-calendar-check"></i>
                             Seleccionar
                         </button>
@@ -602,7 +649,8 @@
                     <td class="td bg-dark text-center" *ngIf="tSubject.subject_id != subjectId">
                         {{ findSubject(tSubject.subject_id).name }}
                     </td>
-                    <td class="td bg-secondary text-center pointer" *ngIf="tSubject.subject_id == subjectId" (click)="selectTSubject(i, e)">
+                    <td class="td bg-secondary text-center pointer" *ngIf="tSubject.subject_id == subjectId"
+                        (click)="selectTSubject(i, e)">
                         {{ findSubject(tSubject.subject_id).name }}
                     </td>
                 </ng-container>
@@ -614,7 +662,7 @@
                 {{ selectableDay.day }} del {{ selectableDay.month }} de {{ selectableDay.year }}
                 <hr>
                 <button class="btn btn-sm btn-block btn-primary mt-2 mb-2"
-                (click)="setDate(selectableDay)">Seleccionar</button>
+                    (click)="setDate(selectableDay)">Seleccionar</button>
             </div>
         </div>
     </div>

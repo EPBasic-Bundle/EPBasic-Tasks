@@ -17,9 +17,11 @@ export class HomeComponent implements OnInit {
     weekDay;
     dayHour;
 
+    loading = [false, false];
+
     constructor(
         private apiService: ApiService
-    ) { }
+    ) {}
 
     ngOnInit() {
         this.timeNow();
@@ -32,8 +34,12 @@ export class HomeComponent implements OnInit {
     /*****************/
 
     getTimetable() {
+        this.loading[2] = true;
+
         this.apiService.get('timetable').subscribe(
             resp => {
+                this.loading[2] = false;
+  
                 if (resp.status === 'success') {
                     this.timetable = resp.timetable;
                     this.timetable.subjects = resp.subjects;
@@ -50,13 +56,17 @@ export class HomeComponent implements OnInit {
                         this.getSubjectsOfDay();
                     }
                 }
-            }
+            }, () => this.loading[2] = false
         );
     }
 
     getSubjectsWithAll() {
+        this.loading[1] = true;
+
         this.apiService.get('subjects/all').subscribe(
             resp => {
+                this.loading[1] = false;
+
                 if (resp.status === 'success') {
                     this.subjects = resp.subjects;
 
@@ -67,7 +77,7 @@ export class HomeComponent implements OnInit {
                         }
                     }
                 }
-            }
+            }, () => this.loading[1] = false
         );
     }
 

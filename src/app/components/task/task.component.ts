@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Task } from '../../models/model';
+import { Task, Book } from '../../models/model';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ApiService } from '../../services/api.service';
 
@@ -10,6 +10,8 @@ import { ApiService } from '../../services/api.service';
 })
 export class TaskComponent implements OnInit {
     task: Task;
+    book: Book;
+
     taskId;
 
     constructor(
@@ -32,6 +34,20 @@ export class TaskComponent implements OnInit {
             resp => {
                 if (resp.status === 'success') {
                     this.task = resp.task;
+
+                    if (this.task.book_id) {
+                        this.getBook();
+                    }
+                }
+            }
+        );
+    }
+
+    getBook() {
+        this.apiService.get('book/' + this.task.book_id).subscribe(
+            resp => {
+                if (resp.status === 'success') {
+                    this.book = resp.book;
                 }
             }
         );

@@ -18,6 +18,7 @@ export class SubjectComponent implements OnInit {
     units: Unity[] = [];
     books: Book[] = [];
     tasksToDo: Task[] = [];
+    examsToDo: Exam[] = [];
     tasks: Task[];
     exams: Exam[];
     timetable: Timetable;
@@ -78,6 +79,7 @@ export class SubjectComponent implements OnInit {
                     this.getBooks();
                     this.getUnits();
                     this.getTasksToDo();
+                    this.getExamsToDo();
 
                     this.getSubjects();
                     this.getTimetable();
@@ -129,6 +131,16 @@ export class SubjectComponent implements OnInit {
             resp => {
                 if (resp.status === 'success') {
                     this.tasksToDo = resp.tasks;
+                }
+            }
+        );
+    }
+
+    getExamsToDo() {
+        this.apiService.get('exams/todo/' + this.subjectId).subscribe(
+            resp => {
+                if (resp.status === 'success') {
+                    this.examsToDo = resp.exams;
                 }
             }
         );
@@ -487,7 +499,9 @@ export class SubjectComponent implements OnInit {
                     this.tasks[index] = resp.task;
                     this.showToast('Tarea añadida correctamente', 'success');
 
-                    this.storeEvent(1);
+                    if (this.tasks[index].delivery_date != null) {
+                        this.storeEvent(1);
+                    }
 
                     this.getTasksToDo();
                 }
@@ -538,6 +552,7 @@ export class SubjectComponent implements OnInit {
             subject_id: this.subject.id,
             unity_id: this.units[this.sUnityIdx].id,
             mark: null,
+            done: false,
             exam_date: null
         });
     }
@@ -558,7 +573,11 @@ export class SubjectComponent implements OnInit {
                     this.exams[index] = resp.exam;
                     this.showToast('Examen añadido correctamente', 'success');
 
-                    this.storeEvent(2);
+                    if (this.exams[index].exam_date != null) {
+                        this.storeEvent(2);
+                    }
+
+                    this.getExamsToDo();
                 }
             }
         );
@@ -570,6 +589,8 @@ export class SubjectComponent implements OnInit {
                 if (resp.status === 'success') {
                     this.exams[index] = resp.exam;
                     this.showToast('Examen actualizado correctamente', 'success');
+
+                    this.getExamsToDo();
                 }
             }
         );
@@ -581,6 +602,8 @@ export class SubjectComponent implements OnInit {
                 if (resp.status === 'success') {
                     this.exams.splice(index, 1);
                     this.showToast('Examen eliminado correctamente', 'success');
+
+                    this.getExamsToDo();
                 }
             }
         );
@@ -755,6 +778,11 @@ export class SubjectComponent implements OnInit {
 
     closeDateSelectorModal() {
         this.dateSelectorModal.close();
+    }
+
+    changeToModal(closeModal, openModal, size, centered) {
+        closeModal.close();
+        this.openModal(openModal, size, centered);
     }
 
     /*********/

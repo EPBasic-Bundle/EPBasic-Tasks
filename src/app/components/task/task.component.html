@@ -1,15 +1,30 @@
 <div class="container mt-4" *ngIf="task">
     <div class="card rounded-25">
         <div class="card-body">
-            <button class="btn btn-primary btn-sm float-right" (click)="markAsDoneAll()">
+
+            <button class="btn btn-primary rounded-25 btn-sm float-right" (click)="markAsDoneAll()"
+                *ngIf="task.done == false">
                 <i class="fas fa-list-alt"></i>
-                Terminada
+                Marcar como <b>Terminada</b>
             </button>
-            <h1>{{ task.title }}</h1>
+            <button class="btn btn-primary rounded-25 btn-sm float-right" (click)="markAsDoneAll()"
+                *ngIf="task.done == true">
+                <i class="fas fa-list-alt"></i>
+                Marcar como <b>Sin terminar</b>
+            </button>
+
+            <h1>
+                <i class="fas fa-check-circle text-primary mt-1" [class.fas]="task.done == true"
+                    [class.far]="task.done == false">
+                </i>
+                {{ task.title }}
+            </h1>
             <hr>
             <div class="row">
-                <div class="col-lg-2" *ngIf="task.book_id != null">
-                    <img [src]="'./assets/images/' + task.book.image" alt="..." class="img-thumbnail pointer" [routerLink]="['/book/', task.book_id]">
+                <div class="col-lg-2" *ngIf="task.book_id != null"> 
+                    <img [src]="'./assets/images/' + task.book.image" alt="..." class="img-thumbnail" *ngIf="book.pdf_name == null">
+                    <img [src]="'./assets/images/' + task.book.image" alt="..." class="img-thumbnail pointer"
+                        [routerLink]="['/book/', task.book_id]" *ngIf="book.pdf_name != null">
                 </div>
                 <div class="col-lg-10">
                     <p>{{ task.description }}</p>
@@ -22,7 +37,11 @@
                     <hr>
                     <ng-container *ngFor="let page of task.pages; let i=index">
                         <h3>Página
-                            <span class="font-weight-bold pointer" [routerLink]="['/book/' + task.book_id + '/' + page.number]">
+                            <span class="font-weight-bold" *ngIf="book.pdf_name == null">
+                                {{ page.number }}
+                            </span>
+                            <span class="font-weight-bold pointer"
+                                [routerLink]="['/book/' + task.book_id + '/' + page.number]" *ngIf="book.pdf_name != null">
                                 {{ page.number }}
                             </span>
                         </h3>
@@ -41,7 +60,7 @@
                     </ng-container>
                 </div>
                 <div class="col-lg-4 d-flex justify-content-center">
-                    <h1 class="delivery_date">21 sep</h1>
+                    <h1 class="delivery_date">{{ task.delivery_date }}</h1>
                 </div>
             </div>
 

@@ -55,6 +55,10 @@ export class SubjectsComponent implements OnInit {
         switch (type) {
             case 'primary_color':
                 this.subjects[i].primary_color = color;
+
+                if (this.subjects[i].secondary_color = '#fff') {
+                    this.subjects[i].secondary_color = color;
+                }
                 break;
             case 'secondary_color':
                 this.subjects[i].secondary_color = color;
