@@ -3,6 +3,7 @@ import { User } from '../../models/model';
 import { ApiService } from '../../services/api.service';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ToastService } from '../../services/toast.service';
 
 declare const auth: any;
 
@@ -28,6 +29,7 @@ export class AuthComponent implements OnInit {
         private apiService: ApiService,
         private router: Router,
         private modalService: NgbModal,
+        public toastService: ToastService
     ) {
         this.user = new User(null, null, null, null, null, 'ROLE_USER', null);
     }
@@ -59,8 +61,13 @@ export class AuthComponent implements OnInit {
                     this.apiService.setStorage(resp);
 
                     this.router.navigate(['home']);
+                } else {
+                    this.showToast('Usuario o contraseña incorrectos', 'danger');
                 }
-            }, () => this.loading = false
+            }, () => {
+                this.showToast('Error de servidor', 'danger');
+                this.loading = false;
+            }
         );
     }
 
@@ -68,10 +75,20 @@ export class AuthComponent implements OnInit {
     onSubmitRegister(form) {
         this.loading = true;
         this.apiService.post('register', this.user).subscribe(
-            () => {
+            resp => {
                 this.loading = false;
-                form.reset();
-            }, () => this.loading = false
+
+                if (resp.status === 'success') {
+                    form.reset();
+                    this.showToast('Usuario creado correctamente', 'success');
+                } else {
+                    this.showToast('El mail ya está en uso', 'danger');
+                }
+
+            }, () => {
+                this.showToast('Error de servidor', 'danger');
+                this.loading = false;
+            }
         );
     }
 
@@ -103,5 +120,22 @@ export class AuthComponent implements OnInit {
 
     closeUserUnblockModal() {
         this.userUnblockModal.close();
+    }
+
+    /**********/
+    /* OTHERS */
+    /**********/
+
+    showToast(text, type) {
+        switch (type) {
+            case 'success': {
+                this.toastService.show(text, { classname: 'bg-dark text-light', delay: 5000 });
+                break;
+            }
+            case 'danger': {
+                this.toastService.show(text, { classname: 'bg-danger text-light', delay: 5000 });
+                break;
+            }
+        }
     }
 }

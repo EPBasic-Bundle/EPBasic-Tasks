@@ -1,4 +1,4 @@
-<div class="container-fluid mt-4 mb-5">
+<div class="container-fluid mt-4 mb-5" *ngIf="this.loading[1] == false">
     <div class="row justify-content-center">
         <div class="col-lg-6 mb-4">
             <div class="card rounded-25" *ngIf="!subjects || !subjects[0] && this.loading[1] == false">
@@ -129,4 +129,7 @@
             </div>
         </div>
     </div>
+</div>
+<div class="container mt-4" *ngIf="this.loading[1] == true">
+    Cargando...
 </div>

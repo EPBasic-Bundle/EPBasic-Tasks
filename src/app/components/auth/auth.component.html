@@ -4,13 +4,13 @@
             <h1>Crear Cuenta</h1>
 
             <input name="name" type="text" #name="ngModel" [(ngModel)]="user.name" class="form-control rounded dimmish"
-                placeholder="Juan" required pattern="[a-zA-Z]+">
+                placeholder="Nombre" required pattern="[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+">
             <small *ngIf="!name.valid && name.touched" class="invalid-feedback d-block">
                 El nombre no es valido
             </small>
 
             <input name="surname" type="text" #surname="ngModel" [(ngModel)]="user.surname"
-                class="form-control rounded dimmish" placeholder="García" required pattern="[a-zA-z]+">
+                class="form-control rounded dimmish" placeholder="Apellido" required pattern="[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+">
             <small *ngIf="!surname.valid && surname.touched" class="invalid-feedback d-block">
                 Los apellidos no son validos
             </small>
