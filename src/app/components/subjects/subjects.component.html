@@ -57,12 +57,13 @@
                     <th>Nombre</th>
                     <th>Color</th>
                     <th>Color</th>
+                    <th>Porcentajes</th>
                     <th>#</th>
                 </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let subject of subjects; let i=index">
-                    <td>
+                    <td style="width:200px">
                         <input type="text" class="form-control" [(ngModel)]="subject.name" />
                     </td>
                     <td class="p-0">
@@ -74,6 +75,12 @@
                         <app-color-picker [color]="subject.secondary_color" heading="Secundario"
                             (event)="setColor('secondary_color', i, $event)">
                         </app-color-picker>
+                    </td>
+                    <td>
+                        <button class="btn btn-primary btn-block"
+                            (click)="openPercentajesModal(percentajesModal, i)">
+                            <i class="fas fa-percentage"></i>
+                        </button>
                     </td>
                     <td>
                         <ng-container *ngIf="subject.id == 0">
@@ -98,6 +105,55 @@
             </tbody>
         </table>
     </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" (click)="modal.close()">
+            Cerrar
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #percentajesModal let-close="close">
+    <div class="modal-header">
+        <h5 class="modal-title">Valores</h5>
+        <button type="button" class="close" (click)="modal.close()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <ng-container *ngFor="let i of [1,2,3,4]">
+                <div class="col">
+                    <ng-container *ngIf="i == 1">
+                        <b>Tareas</b>
+                        <span class="float-right text-primary">{{ subjects[sSubjectIdx].tasks_percentage }}</span>
+                    </ng-container>
+                    <ng-container *ngIf="i == 2">
+                        <b>Examenes</b>
+                        <span class="float-right text-primary">{{ subjects[sSubjectIdx].exams_percentage }}</span>
+                    </ng-container>
+                    <ng-container *ngIf="i == 3">
+                        <b>Proyectos</b>
+                        <span class="float-right text-primary">{{ subjects[sSubjectIdx].projects_percentage }}</span>
+                    </ng-container>
+                    <ng-container *ngIf="i == 4">
+                        <b>Comportamiento</b>
+                        <span class="float-right text-primary">{{ subjects[sSubjectIdx].behaviour_percentage }}</span>
+                    </ng-container>
+                    <hr>
+                    <div class="row">
+                        <ng-container *ngFor="let e of [5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100]">
+                            <div class="col-lg-6 pointer" (click)="setPercentage(i,e)" [class.bg-dark]="isSelected(i,e) == true" [class.text-light]="isSelected(i,e) == true">
+                                <span class="small">{{ e }} %</span>
+                                <hr class="mt-1 mb-1">
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+        <h2 class="mt-3 mr-2 mb-0 float-right text-primary">Restante: {{ calcPercentageToBeAssigned() }}</h2>
+    </div>
+
     <div class="modal-footer">
         <button type="button" class="btn btn-outline-secondary" (click)="modal.close()">
             Cerrar

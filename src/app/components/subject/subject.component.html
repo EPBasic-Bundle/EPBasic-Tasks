@@ -225,14 +225,14 @@
             </thead>
             <tbody>
                 <tr *ngFor="let book of books; let i=index">
-                    <td class="col-lg-5">
+                    <td>
                         <input type="text" class="form-control" [(ngModel)]="book.name" />
                     </td>
-                    <td class="col-lg-2">
+                    <td style="width: 150px;">
                         <input type="number" class="form-control" [(ngModel)]="book.pages_quantity" />
                     </td>
-                    <td class="col-lg-1 pointer" (click)="openImagePickerModal(imagePickerModal, i)">
-                        <img [src]="'./assets/images/' + book.image" alt="..." class="img-thumbnail">
+                    <td class="pointer" (click)="openImagePickerModal(imagePickerModal, i)">
+                        <img [src]="'./assets/images/' + book.image" alt="..." class="img-thumbnail" width="100px">
                     </td>
                     <td class="default-cursor" *ngIf="book.id == 0" container="body" placement="top"
                         ngbTooltip="Guarda el libro para poder subir el PDF">
@@ -241,7 +241,7 @@
                     <td class="pointer" (click)="openPDFUploaderModal(pdfUploaderModal, i)" *ngIf="book.id > 0">
                         <h1>PDF <i class="fas fa-file-pdf"></i></h1>
                     </td>
-                    <td class="col-lg-2">
+                    <td>
                         <ng-container *ngIf="book.id == 0">
                             <button class="btn btn-primary rounded-25 mr-2" (click)="storeBook(book, i)">
                                 <i class="fa fa-save"></i>
@@ -288,10 +288,10 @@
             </thead>
             <tbody>
                 <tr *ngFor="let unity of units; let i=index">
-                    <td class="col-lg-2">
+                    <td style="width:500px">
                         <input type="number" class="form-control" [(ngModel)]="unity.number" />
                     </td>
-                    <td class="col-lg-2">
+                    <td style="width:500px">
                         <ng-container *ngIf="unity.id == 0">
                             <button class="btn btn-primary rounded-25 mr-2" (click)="storeUnity(unity, i)">
                                 <i class="fa fa-save"></i>
@@ -345,10 +345,10 @@
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th class="col-lg-5">Datos principales</th>
-                    <th class="col-lg-3">Ejercicios</th>
-                    <th class="col-lg-2">Entrega</th>
-                    <th class="col-lg-2">#</th>
+                    <th>Datos principales</th>
+                    <th>Ejercicios</th>
+                    <th>Entrega</th>
+                    <th>#</th>
                 </tr>
             </thead>
             <tbody>
@@ -426,10 +426,10 @@
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th class="col-lg-5">Titulo</th>
-                    <th class="col-lg-2">Nota</th>
-                    <th class="col-lg-3">Fecha examen</th>
-                    <th class="col-lg-2">#</th>
+                    <th>Titulo</th>
+                    <th>Nota</th>
+                    <th>Fecha examen</th>
+                    <th>#</th>
                 </tr>
             </thead>
             <tbody>
@@ -543,10 +543,10 @@
             </thead>
             <tbody>
                 <tr *ngFor="let page of tasks[sTaskIdx].pages; let i=index">
-                    <td class="col-lg-3 col-md-3 col-sm-3">
+                    <td style="width:400px">
                         <input type="number" class="form-control" [(ngModel)]="page.number" />
                     </td>
-                    <td class="col-lg-7 col-md-7 col-sm-7">
+                    <td style="width:400px">
                         <div class="row">
                             <div class="col-lg-3 col-md-3 col-sm-3 ml-2 mb-2"
                                 *ngFor="let number of [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]">
@@ -561,7 +561,7 @@
                             </div>
                         </div>
                     </td>
-                    <td class="col-lg-2 col-md-2">
+                    <td>
                         <ng-container *ngIf="page.id == 0">
                             <button class="btn btn-danger rounded-25" (click)="deletePageFront(i)">
                                 <i class="fa fa-trash"></i>

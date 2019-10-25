@@ -77,7 +77,6 @@ export class SubjectComponent implements OnInit {
                 if (this.subjectId > 0) {
                     this.getSubject();
                     this.getBooks();
-                    this.getUnits();
                     this.getTasksToDo();
                     this.getExamsToDo();
 
@@ -97,6 +96,8 @@ export class SubjectComponent implements OnInit {
             resp => {
                 if (resp.status === 'success') {
                     this.subject = resp.subject;
+
+                    this.getUnits();
                 }
             }
         );

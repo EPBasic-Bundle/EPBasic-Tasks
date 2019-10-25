@@ -12,6 +12,9 @@ import { Subject } from '../../models/model';
 export class SubjectsComponent implements OnInit {
     subjects: Subject[];
     modal;
+    percentajesModal;
+
+    sSubjectIdx;
 
     constructor(
         private apiService: ApiService,
@@ -37,7 +40,7 @@ export class SubjectsComponent implements OnInit {
         );
     }
 
-     /************/
+    /************/
     /* SUBJECT */
     /***********/
 
@@ -65,6 +68,78 @@ export class SubjectsComponent implements OnInit {
                 break;
             default:
                 break;
+        }
+    }
+
+    setPercentage(type, percentage) {
+        let subject = this.subjects[this.sSubjectIdx];
+
+        if (subject.tasks_percentage == null) {
+            subject.tasks_percentage = 0;
+        } if (subject.exams_percentage == null) {
+            subject.exams_percentage = 0;
+        } if (subject.projects_percentage == null) {
+            subject.projects_percentage = 0;
+        } if (subject.behaviour_percentage == null) {
+            subject.behaviour_percentage = 0;
+        }
+
+        switch (type) {
+            case 1:
+                subject.tasks_percentage = percentage;
+                break;
+            case 2:
+                subject.exams_percentage = percentage;
+                break;
+            case 3:
+                subject.projects_percentage = percentage;
+                break;
+            case 4:
+                subject.behaviour_percentage = percentage;
+                break;
+        }
+
+        let total_percentage = (subject.tasks_percentage + subject.exams_percentage + subject.projects_percentage + subject.behaviour_percentage);
+
+        this.subjects[this.sSubjectIdx] = subject;
+
+        console.log(this.subjects[this.sSubjectIdx], total_percentage);
+    }
+
+    calcPercentageToBeAssigned() {
+        const subject = this.subjects[this.sSubjectIdx];
+
+        return 100 - (subject.tasks_percentage + subject.exams_percentage + subject.projects_percentage + subject.behaviour_percentage);
+    }
+
+    isSelected(type, percentage) {
+        const subject = this.subjects[this.sSubjectIdx];
+
+        switch (type) {
+            case 1:
+                if (subject.tasks_percentage == percentage) {
+                    return true;
+                } else {
+                    return false;
+                }
+            case 2:
+                if (subject.exams_percentage == percentage) {
+                    return true;
+                } else {
+                    return false;
+                }
+            case 3:
+                if (subject.projects_percentage == percentage) {
+                    return true;
+                } else {
+                    return false;
+                }
+            case 4:
+                if (subject.behaviour_percentage == percentage) {
+                    return true;
+                } else {
+                    return false;
+                }
         }
     }
 
@@ -109,8 +184,17 @@ export class SubjectsComponent implements OnInit {
         );
     }
 
+    /**********/
+    /* MODALS */
+    /**********/
+
     openModal(content, size, centered) {
         this.modal = this.modalService.open(content, { size, centered });
+    }
+
+    openPercentajesModal(content, index) {
+        this.sSubjectIdx = index;
+        this.percentajesModal = this.modalService.open(content, { size: 'lg' });
     }
 
     showToast(text, type) {
