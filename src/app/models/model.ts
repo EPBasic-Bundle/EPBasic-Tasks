@@ -21,7 +21,7 @@ export class Subject {
         public tasks_percentage?: number,
         public exams_percentage?: number,
         public projects_percentage?: number,
-        public behaviour_percentage?: number,
+        public behavior_percentage?: number,
         public created_at?: string,
         public updated_at?: string,
         public tasks?: Task[],

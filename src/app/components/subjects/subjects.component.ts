@@ -14,7 +14,7 @@ export class SubjectsComponent implements OnInit {
     modal;
     percentajesModal;
 
-    sSubjectIdx;
+    sSubjectIdx: number;
 
     constructor(
         private apiService: ApiService,
@@ -74,16 +74,6 @@ export class SubjectsComponent implements OnInit {
     setPercentage(type, percentage) {
         let subject = this.subjects[this.sSubjectIdx];
 
-        if (subject.tasks_percentage == null) {
-            subject.tasks_percentage = 0;
-        } if (subject.exams_percentage == null) {
-            subject.exams_percentage = 0;
-        } if (subject.projects_percentage == null) {
-            subject.projects_percentage = 0;
-        } if (subject.behaviour_percentage == null) {
-            subject.behaviour_percentage = 0;
-        }
-
         switch (type) {
             case 1:
                 subject.tasks_percentage = percentage;
@@ -95,21 +85,21 @@ export class SubjectsComponent implements OnInit {
                 subject.projects_percentage = percentage;
                 break;
             case 4:
-                subject.behaviour_percentage = percentage;
+                subject.behavior_percentage = percentage;
                 break;
         }
 
-        let total_percentage = (subject.tasks_percentage + subject.exams_percentage + subject.projects_percentage + subject.behaviour_percentage);
-
         this.subjects[this.sSubjectIdx] = subject;
+    }
 
-        console.log(this.subjects[this.sSubjectIdx], total_percentage);
+    calcTotalPercentage(subject) {
+        return subject.tasks_percentage + subject.exams_percentage + subject.projects_percentage + subject.behavior_percentage;
     }
 
     calcPercentageToBeAssigned() {
         const subject = this.subjects[this.sSubjectIdx];
 
-        return 100 - (subject.tasks_percentage + subject.exams_percentage + subject.projects_percentage + subject.behaviour_percentage);
+        return 100 - this.calcTotalPercentage(subject);
     }
 
     isSelected(type, percentage) {
@@ -135,7 +125,7 @@ export class SubjectsComponent implements OnInit {
                     return false;
                 }
             case 4:
-                if (subject.behaviour_percentage == percentage) {
+                if (subject.behavior_percentage == percentage) {
                     return true;
                 } else {
                     return false;
@@ -193,8 +183,26 @@ export class SubjectsComponent implements OnInit {
     }
 
     openPercentajesModal(content, index) {
+        let subject = this.subjects[index];
+
+        if (subject.tasks_percentage == null) {
+            subject.tasks_percentage = 0;
+        } if (subject.exams_percentage == null) {
+            subject.exams_percentage = 0;
+        } if (subject.projects_percentage == null) {
+            subject.projects_percentage = 0;
+        } if (subject.behavior_percentage == null) {
+            subject.behavior_percentage = 0;
+        }
+
+        this.subjects[index] = subject;
+
         this.sSubjectIdx = index;
         this.percentajesModal = this.modalService.open(content, { size: 'lg' });
+    }
+
+    closePercentageModal() {
+        this.percentajesModal.close();
     }
 
     showToast(text, type) {
