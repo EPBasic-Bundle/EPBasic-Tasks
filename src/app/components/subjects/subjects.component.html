@@ -11,13 +11,13 @@
                         Asignaturas
                     </button>
                     <div class="list-group w-100 mb-3">
-                        <a class="list-group-item list-group-item-action" *ngFor="let subject of subjects">
+                        <a class="list-group-item list-group-item-action pr-2" *ngFor="let subject of subjects">
                             <div class="row justify-content-between">
-                                <h3 class="col-lg-9 mt-1 pointer">
+                                <h3 class="col-lg-7 mt-1 pointer">
                                     {{ subject.name }}
                                 </h3>
-                                <div class="col-lg-3">
-                                    <button class="btn btn-sm btn-primary rounded-25" *ngIf="subject.id > 0"
+                                <div class="col-lg-5">
+                                    <button class="btn btn-sm btn-block btn-primary rounded-25" *ngIf="subject.id > 0"
                                         [routerLink]="['/subject', subject.id]">
                                         <i class="fas fa-arrow-right"></i>
                                     </button>
