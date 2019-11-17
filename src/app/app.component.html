@@ -88,7 +88,7 @@
             </div>
 
             <div class="card rounded-25 mb-3 pointer" (click)="changeUser(i)"
-            *ngIf="deleteUsers == false && loguedUser.sub != identity.sub">
+                *ngIf="deleteUsers == false && loguedUser.sub != identity.sub">
                 <div class="card-body p-1 d-flex">
                     <img src="./assets/images/user-image.png" class="avatar-sm" alt="">
                     <h2 class="ml-2 mt-2">
@@ -98,7 +98,7 @@
             </div>
 
             <div class="card rounded-25 mb-3 pointer bg-danger text-light"
-            *ngIf="deleteUsers == true && loguedUser.sub != identity.sub" (click)="deleteUser(i)">
+                *ngIf="deleteUsers == true && loguedUser.sub != identity.sub" (click)="deleteUser(i)">
                 <div class="card-body p-1 d-flex">
                     <img src="./assets/images/user-image.png" class="avatar-sm" alt="">
                     <h2 class="ml-2 mt-2">

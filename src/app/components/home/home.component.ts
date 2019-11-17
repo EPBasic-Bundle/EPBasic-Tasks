@@ -21,7 +21,7 @@ export class HomeComponent implements OnInit {
 
     constructor(
         private apiService: ApiService
-    ) {}
+    ) { }
 
     ngOnInit() {
         this.timeNow();
@@ -34,12 +34,12 @@ export class HomeComponent implements OnInit {
     /*****************/
 
     getTimetable() {
-        this.loading[2] = true;
+        this.loading[1] = true;
 
         this.apiService.get('timetable').subscribe(
             resp => {
-                this.loading[2] = false;
-  
+                this.loading[1] = false;
+
                 if (resp.status === 'success') {
                     this.timetable = resp.timetable;
                     this.timetable.subjects = resp.subjects;
@@ -56,16 +56,16 @@ export class HomeComponent implements OnInit {
                         this.getSubjectsOfDay();
                     }
                 }
-            }, () => this.loading[2] = false
+            }, () => this.loading[1] = false
         );
     }
 
     getSubjectsWithAll() {
-        this.loading[1] = true;
+        this.loading[0] = true;
 
-        this.apiService.get('subjects/all').subscribe(
+        this.apiService.get('subjects/allToDo').subscribe(
             resp => {
-                this.loading[1] = false;
+                this.loading[0] = false;
 
                 if (resp.status === 'success') {
                     this.subjects = resp.subjects;
@@ -77,7 +77,7 @@ export class HomeComponent implements OnInit {
                         }
                     }
                 }
-            }, () => this.loading[1] = false
+            }, () => this.loading[0] = false
         );
     }
 
@@ -167,10 +167,22 @@ export class HomeComponent implements OnInit {
     markTaskDone(subject_index, task_index) {
         const taskId = this.subjects[subject_index].tasks[task_index].id;
 
-        this.apiService.get('exercises/done/' + taskId).subscribe(
+        this.apiService.get('task/done/' + taskId).subscribe(
             resp => {
                 if (resp.status === 'success') {
                     this.subjects[subject_index].tasks.splice(task_index, 1);
+                }
+            }
+        );
+    }
+
+    markExamDone(subject_index, exam_index) {
+        const examId = this.subjects[subject_index].exams[exam_index].id;
+
+        this.apiService.get('exam/done/' + examId).subscribe(
+            resp => {
+                if (resp.status === 'success') {
+                    this.subjects[subject_index].exams.splice(exam_index, 1);
                 }
             }
         );

@@ -69,7 +69,8 @@
                             <ng-container *ngFor="let event of day.events">
                                 <i class="fas fa-book mr-1 text-primary" *ngIf="event.exam_id !== null"></i>
                                 <i class="fas fa-tasks mr-1" *ngIf="event.task_id !== null"></i>
-                                <i class="fas fa-sticky-note text-secondary mr-1" *ngIf="event.task_id == null && event.exam_id == null"></i>
+                                <i class="fas fa-sticky-note text-secondary mr-1"
+                                    *ngIf="event.task_id == null && event.exam_id == null"></i>
                             </ng-container>
                         </div>
                     </ng-template>
@@ -77,39 +78,41 @@
             </div>
         </div>
 
-        <div class="col-lg-3">
+        <div class="col-lg-3 mb-2">
             <div class="card rounded-25">
                 <div class="card-body">
                     <div class="title">
                         <h1>Eventos</h1>
                         <hr>
                         <ng-container *ngFor="let event of events">
-                            {{ event.title }}
+                            <ng-container *ngIf="showEvent(event.start) == true">
+                                {{ event.title }}
 
-                            <section class="float-right mr-2">
-                                <ng-container
-                                    *ngIf="(event.end | date:'d \'de\' MMM') != (event.start | date:'d \'de\' MMM')">
-                                    <span class="small">
-                                        {{ event.start | date:'d \'de\' MMM' }}
-                                    </span>
-                                    -
-                                    <span class="small">
-                                        {{ event.end | date:'d \'de\' MMM' }}
-                                    </span>
-                                </ng-container>
-                                <ng-container
-                                    *ngIf="(event.end | date:'d \'de\' MMM') == (event.start | date:'d \'de\' MMM')">
-                                    <span class="small ">{{ event.start | date:'d \'de\' MMM' }}</span>
-
-                                    <section>
-                                        <span class="small">{{ event.start | date:'HH:mm' }}</span>
+                                <section class="float-right mr-2">
+                                    <ng-container
+                                        *ngIf="(event.end | date:'d \'de\' MMM') != (event.start | date:'d \'de\' MMM')">
+                                        <span class="small">
+                                            {{ event.start | date:'d \'de\' MMM' }}
+                                        </span>
                                         -
-                                        <span class="small">{{ event.end | date:'HH:mm' }}</span>
-                                    </section>
-                                </ng-container>
-                            </section>
+                                        <span class="small">
+                                            {{ event.end | date:'d \'de\' MMM' }}
+                                        </span>
+                                    </ng-container>
+                                    <ng-container
+                                        *ngIf="(event.end | date:'d \'de\' MMM') == (event.start | date:'d \'de\' MMM')">
+                                        <span class="small ">{{ event.start | date:'d \'de\' MMM' }}</span>
 
-                            <hr class="mt-5">
+                                        <section>
+                                            <span class="small">{{ event.start | date:'HH:mm' }}</span>
+                                            -
+                                            <span class="small">{{ event.end | date:'HH:mm' }}</span>
+                                        </section>
+                                    </ng-container>
+                                </section>
+
+                                <hr class="mt-5">
+                            </ng-container>
                         </ng-container>
 
                         <button class="btn btn-sm btn-block btn-primary mt-2 mb-2"
@@ -188,10 +191,12 @@
                                 placeholder="Not set" />
                         </td>
                         <td>
-                            <button class="btn btn-primary rounded-25 mr-2" (click)="storeEvent(event, i)" *ngIf="event['id'] == null">
+                            <button class="btn btn-primary rounded-25 mr-2" (click)="storeEvent(event, i)"
+                                *ngIf="event['id'] == null">
                                 <i class="fa fa-save"></i>
                             </button>
-                            <button class="btn btn-secondary rounded-25 mr-2" (click)="updateEvent(event, i)" *ngIf="event['id'] > 0">
+                            <button class="btn btn-secondary rounded-25 mr-2" (click)="updateEvent(event, i)"
+                                *ngIf="event['id'] > 0">
                                 <i class="fas fa-pen"></i>
                             </button>
                             <button class="btn btn-danger rounded-25" (click)="deleteEvent(event, i)">

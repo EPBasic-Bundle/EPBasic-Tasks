@@ -32,6 +32,7 @@ export class SubjectComponent implements OnInit {
     pdfUploaderModal;
     unityDeleteModal;
     dateSelectorModal;
+    descriptionModal;
 
     sUnityIdx: number;
     sBookIdx: number;
@@ -56,6 +57,8 @@ export class SubjectComponent implements OnInit {
     dragOver: boolean;
 
     baseURL: string = environment.server;
+
+    loading = [false, false];
 
     constructor(
         private apiService: ApiService,
@@ -92,14 +95,18 @@ export class SubjectComponent implements OnInit {
     /*****************/
 
     getSubject() {
+        this.loading[0] = true;
+
         this.apiService.get('subject/' + this.subjectId).subscribe(
             resp => {
+                this.loading[0] = false;
+
                 if (resp.status === 'success') {
                     this.subject = resp.subject;
 
                     this.getUnits();
                 }
-            }
+            }, () => this.loading[0] = false
         );
     }
 
@@ -550,6 +557,7 @@ export class SubjectComponent implements OnInit {
         this.exams.unshift({
             id: 0,
             title: '',
+            description: '',
             subject_id: this.subject.id,
             unity_id: this.units[this.sUnityIdx].id,
             mark: null,
@@ -765,6 +773,22 @@ export class SubjectComponent implements OnInit {
         this.dateSelectorModal = this.modalService.open(content, { size: 'xl', centered: true });
     }
 
+    openDescriptionModal(content, index, type) {
+        this.sTaskIdx = -1;
+        this.sExamIdx = -1;
+
+        switch (type) {
+            case 1:
+                this.sTaskIdx = index;
+                break;
+            case 2:
+                this.sExamIdx = index;
+                break;
+        }
+
+        this.descriptionModal = this.modalService.open(content, { size: 'lg', centered: true });
+    }
+
     closeUnityDeleteModal() {
         this.unityDeleteModal.close();
     }
@@ -784,6 +808,10 @@ export class SubjectComponent implements OnInit {
     changeToModal(closeModal, openModal, size, centered) {
         closeModal.close();
         this.openModal(openModal, size, centered);
+    }
+
+    closeDescriptionModal() {
+        this.descriptionModal.close();
     }
 
     /*********/
@@ -809,12 +837,26 @@ export class SubjectComponent implements OnInit {
     markTaskDone(index) {
         const taskId = this.tasks[index].id;
 
-        this.apiService.get('exercises/done/' + taskId).subscribe(
+        this.apiService.get('task/done/' + taskId).subscribe(
             resp => {
                 if (resp.status === 'success') {
                     this.tasks[index] = resp.task;
 
                     this.getTasksToDo();
+                }
+            }
+        );
+    }
+
+    markExamDone(index) {
+        const examId = this.exams[index].id;
+
+        this.apiService.get('exam/done/' + examId).subscribe(
+            resp => {
+                if (resp.status === 'success') {
+                    this.exams[index] = resp.exam;
+
+                    this.getExamsToDo();
                 }
             }
         );

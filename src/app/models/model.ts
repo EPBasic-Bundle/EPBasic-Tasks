@@ -5,6 +5,7 @@ export class User {
         public surname: string,
         public email: string,
         public password: string,
+        public dark_mode: string,
         public created_at?: string,
         public updated_at?: string,
     ) { }
@@ -129,6 +130,7 @@ export class Exam {
     constructor(
         public id: number,
         public title: string,
+        public description: string,
         public subject_id: number,
         public unity_id: number,
         public mark: number,
@@ -139,3 +141,18 @@ export class Exam {
     ) { }
 }
 
+export class DBEvent {
+    constructor(
+        public start: number,
+        public end: string,
+        public color: {
+            primary: string,
+            secondary: string
+        },
+        public draggable: true,
+        public resizable: {
+            beforeStart: true,
+            afterEnd: true
+        }
+    ) { }
+}

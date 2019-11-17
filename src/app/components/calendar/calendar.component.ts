@@ -45,6 +45,9 @@ export class CalendarComponent implements OnInit {
 
     activeDayIsOpen = true;
 
+    page = 4;
+    pageSize = 6;
+
     constructor(
         private modalService: NgbModal,
         private apiService: ApiService,
@@ -190,7 +193,7 @@ export class CalendarComponent implements OnInit {
             "secondary": event.secondary_color
         }
         event.draggable = true;
-        event.resizable = {"afterEnd": true, "beforeStart": true};
+        event.resizable = { "afterEnd": true, "beforeStart": true };
 
         return event;
     }
@@ -220,5 +223,9 @@ export class CalendarComponent implements OnInit {
 
     findEvent(sEvent) {
         this.events.filter(event => event == sEvent);
+    }
+
+    showEvent(date) {
+        return new Date().getTime() <= new Date(date).getTime();
     }
 }

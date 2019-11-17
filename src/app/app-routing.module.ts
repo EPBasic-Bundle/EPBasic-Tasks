@@ -13,6 +13,7 @@ import { AuthComponent } from './components/auth/auth.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { BookComponent } from './components/book/book.component';
 import { SubjectsComponent } from './components/subjects/subjects.component';
+import { ExamComponent } from './components/exam/exam.component';
 
 const routes: Routes = [
     {
@@ -51,6 +52,11 @@ const routes: Routes = [
     {
         path: 'task/:id',
         component: TaskComponent,
+        canActivate: [IdentityGuard]
+    },
+    {
+        path: 'exam/:id',
+        component: ExamComponent,
         canActivate: [IdentityGuard]
     },
     {

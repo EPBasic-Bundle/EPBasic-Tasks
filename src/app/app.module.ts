@@ -14,6 +14,7 @@ import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
 import { TimetableComponent } from './components/timetable/timetable.component';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
+import { NgxEditorModule } from 'ngx-editor';
 
 import { ColorPickerComponent } from './components/imports/color-picker/color-picker.component';
 import { PdfReaderComponent } from './components/imports/pdf-reader/pdf-reader.component';
@@ -32,6 +33,7 @@ import { BookComponent } from './components/book/book.component';
 import { NgxUploaderModule } from 'ngx-uploader';
 import { ToastComponent } from './components/imports/toast/toast.component';
 import { SubjectsComponent } from './components/subjects/subjects.component';
+import { ExamComponent } from './components/exam/exam.component';
 
 registerLocaleData(localeEs);
 
@@ -51,6 +53,7 @@ registerLocaleData(localeEs);
         BookComponent,
         ToastComponent,
         SubjectsComponent,
+        ExamComponent,
     ],
     imports: [
         BrowserModule,
@@ -66,6 +69,7 @@ registerLocaleData(localeEs);
         }),
         PdfViewerModule,
         NgxUploaderModule,
+        NgxEditorModule
     ],
     providers: [
         { provide: LOCALE_ID, useValue: 'es' },

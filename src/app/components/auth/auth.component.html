@@ -39,7 +39,8 @@
         <form #loginForm="ngForm" (ngSubmit)="onSubmitLogin()">
 
             <ng-container *ngFor="let blockedUser of blockedUsers">
-                <div class="card rounded-25 pointer mb-3" (click)="openUserUnblockModal(userUnblockModal, blockedUser.sub)">
+                <div class="card rounded-25 pointer mb-3"
+                    (click)="openUserUnblockModal(userUnblockModal, blockedUser.sub)">
                     <div class="card-body pr-auto pt-1 pb-1 pl-1 d-flex">
                         <img src="./assets/images/user-image.png" class="avatar-sm" alt="">
                         <h2 class="ml-2 mt-2">
@@ -83,7 +84,7 @@
         <h5 class="modal-title">Desbloquear usuario</h5>
     </div>
     <div class="modal-body">
-            <input type="password" name="pinCode" [(ngModel)]="pinCode" class="mb-3" placeholder="Introduce el código"
+        <input type="password" name="pinCode" [(ngModel)]="pinCode" class="mb-3" placeholder="Introduce el código"
             autofocus>
 
         <button class="btn btn-primary btn-block" (click)="unBlockUser()" [disabled]="pinCode == null">

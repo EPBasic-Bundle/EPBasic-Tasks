@@ -9,13 +9,13 @@
             </button>
             <div class="card rounded-25 mb-4" *ngIf="books && books[0]">
                 <div class="card-body pb-0">
-                    <button class="btn btn-primary btn-sm mb-3 btn-block rounded-25"
+                    <button class="btn btn-primary btn-sm btn-block rounded-25"
                         (click)="openModal(booksModal, 'lg', false)">
                         <i class="fas fa-book"></i>
                         Libros
                     </button>
                     <div class="row">
-                        <div class="col-lg-6 col-md-6 col-6 mb-4" *ngFor="let book of books">
+                        <div class="col-lg-6 col-md-6 col-6 mt-3" *ngFor="let book of books">
                             <div class="card rounded-25 mb-3 shadow-sm" *ngIf="book.pdf_name == null" container="body"
                                 placement="top" ngbTooltip="Este libro no tiene PDF asignado">
                                 <img [src]="'./assets/images/' + book.image" class="card-img-top rounded-top-25">
@@ -37,7 +37,7 @@
                 </div>
                 <div class="card-body pb-0 pt-3">
                     <ng-container *ngIf="tasksToDo[0]">
-                        <hr class="mt-0">
+                        <hr class="mt-0 mb-1">
                         <div *ngFor="let task of tasksToDo;" class="pointer" [routerLink]="['/task/', task.id]">
                             <div class="card-body d-flex justify-content-between pt-1 pb-1">
                                 <span>{{ task.title }}</span>
@@ -45,7 +45,7 @@
                                     [class.far]="task.done == false">
                                 </i>
                             </div>
-                            <hr>
+                            <hr class="mt-1">
                         </div>
                     </ng-container>
                     <p class="text-center" *ngIf="!tasksToDo[0]">¡Felicidades, no tienes tareas!</p>
@@ -58,16 +58,18 @@
                 </div>
                 <div class="card-body pb-0 pt-3">
                     <ng-container *ngIf="examsToDo[0]">
-                        <hr class="mt-0">
+                        <hr class="mt-0 mb-1">
                         <div *ngFor="let exam of examsToDo;" class="pointer" [routerLink]="['/exam/', exam.id]">
                             <div class="card-body d-flex justify-content-between pt-1 pb-1">
                                 <span>{{ exam.title }}</span>
-                                <i class="fas fa-check-circle text-primary mt-1" [class.fas]="exam.done == true" [class.far]="exam.done == false"
-                                [class.text-danger]="exam.mark < 5 && exam.done == true" [class.text-warning]="exam.mark == 5 && exam.done == true"
-                                [class.text-success]="exam.mark > 5 && exam.done == true">
+                                <i class="fas fa-check-circle text-primary mt-1" [class.fas]="exam.done == true"
+                                    [class.far]="exam.done == false"
+                                    [class.text-danger]="exam.mark < 5 && exam.done == true"
+                                    [class.text-warning]="exam.mark == 5 && exam.done == true"
+                                    [class.text-success]="exam.mark > 5 && exam.done == true">
                                 </i>
                             </div>
-                            <hr>
+                            <hr class="mt-1">
                         </div>
                     </ng-container>
                     <p class="text-center" *ngIf="!examsToDo[0]">¡Felicidades, no tienes examenes!</p>
@@ -119,10 +121,10 @@
                                                 Tareas
                                             </button>
                                         </div>
-                                        <hr class="mt-0">
+                                        <hr class="mt-0 mb-1">
                                         <ng-container *ngIf="tasks && tasks[0]">
-                                            <div class="card rounded-25 mb-2" *ngFor="let task of tasks; let i=index"
-                                                data-aos="zoom-in">
+                                            <div class="card rounded-25 mb-2 mt-2"
+                                                *ngFor="let task of tasks; let i=index">
                                                 <div class="card-body d-flex justify-content-between pb-1 pt-1"
                                                     *ngIf="task.id != 0">
                                                     <div class="col-lg-10 pointer pl-0"
@@ -146,7 +148,8 @@
                                                 </div>
                                             </div>
                                         </ng-container>
-                                        <span *ngIf="!tasks || !tasks[0]">No hay tareas en esta unidad</span>
+                                        <span class="small" *ngIf="!tasks || !tasks[0]">No hay tareas en esta
+                                            unidad</span>
                                     </div>
                                     <div class="col-lg-4">
                                         <div class="d-flex justify-content-between">
@@ -157,25 +160,36 @@
                                                 Exámenes
                                             </button>
                                         </div>
-                                        <hr class="mt-0">
+                                        <hr class="mt-0 mb-1">
                                         <ng-container *ngIf="exams && exams[0]">
-                                            <div class="card rounded-25 mb-2" *ngFor="let exam of exams"
-                                                data-aos="zoom-in">
-                                                <div class="card-body d-flex justify-content-between pb-1 pt-1">
-                                                    <span>{{ exam.title }}</span>
-                                                    <span class="badge badge-warning float-right" container="body"
-                                                        *ngIf="exam.id == 0" placement="top"
-                                                        ngbTooltip="Examen sin guardar">
-                                                        <i class="fas fa-save"></i>
-                                                    </span>
-                                                    <i class="fas fa-check-circle text-primary mt-1" [class.fas]="exam.done == true" [class.far]="exam.done == false"
-                                                        [class.text-danger]="exam.mark < 5 && exam.done == true" [class.text-warning]="exam.mark == 5 && exam.done == true"
+                                            <div class="card rounded-25 mb-2 mt-2" *ngFor="let exam of exams">
+                                                <div class="card-body d-flex justify-content-between pb-1 pt-1"
+                                                    *ngIf="exam.id != 0">
+                                                    <div class="col-lg-10 pointer pl-0"
+                                                        [routerLink]="['/exam/', exam.id]">
+                                                        <span>{{ exam.title }}</span>
+                                                    </div>
+
+                                                    <i class="fas fa-check-circle text-primary mt-1 pointer"
+                                                        (click)="markExamDone(i)" [class.fas]="exam.done == true"
+                                                        [class.far]="exam.done == false"
+                                                        [class.text-danger]="exam.mark < 5 && exam.done == true"
+                                                        [class.text-warning]="exam.mark == 5 && exam.done == true"
                                                         [class.text-success]="exam.mark > 5 && exam.done == true">
                                                     </i>
                                                 </div>
+                                                <div class="card-body d-flex justify-content-between pb-1 pt-1"
+                                                    *ngIf="exam.id == 0">
+                                                    <span>{{ exam.title }}</span>
+                                                    <span class="badge badge-warning float-right" container="body"
+                                                        placement="top" ngbTooltip="Examen sin guardar">
+                                                        <i class="fas fa-save"></i>
+                                                    </span>
+                                                </div>
                                             </div>
                                         </ng-container>
-                                        <span *ngIf="!exams || !exams[0]">No hay examenes en esta unidad</span>
+                                        <span class="small" *ngIf="!exams || !exams[0]">No hay examenes en esta
+                                            unidad</span>
                                     </div>
                                     <div class="col-lg-4">
                                         <div class="d-flex justify-content-between">
@@ -186,8 +200,8 @@
                                                 Proyectos
                                             </button>
                                         </div>
-                                        <hr class="mt-0">
-                                        <span>No hay proyectos en esta unidad</span>
+                                        <hr class="mt-0 mb-1">
+                                        <span class="small">No hay proyectos en esta unidad</span>
                                     </div>
                                     <div class="col-lg-4"></div>
                                 </div>
@@ -355,7 +369,10 @@
                 <tr *ngFor="let task of tasks; let i=index">
                     <td>
                         <input type="text" class="form-control mb-2" [(ngModel)]="task.title" />
-                        <textarea class="form-control" rows="2" [(ngModel)]="task.description"></textarea>
+                        <button class="btn btn-block btn-primary"
+                            (click)="openDescriptionModal(descriptionModal, i, 1)">
+                            <i class="fas fa-align-justify"></i> Descripción
+                        </button>
                     </td>
                     <td>
                         <button class="btn btn-sm btn-primary btn-block" [disabled]="task.id != 0"
@@ -372,7 +389,8 @@
                         </button>
                     </td>
                     <td>
-                        <button class="btn btn-primary btn-sm rounded-25" [disabled]="task.id != 0" *ngIf="timetable && timetable.subjects"
+                        <button class="btn btn-primary btn-sm rounded-25" [disabled]="task.id != 0"
+                            *ngIf="timetable && timetable.subjects"
                             (click)="openDateSelectorModal(dateSelectorModal, i, 1)">
                             <i class="far fa-calendar-check"></i>
                             Seleccionar
@@ -436,12 +454,18 @@
                 <tr *ngFor="let exam of exams; let i=index">
                     <td>
                         <input type="text" class="form-control mb-2" [(ngModel)]="exam.title" />
+                        <button class="btn btn-block btn-primary"
+                            (click)="openDescriptionModal(descriptionModal, i, 2)">
+                            <i class="fas fa-align-justify"></i> Descripción
+                        </button>
                     </td>
                     <td>
-                        <input type="number" class="form-control mb-2" max="10" min="0" step="0.01" [(ngModel)]="exam.mark"/>
+                        <input type="number" class="form-control mb-2" max="10" min="0" step="0.01"
+                            [(ngModel)]="exam.mark" />
                     </td>
                     <td>
-                        <button class="btn btn-primary btn-sm rounded-25" [disabled]="exam.id != 0" *ngIf="timetable && timetable.subjects"
+                        <button class="btn btn-primary btn-sm rounded-25" [disabled]="exam.id != 0"
+                            *ngIf="timetable && timetable.subjects"
                             (click)="openDateSelectorModal(dateSelectorModal, i, 2)">
                             <i class="far fa-calendar-check"></i>
                             Seleccionar
@@ -478,6 +502,28 @@
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-outline-secondary" (click)="modal.close()">
+            Cerrar
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #descriptionModal let-close="close">
+    <div class="modal-header">
+        <h5 class="modal-title">Descripción</h5>
+        <button type="button" class="close" (click)="closeDescriptionModal()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <app-ngx-editor [placeholder]="'Escribe la descripción...'" [spellcheck]="false"
+            [(ngModel)]="tasks[sTaskIdx].description" *ngIf="sTaskIdx >= 0">
+        </app-ngx-editor>
+        <app-ngx-editor [placeholder]="'Escribe la descripción...'" [spellcheck]="false"
+            [(ngModel)]="exams[sExamIdx].description" *ngIf="sExamIdx >= 0">
+        </app-ngx-editor>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" (click)="closeDescriptionModal()">
             Cerrar
         </button>
     </div>
@@ -550,14 +596,14 @@
                         <div class="row">
                             <div class="col-lg-3 col-md-3 col-sm-3 ml-2 mb-2"
                                 *ngFor="let number of [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]">
-                                <div class="chip" (click)="selectExercise(number, i)"
-                                    *ngIf="findExercise(number, i) == -1">
-                                    <p>{{ number }}</p>
-                                </div>
-                                <div class="chip bg-dark text-light" (click)="deleteExercise(number, i)"
-                                    *ngIf="findExercise(number, i) != -1">
-                                    <p>{{ number }}</p>
-                                </div>
+                                <span class="badge badge-pill badge-dark p-3 pointer"
+                                    (click)="selectExercise(number, i)" *ngIf="findExercise(number, i) == -1">
+                                    {{ number }}
+                                </span>
+                                <span class="badge badge-pill badge-light p-3 pointer"
+                                    (click)="deleteExercise(number, i)" *ngIf="findExercise(number, i) != -1">
+                                    {{ number }}
+                                </span>
                             </div>
                         </div>
                     </td>

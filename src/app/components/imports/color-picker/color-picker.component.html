@@ -1,8 +1,8 @@
 <div class="color-picker">
     <div class="summary-info" (click)="openModal(colorsModal, 'sm')">
         <div class="info">
-            <p class="style">{{ heading }}</p>
-            <p class="style-value">{{ color }}</p>
+            <p class="style text-dark">{{ heading }}</p>
+            <p class="style-value text-primary">{{ color }}</p>
         </div>
 
         <div class="circle" [ngStyle]="{'background': color}"></div>

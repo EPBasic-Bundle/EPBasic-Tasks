@@ -36,6 +36,7 @@ export class SettingsComponent {
             this.identity.surname,
             this.identity.email,
             null,
+            this.identity.dark_mode,
         );
     }
 

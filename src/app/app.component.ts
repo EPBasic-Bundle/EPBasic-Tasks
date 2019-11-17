@@ -20,7 +20,7 @@ export class AppComponent implements OnInit, DoCheck {
         private apiService: ApiService,
         private modalService: NgbModal,
         private router: Router,
-    ) {}
+    ) { }
 
     ngOnInit() {
         AOS.init();

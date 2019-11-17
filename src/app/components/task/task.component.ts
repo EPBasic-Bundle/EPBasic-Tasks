@@ -64,7 +64,7 @@ export class TaskComponent implements OnInit {
     }
 
     markAsDoneAll() {
-        this.apiService.get('exercises/done/' + this.taskId).subscribe(
+        this.apiService.get('task/done/' + this.taskId).subscribe(
             resp => {
                 if (resp.status === 'success') {
                     this.task.pages = resp.task.pages;

@@ -1,6 +1,6 @@
 <div class="container-fluid mt-4 mb-5">
     <div class="row justify-content-center">
-        <div class="col-lg-7 mb-1">
+        <div class="col-lg-7 mb-4">
             <table class="timetable table-responsive" *ngIf="timetable && subjects" data-aos="zoom-in">
                 <tr class="days">
                     <th></th>
@@ -18,25 +18,28 @@
                         <td class="td bg-dark text-center" *ngIf="subjectIsSelected(tSubject.subject_id) != true">
                             {{ findSubject(tSubject.subject_id).name }}
                         </td>
-                        <td class="td text-dark text-center font-weight-bold" *ngIf="subjectIsSelected(tSubject.subject_id) == true" [ngStyle]="{ background: findSubject(tSubject.subject_id).primary_color }">
+                        <td class="td text-dark text-center font-weight-bold"
+                            *ngIf="subjectIsSelected(tSubject.subject_id) == true"
+                            [ngStyle]="{ background: findSubject(tSubject.subject_id).primary_color }">
                             {{ findSubject(tSubject.subject_id).name }}
                         </td>
                     </ng-container>
                 </tr>
             </table>
         </div>
-        <div class="col-lg-2">
+        <div class="col-lg-2 mb-2">
             <div class="card rounded-25" data-aos="zoom-in">
                 <div class="card-body pb-0">
                     <h1>Asignaturas</h1>
                     <hr>
-                    <button class="btn btn-primary btn-sm mb-3 btn-block" *ngIf="subjects.length != 0"
+                    <button class="btn btn-sm btn-block btn-primary mb-3 " *ngIf="subjects.length != 0"
                         (click)="openModal(timetableModal, 'xl', false)">
                         <i class="fas fa-clock"></i>
                         Horario
                     </button>
-                    <button class="btn btn-primary btn-sm mb-3 btn-block" placement="top" ngbTooltip="Añade asignaturas para poder generar el horario"
-                    *ngIf="subjects.length == 0" disabled>
+                    <button class="btn btn-sm btn-block btn-primary mb-3" placement="top"
+                        ngbTooltip="Añade asignaturas para poder generar el horario" *ngIf="subjects.length == 0"
+                        disabled>
                         <i class="fas fa-clock"></i>
                         Horario
                     </button>
@@ -47,8 +50,10 @@
                                     <span>{{ subject.name }}</span>
                                 </div>
                                 <div class="col-lg-4 pointer" (click)="markSubjectInTimetable(subject.id)">
-                                    <div class="circle float-right" [ngStyle]="{ background: subject.primary_color }" *ngIf="subject.id != 0"></div>
-                                    <span class="badge badge-warning float-right" container="body" placement="top" ngbTooltip="Asignatura sin guardar" *ngIf="subject.id == 0">
+                                    <div class="circle float-right" [ngStyle]="{ background: subject.primary_color }"
+                                        *ngIf="subject.id != 0"></div>
+                                    <span class="badge badge-warning float-right" container="body" placement="top"
+                                        ngbTooltip="Asignatura sin guardar" *ngIf="subject.id == 0">
                                         <i class="fas fa-save"></i>
                                     </span>
                                 </div>
