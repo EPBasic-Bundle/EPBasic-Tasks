@@ -1,8 +1,8 @@
 import { Component, DoCheck, OnInit } from '@angular/core';
 import { ApiService } from './services/api.service';
-import * as AOS from 'aos';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
+import * as AOS from 'aos';
 
 @Component({
     selector: 'app-root',

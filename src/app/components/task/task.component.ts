@@ -3,6 +3,8 @@ import { Task, Book } from '../../models/model';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ApiService } from '../../services/api.service';
 
+import * as moment from 'moment';
+
 @Component({
     selector: 'app-task',
     templateUrl: './task.component.html',
@@ -17,7 +19,9 @@ export class TaskComponent implements OnInit {
     constructor(
         private apiService: ApiService,
         private route: ActivatedRoute
-    ) { }
+    ) {
+        moment.locale('es');
+    }
 
     ngOnInit() {
         this.route.params.subscribe(
@@ -37,10 +41,20 @@ export class TaskComponent implements OnInit {
 
                     if (this.task.book_id) {
                         this.getBook();
+
+
                     }
                 }
             }
         );
+    }
+
+    daysRemaining() {
+        return moment(this.task.delivery_date).startOf('hour').fromNow()
+    }
+
+    deliveryDate() {
+        return moment(this.task.delivery_date).format('LLL');
     }
 
     getBook() {

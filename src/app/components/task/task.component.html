@@ -1,24 +1,18 @@
 <div class="container mt-4" *ngIf="task">
     <div class="card rounded-25">
         <div class="card-body">
-
-            <button class="btn btn-primary rounded-25 btn-sm float-right" (click)="markAsDoneAll()"
-                *ngIf="task.done == false">
-                <i class="fas fa-list-alt"></i>
-                Marcar como <b>Terminada</b>
-            </button>
-            <button class="btn btn-primary rounded-25 btn-sm float-right" (click)="markAsDoneAll()"
-                *ngIf="task.done == true">
-                <i class="fas fa-list-alt"></i>
-                Marcar como <b>Sin terminar</b>
-            </button>
-
-            <h1>
-                <i class="fas fa-check-circle text-primary mt-1" [class.fas]="task.done == true"
-                    [class.far]="task.done == false">
-                </i>
-                {{ task.title }}
-            </h1>
+            <div class="d-flex justify-content-between">
+                <h1>
+                    <i class="far fa-check-circle text-primary mt-1 pointer" (click)="markAsDoneAll()"
+                        *ngIf="task.done == false"></i>
+                    <i class="fas fa-check-circle text-primary mt-1 pointer" (click)="markAsDoneAll()"
+                        *ngIf="task.done == true"></i>
+                    {{ task.title }}
+                </h1>
+                <span>
+                    Entregar <span class="text-primary">{{ daysRemaining() }}</span>
+                </span>
+            </div>
             <hr>
             <div class="row">
                 <div class="col-lg-2" *ngIf="task.book_id != null">
@@ -61,8 +55,9 @@
                         <hr>
                     </ng-container>
                 </div>
-                <div class="col-lg-4 d-flex justify-content-center">
-                    <h1 class="text-light">{{ task.delivery_date }}</h1>
+                <div class="col-lg-4">
+                    <span class="text-primary">Día de entrega</span>
+                    <h3 class="text-light">{{ deliveryDate() }}</h3>
                 </div>
             </div>
         </div>

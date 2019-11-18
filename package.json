@@ -29,6 +29,7 @@
     "calendar-utils": "0.3.3",
     "date-fns": "1.29.0",
     "flatpickr": "4.6.2",
+    "moment": "^2.24.0",
     "ng2-pdf-viewer": "^5.3.4",
     "ngx-bootstrap": "^5.2.0",
     "ngx-editor": "^4.1.0",

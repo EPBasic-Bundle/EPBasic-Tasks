@@ -24,7 +24,7 @@ export class SubjectComponent implements OnInit {
     timetable: Timetable;
     subjects: Subject[];
 
-    images = ['books.png', 'paper.png'];
+    images = ['books.png', 'paper.png', 'pdf.png'];
 
     modal;
     imagePickerModal;

@@ -1,6 +1,7 @@
 <div class="row justify-content-center mt-4">
-    <div class="col-md-6">
-        <div class="card shadow-sm rounded-25" data-aos="zoom-in">
+    <div class="col-md-6" data-aos="zoom-in">
+
+        <div class="card shadow-sm rounded-25">
             <div class="card-body">
                 <div class="container">
                     <h4>Usuario</h4>
@@ -49,9 +50,14 @@
                                     Actualizar <i class="fa fa-spinner fa-spin fa-fw" *ngIf="loading == true"></i>
                                 </button>
                             </form>
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" #dark_mode="ngModel" class="custom-control-input" id="darkMode"
+                                    [(ngModel)]="user.dark_mode">
+                                <label class="custom-control-label" for="darkMode">Modo oscuro</label>
+                            </div>
+
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>

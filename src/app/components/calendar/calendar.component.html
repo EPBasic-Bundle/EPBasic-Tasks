@@ -91,23 +91,20 @@
                                 <section class="float-right mr-2">
                                     <ng-container
                                         *ngIf="(event.end | date:'d \'de\' MMM') != (event.start | date:'d \'de\' MMM')">
-                                        <span class="small">
+                                        <p class="small text-light">
                                             {{ event.start | date:'d \'de\' MMM' }}
-                                        </span>
-                                        -
-                                        <span class="small">
+                                            -
                                             {{ event.end | date:'d \'de\' MMM' }}
-                                        </span>
+                                        </p>
                                     </ng-container>
                                     <ng-container
                                         *ngIf="(event.end | date:'d \'de\' MMM') == (event.start | date:'d \'de\' MMM')">
-                                        <span class="small ">{{ event.start | date:'d \'de\' MMM' }}</span>
+                                        <p class="small text-primary mb-0">{{ event.start | date:'d \'de\' MMM' }}</p>
 
-                                        <section>
-                                            <span class="small">{{ event.start | date:'HH:mm' }}</span>
-                                            -
-                                            <span class="small">{{ event.end | date:'HH:mm' }}</span>
-                                        </section>
+                                        <p class="small">
+                                            {{ event.start | date:'HH:mm' }} -
+                                            {{ event.end | date:'HH:mm' }}
+                                        </p>
                                     </ng-container>
                                 </section>
 

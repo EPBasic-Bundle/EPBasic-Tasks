@@ -163,6 +163,13 @@ export class CalendarComponent implements OnInit {
         this.apiService.put('event/' + event.id, event).subscribe(
             resp => {
                 if (resp.status === 'success') {
+
+                    if (resp.event.task_id > 0) {
+                        this.apiService.put('task/start/' + event.task_id, resp.event.start);
+                    } if (resp.event.exam_id > 0) {
+                        this.apiService.put('exam/start/' + event.exam_id, resp.event.start);
+                    }
+
                     this.events[index] = this.convertEvent(resp.event);
                 }
             }
