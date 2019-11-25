@@ -35,6 +35,8 @@ import { ToastComponent } from './components/imports/toast/toast.component';
 import { SubjectsComponent } from './components/subjects/subjects.component';
 import { ExamComponent } from './components/exam/exam.component';
 
+import { UiSwitchModule } from 'ngx-ui-switch';
+
 registerLocaleData(localeEs);
 
 @NgModule({
@@ -69,7 +71,8 @@ registerLocaleData(localeEs);
         }),
         PdfViewerModule,
         NgxUploaderModule,
-        NgxEditorModule
+        NgxEditorModule,
+        UiSwitchModule
     ],
     providers: [
         { provide: LOCALE_ID, useValue: 'es' },

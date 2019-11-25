@@ -23,6 +23,7 @@ export class Subject {
         public exams_percentage?: number,
         public projects_percentage?: number,
         public behavior_percentage?: number,
+        public tasks_has_mark?: boolean,
         public created_at?: string,
         public updated_at?: string,
         public tasks?: Task[],

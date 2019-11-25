@@ -319,3 +319,15 @@ h3 {
     color: #eee !important;
   }
 }
+
+@import "~ngx-ui-switch/ui-switch.component.scss";
+
+.switch {
+  background: $secondary;
+  small {
+    background: #fff;
+  }
+  .checked {
+    background: $primary;
+  }
+}

@@ -32,7 +32,7 @@
               "node_modules/aos/dist/aos.css"
             ],
             "scripts": [
-                "src/assets/js/auth.js"
+              "src/assets/js/auth.js"
             ]
           },
           "configurations": {
@@ -96,7 +96,8 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "./node_modules/ngx-ui-switch/ui-switch.component.css"
             ],
             "scripts": []
           }
@@ -127,6 +128,7 @@
           }
         }
       }
-    }},
+    }
+  },
   "defaultProject": "EPBasic-Tasks"
 }

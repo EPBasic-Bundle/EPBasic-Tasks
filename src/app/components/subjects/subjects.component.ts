@@ -11,6 +11,8 @@ import { Subject } from '../../models/model';
 })
 export class SubjectsComponent implements OnInit {
     subjects: Subject[];
+    subject: Subject;
+
     modal;
     percentajesModal;
 
@@ -135,6 +137,16 @@ export class SubjectsComponent implements OnInit {
 
     deleteSubjectFront(index) {
         this.subjects.splice(index, 1);
+    }
+
+    getSubject(id) {
+        this.apiService.get('subject/all/' + id).subscribe(
+            resp => {
+                if (resp.status === 'success') {
+                    this.subject = resp.subject;
+                }
+            }
+        );
     }
 
     /******************/
