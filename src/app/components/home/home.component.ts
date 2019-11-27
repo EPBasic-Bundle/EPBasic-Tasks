@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../services/api.service';
-import { Subject, Timetable, Study } from '../../models/model';
+import { Subject, Timetable, Study, Year, Evaluation } from '../../models/model';
 import { ToastService } from '../../services/toast.service';
 
 @Component({
@@ -19,8 +19,13 @@ export class HomeComponent implements OnInit {
     dayHour;
 
     studies: Study[] = [];
+    years: Year[] = [];
+    evaluations: Evaluation[] = [];
 
     loading = [false, false];
+
+    sStudyId;
+    sYearId;
 
     constructor(
         private apiService: ApiService,
@@ -91,6 +96,36 @@ export class HomeComponent implements OnInit {
             resp => {
                 if (resp.status === 'success') {
                     this.studies = resp.studies;
+                }
+            }
+        );
+    }
+
+    getYears() {
+        this.apiService.get('years/' + this.sStudyId).subscribe(
+            resp => {
+                if (resp.status === 'success') {
+                    this.years = resp.years;
+
+                    for (let i = 0; i < this.years.length; i++) {
+                        this.years[i].start = this.formatDate(this.years[i].start);
+                        this.years[i].end = this.formatDate(this.years[i].end);
+                    }
+                }
+            }
+        );
+    }
+
+    getEvaluations() {
+        this.apiService.get('evaluations/' + this.sYearId).subscribe(
+            resp => {
+                if (resp.status === 'success') {
+                    this.evaluations = resp.evaluations;
+
+                    for (let i = 0; i < this.evaluations.length; i++) {
+                        this.evaluations[i].start = this.formatDate(this.evaluations[i].start);
+                        this.evaluations[i].end = this.formatDate(this.evaluations[i].end);
+                    }
                 }
             }
         );
@@ -218,8 +253,10 @@ export class HomeComponent implements OnInit {
         this.studies.splice(index, 1);
     }
 
-    selectStudy() {
+    selectStudy(id) {
+        this.sStudyId = id;
 
+        this.getYears();
     }
 
     /***************/
@@ -248,12 +285,154 @@ export class HomeComponent implements OnInit {
         );
     }
 
-    deleteStudy(studies_id, index) {
-        this.apiService.delete('study/' + studies_id).subscribe(
+    deleteStudy(study_id, index) {
+        this.apiService.delete('study/' + study_id).subscribe(
             resp => {
                 if (resp.status === 'success') {
                     this.studies.splice(index, 1);
                     this.showToast('Estudio eliminado correctamente', 'success');
+                }
+            }
+        );
+    }
+
+    /*********/
+    /* YEAR */
+    /*********/
+
+    createYear() {
+        this.years.push({
+            id: 0,
+            start: null,
+            end: null,
+            study_id: this.sStudyId
+        });
+    }
+
+    deleteYearFront(index) {
+        this.years.splice(index, 1);
+    }
+
+    selectYear(id) {
+        this.sYearId = id;
+
+        this.getEvaluations();
+    }
+
+    /***************/
+    /* YEAR CRUD */
+    /**************/
+
+    storeYear(year, index) {
+        year.start = this.formatDateDB(year.start);
+        year.end = this.formatDateDB(year.end);
+
+        this.apiService.post('year', year).subscribe(
+            resp => {
+                if (resp.status === 'success') {
+                    this.years[index] = resp.year;
+
+                    this.years[index].start = this.formatDate(resp.year.start);
+                    this.years[index].end = this.formatDate(resp.year.end);
+
+                    this.showToast('Año añadido correctamente', 'success');
+                }
+            }
+        );
+    }
+
+    updateYear(year, index) {
+        year.start = this.formatDateDB(year);
+        year.end = this.formatDateDB(year);
+
+        this.apiService.put('year/' + year.id, year).subscribe(
+            resp => {
+                if (resp.status === 'success') {
+                    this.years[index] = resp.year;
+
+                    this.years[index].start = this.formatDate(resp.year.start);
+                    this.years[index].end = this.formatDate(resp.year.end);
+
+                    this.showToast('Año actualizado correctamente', 'success');
+                }
+            }
+        );
+    }
+
+    deleteYear(year_id, index) {
+        this.apiService.delete('year/' + year_id).subscribe(
+            resp => {
+                if (resp.status === 'success') {
+                    this.years.splice(index, 1);
+                    this.showToast('Año eliminado correctamente', 'success');
+                }
+            }
+        );
+    }
+
+    /**************/
+    /* EVALUATION */
+    /**************/
+
+    createEvaluation() {
+        this.evaluations.push({
+            id: 0,
+            start: null,
+            end: null,
+            year_id: this.sYearId,
+        });
+    }
+
+    deleteEvaluationFront(index) {
+        this.evaluations.splice(index, 1);
+    }
+
+    /***************/
+    /* STUDY CRUD */
+    /**************/
+
+    storeEvaluation(evaluation, index) {
+        evaluation.start = this.formatDateDB(evaluation.start);
+        evaluation.end = this.formatDateDB(evaluation.end);
+
+        this.apiService.post('evaluation', evaluation).subscribe(
+            resp => {
+                if (resp.status === 'success') {
+                    this.evaluations[index] = resp.evaluation;
+
+                    this.evaluations[index].start = this.formatDate(resp.evaluation.start);
+                    this.evaluations[index].end = this.formatDate(resp.evaluation.end);
+
+                    this.showToast('Evaluación añadido correctamente', 'success');
+                }
+            }
+        );
+    }
+
+    updateEvaluation(evaluation, index) {
+        evaluation.start = this.formatDateDB(evaluation);
+        evaluation.end = this.formatDateDB(evaluation);
+
+        this.apiService.put('evaluation/' + evaluation.id, evaluation).subscribe(
+            resp => {
+                if (resp.status === 'success') {
+                    this.evaluations[index] = resp.evaluation;
+
+                    this.evaluations[index].start = this.formatDate(resp.evaluation.start);
+                    this.evaluations[index].end = this.formatDate(resp.evaluation.end);
+
+                    this.showToast('Evaluación actualizado correctamente', 'success');
+                }
+            }
+        );
+    }
+
+    deleteEvaluation(evaluation_id, index) {
+        this.apiService.delete('evaluation/' + evaluation_id).subscribe(
+            resp => {
+                if (resp.status === 'success') {
+                    this.evaluations.splice(index, 1);
+                    this.showToast('Evaluación eliminado correctamente', 'success');
                 }
             }
         );
@@ -274,5 +453,19 @@ export class HomeComponent implements OnInit {
                 break;
             }
         }
+    }
+
+    formatDateDB(date) {
+        return (date.year + '-' + date.month + '-' + date.day);
+    }
+
+    formatDate(date) {
+        date = new Date(date);
+
+        return {
+            year: date.getFullYear(),
+            month: date.getMonth() + 1,
+            day: date.getDate()
+        };
     }
 }

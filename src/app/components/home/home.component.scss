@@ -161,19 +161,7 @@ $progress-fill: #0074d9;
         background: $progress-track;
       }
     }
-    &.step01 {
-      @include progress-step($step);
-    }
-    &.step02 {
-      @include progress-step($step);
-    }
-    &.step03 {
-      @include progress-step($step);
-    }
-    &.step04 {
-      @include progress-step($step);
-    }
-    &.step05 {
+    &.step {
       @include progress-step($step);
     }
   }

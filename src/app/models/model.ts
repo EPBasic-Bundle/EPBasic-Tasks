@@ -150,3 +150,25 @@ export class Study {
         public updated_at?: string,
     ) { }
 }
+
+export class Year {
+    constructor(
+        public id: number,
+        public study_id: number,
+        public start,
+        public end,
+        public created_at?: string,
+        public updated_at?: string,
+    ) { }
+}
+
+export class Evaluation {
+    constructor(
+        public id: number,
+        public year_id: number,
+        public start,
+        public end,
+        public created_at?: string,
+        public updated_at?: string,
+    ) { }
+}

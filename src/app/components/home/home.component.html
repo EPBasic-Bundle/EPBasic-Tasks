@@ -5,106 +5,193 @@
     <div class="row justify-content-center">
         <div class="col-lg-6 col-md-12 mb-4">
 
-            <div class="card rounded-25" *ngIf="!subjects || !subjects[0] && this.loading[0] == false">
-                <div class="card-body">
-                    <h1>Bienvenido a EPBasic Task</h1>
-                    <hr>
-                    <div class="container mb-2">
-                        <div class="progress-group">
-                            <div class="wrapper">
-                                <div class="step step01 complete">
-                                    <progress class="progress" value="100" max="100"></progress>
-                                    <div class="progress-circle"></div>
-                                </div>
-                                <div class="step step02 complete">
-                                    <progress class="progress" value="100" max="100"></progress>
-                                    <div class="progress-circle"></div>
-                                </div>
-                                <div class="step step03 complete">
-                                    <progress class="progress" value="100" max="100"></progress>
-                                    <div class="progress-circle"></div>
-                                </div>
-                                <div class="step step04 complete">
-                                    <progress class="progress" value="100" max="100"></progress>
-                                    <div class="progress-circle"></div>
-                                </div>
-                                <div class="step step05">
-                                    <progress class="progress" value="20" max="100"></progress>
-                                    <div class="progress-circle"></div>
-                                </div>
-                            </div>
-                            <div class="progress-labels">
-                                <div class="label">Estudios</div>
-                                <div class="label">Años</div>
-                                <div class="label">Evaluaciones</div>
-                                <div class="label">Asignaturas</div>
-                                <div class="label">Horario</div>
-                            </div>
+            <div class="container mb-2">
+                <div class="progress-group">
+                    <div class="wrapper">
+                        <div class="step complete">
+                            <progress class="progress" value="100" max="100"></progress>
+                            <div class="progress-circle"></div>
+                        </div>
+                        <div class="step complete">
+                            <progress class="progress" value="100" max="100"></progress>
+                            <div class="progress-circle"></div>
+                        </div>
+                        <div class="step complete">
+                            <progress class="progress" value="100" max="100"></progress>
+                            <div class="progress-circle"></div>
+                        </div>
+                        <div class="step complete">
+                            <progress class="progress" value="0" max="100"></progress>
+                            <div class="progress-circle"></div>
+                        </div>
+                        <div class="step step05">
+                            <progress class="progress" value="0" max="100"></progress>
+                            <div class="progress-circle"></div>
                         </div>
                     </div>
+                    <div class="progress-labels">
+                        <div class="label">Estudios</div>
+                        <div class="label">Años</div>
+                        <div class="label">Evaluaciones</div>
+                        <div class="label">Asignaturas</div>
+                        <div class="label">Horario</div>
+                    </div>
+                </div>
+            </div>
 
+            <div class="card rounded-25" *ngIf="!subjects || !subjects[0] && this.loading[0] == false">
+                <div class="card-body">
                     <section>
-                        <h3>Paso 1 de 5 | <b>Estudios</b></h3>
+                        <h3>Paso 1 de 3 | <b>Estudios</b></h3>
                         <hr class="bg-light mt-1">
 
-                        <div class="row mt-4">
-                            <div class="col-lg-8">
-                                <table class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>Nombre</th>
-                                            <th class="pointer" (click)="createStudy()">
-                                                Añadir <i class="fas fa-plus text-primary ml-1"></i>
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr *ngFor="let study of studies; let i=index">
-                                            <td>{{ i + 1 }}</td>
-                                            <td>
-                                                <input type="text" class="form-control mb-2" [(ngModel)]="study.name" />
-                                            </td>
-                                            <td>
-                                                <ng-container *ngIf="study.id == 0">
-                                                    <button class="btn btn-primary rounded-25 mr-2"
-                                                        (click)="storeStudy(study, i)" [disabled]="study.name == ''">
-                                                        <i class="fa fa-save"></i>
-                                                    </button>
-                                                    <button class="btn btn-danger rounded-25"
-                                                        (click)="deleteStudyFront(i)">
-                                                        <i class="fa fa-trash"></i>
-                                                    </button>
-                                                </ng-container>
-                                                <ng-container *ngIf="study.id > 0">
-                                                    <button class="btn btn-secondary rounded-25 mr-2"
-                                                        (click)="updateStudy(study, i)">
-                                                        <i class="fas fa-pen"></i>
-                                                    </button>
-                                                    <button class="btn btn-danger rounded-25"
-                                                        (click)="deleteStudy(study.id, i)">
-                                                        <i class="fa fa-trash"></i>
-                                                    </button>
-                                                </ng-container>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="list-group w-100 mb-3">
-                                    <a class="list-group-item list-group-item-action"
-                                        *ngFor="let study of studies; let i = index">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <div class="font-weight-bold">{{ study.name }}</div>
-                                            <button class="btn btn-primary rounded-25" (click)="selectStudy(i)">
-                                                Seleccionar <i class="fas fa-sign-in-alt ml-1"></i>
+                        <table class="table table-bordered mt-4">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Nombre</th>
+                                    <th class="pointer" (click)="createStudy()">
+                                        Añadir <i class="fas fa-plus text-primary ml-1"></i>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let study of studies; let i=index">
+                                    <td>{{ i + 1 }}</td>
+                                    <td>
+                                        <input type="text" class="form-control mb-2" [(ngModel)]="study.name" />
+                                    </td>
+                                    <td>
+                                        <ng-container *ngIf="study.id == 0">
+                                            <button class="btn btn-primary rounded-25 mr-2"
+                                                (click)="storeStudy(study, i)" [disabled]="study.name == ''">
+                                                <i class="fa fa-save"></i>
                                             </button>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
+                                            <button class="btn btn-danger rounded-25" (click)="deleteStudyFront(i)">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </ng-container>
+                                        <ng-container *ngIf="study.id > 0">
+                                            <button class="btn btn-secondary rounded-25 mr-2"
+                                                (click)="updateStudy(study, i)">
+                                                <i class="fas fa-pen"></i>
+                                            </button>
+                                            <button class="btn btn-danger rounded-25"
+                                                (click)="deleteStudy(study.id, i)">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </ng-container>
+                                        <button class="btn btn-primary rounded-25 float-right"
+                                            (click)="selectStudy(study.id)">
+                                            Seleccionar <i class="fas fa-sign-in-alt ml-1"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </section>
+                    <section>
+                        <h3>Paso 2 de 3 | <b>Años</b></h3>
+                        <hr class="bg-light mt-1">
+
+                        <table class="table table-bordered mt-4">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Inicio</th>
+                                    <th>Fin</th>
+                                    <th class="pointer" (click)="createYear()">
+                                        Añadir <i class="fas fa-plus text-primary ml-1"></i>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let year of years; let i=index">
+                                    <td>{{ i + 1 }}</td>
+                                    <td>
+                                        <ngb-datepicker [(ngModel)]="year.start"></ngb-datepicker>
+                                    </td>
+                                    <td>
+                                        <ngb-datepicker [(ngModel)]="year.end"></ngb-datepicker>
+                                    </td>
+                                    <td>
+                                        <ng-container *ngIf="year.id == 0">
+                                            <button class="btn btn-primary rounded-25 mr-2" (click)="storeYear(year, i)"
+                                                [disabled]="year.start == null || year.end == null">
+                                                <i class="fa fa-save"></i>
+                                            </button>
+                                            <button class="btn btn-danger rounded-25" (click)="deleteYearFront(i)">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </ng-container>
+                                        <ng-container *ngIf="year.id > 0">
+                                            <button class="btn btn-secondary rounded-25 mr-2"
+                                                (click)="updateYear(year, i)">
+                                                <i class="fas fa-pen"></i>
+                                            </button>
+                                            <button class="btn btn-danger rounded-25" (click)="deleteYear(year.id, i)">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </ng-container>
+                                        <button class="btn btn-primary rounded-25 float-right"
+                                            (click)="selectYear(year.id)">
+                                            <i class="fas fa-sign-in-alt ml-1"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </section>
+                    <section>
+                        <h3>Paso 3 de 3 | <b>Evaluaciones</b></h3>
+                        <hr class="bg-light mt-1">
+
+                        <table class="table table-bordered mt-4">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Inicio</th>
+                                    <th>Fin</th>
+                                    <th class="pointer" (click)="createEvaluation()">
+                                        Añadir <i class="fas fa-plus text-primary ml-1"></i>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let evaluation of evaluations; let i=index">
+                                    <td>{{ i + 1 }}</td>
+                                    <td>
+                                        <ngb-datepicker [(ngModel)]="evaluation.start"></ngb-datepicker>
+                                    </td>
+                                    <td>
+                                        <ngb-datepicker [(ngModel)]="evaluation.end"></ngb-datepicker>
+                                    </td>
+                                    <td>
+                                        <ng-container *ngIf="evaluation.id == 0">
+                                            <button class="btn btn-primary rounded-25 mr-2"
+                                                (click)="storeEvaluation(evaluation, i)"
+                                                [disabled]="evaluation.start == null || evaluation.end == null">
+                                                <i class="fa fa-save"></i>
+                                            </button>
+                                            <button class="btn btn-danger rounded-25"
+                                                (click)="deleteEvaluationFront(i)">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </ng-container>
+                                        <ng-container *ngIf="evaluation.id > 0">
+                                            <button class="btn btn-secondary rounded-25 mr-2"
+                                                (click)="updateEvaluation(evaluation, i)">
+                                                <i class="fas fa-pen"></i>
+                                            </button>
+                                            <button class="btn btn-danger rounded-25"
+                                                (click)="deleteEvaluation(evaluation.id, i)">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </ng-container>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </section>
                 </div>
             </div>
@@ -181,9 +268,9 @@
                                     <div class="col-lg-4 col-md-4">
                                         <b>Proyectos</b>
                                         <hr class="mt-1 mb-1">
-                                        <span class="small" *ngIf="!subject.projects || !subject.projects[0]">No tienes
-                                            proyectos
-                                            pendientes</span>
+                                        <span class="small" *ngIf="!subject.projects || !subject.projects[0]">
+                                            No tienes proyectos pendientes
+                                        </span>
                                     </div>
                                 </div>
                             </div>

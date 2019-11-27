@@ -315,8 +315,29 @@ h3 {
     background-color: #343a40;
   }
 
+  .btn-light {
+    color: #fff;
+  }
+
   .text-dark {
     color: #eee !important;
+  }
+
+  /* CALENDAR */
+
+  .cal-month-view .cal-cell-top {
+    background-color: #343a40;
+    .cal-day-number {
+      color: #fff !important;
+    }
+  }
+
+  mwl-calendar-month-cell {
+    background-color: #343a40;
+  }
+
+  .cal-month-view .cal-header .cal-cell {
+    background-color: #343a40;
   }
 }
 
