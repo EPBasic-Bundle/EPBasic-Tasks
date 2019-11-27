@@ -142,18 +142,11 @@ export class Exam {
     ) { }
 }
 
-export class DBEvent {
+export class Study {
     constructor(
-        public start: number,
-        public end: string,
-        public color: {
-            primary: string,
-            secondary: string
-        },
-        public draggable: true,
-        public resizable: {
-            beforeStart: true,
-            afterEnd: true
-        }
+        public id: number,
+        public name: string,
+        public created_at?: string,
+        public updated_at?: string,
     ) { }
 }

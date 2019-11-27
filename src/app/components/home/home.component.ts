@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../services/api.service';
-import { Subject, Timetable } from '../../models/model';
+import { Subject, Timetable, Study } from '../../models/model';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
     selector: 'app-home',
@@ -17,16 +18,20 @@ export class HomeComponent implements OnInit {
     weekDay;
     dayHour;
 
+    studies: Study[] = [];
+
     loading = [false, false];
 
     constructor(
-        private apiService: ApiService
+        private apiService: ApiService,
+        public toastService: ToastService
     ) { }
 
     ngOnInit() {
         this.timeNow();
         this.getSubjectsWithAll();
         this.getTimetable();
+        this.getStudies();
     }
 
     /*****************/
@@ -78,6 +83,16 @@ export class HomeComponent implements OnInit {
                     }
                 }
             }, () => this.loading[0] = false
+        );
+    }
+
+    getStudies() {
+        this.apiService.get('studies').subscribe(
+            resp => {
+                if (resp.status === 'success') {
+                    this.studies = resp.studies;
+                }
+            }
         );
     }
 
@@ -186,5 +201,78 @@ export class HomeComponent implements OnInit {
                 }
             }
         );
+    }
+
+    /*********/
+    /* STUDY */
+    /*********/
+
+    createStudy() {
+        this.studies.push({
+            id: 0,
+            name: '',
+        });
+    }
+
+    deleteStudyFront(index) {
+        this.studies.splice(index, 1);
+    }
+
+    selectStudy() {
+
+    }
+
+    /***************/
+    /* STUDY CRUD */
+    /**************/
+
+    storeStudy(study, index) {
+        this.apiService.post('study', study).subscribe(
+            resp => {
+                if (resp.status === 'success') {
+                    this.studies[index] = resp.study;
+                    this.showToast('Estudio añadido correctamente', 'success');
+                }
+            }
+        );
+    }
+
+    updateStudy(study, index) {
+        this.apiService.put('study/' + study.id, study).subscribe(
+            resp => {
+                if (resp.status === 'success') {
+                    this.studies[index] = resp.study;
+                    this.showToast('Estudio actualizado correctamente', 'success');
+                }
+            }
+        );
+    }
+
+    deleteStudy(studies_id, index) {
+        this.apiService.delete('study/' + studies_id).subscribe(
+            resp => {
+                if (resp.status === 'success') {
+                    this.studies.splice(index, 1);
+                    this.showToast('Estudio eliminado correctamente', 'success');
+                }
+            }
+        );
+    }
+
+    /*********/
+    /* OTROS */
+    /*********/
+
+    showToast(text, type) {
+        switch (type) {
+            case 'success': {
+                this.toastService.show(text, { classname: 'bg-dark text-light', delay: 5000 });
+                break;
+            }
+            case 'danger': {
+                this.toastService.show(text, { classname: 'bg-danger text-light', delay: 5000 });
+                break;
+            }
+        }
     }
 }

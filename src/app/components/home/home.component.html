@@ -1,3 +1,6 @@
+<div class="container mt-4" *ngIf="this.loading[0] == true">
+    Cargando...
+</div>
 <div class="container-fluid mt-4 mb-5" *ngIf="this.loading[0] == false">
     <div class="row justify-content-center">
         <div class="col-lg-6 col-md-12 mb-4">
@@ -6,15 +9,103 @@
                 <div class="card-body">
                     <h1>Bienvenido a EPBasic Task</h1>
                     <hr>
-                    <div class="row">
-                        <div class="col-lg-3"
-                            *ngFor="let i of [{img: 'task.png', name: 'Tareas'},{img: 'exam.png', name: 'Examenes'},{img: 'books.png', name: 'Libros'},{img: 'timetable.png', name: 'Horario'}]">
-                            <div class="card">
-                                <img [src]="'./assets/images/' + i.img" class="card-img-top" alt="...">
-                                <h5 class="card-title mt-2 text-center">{{ i.name }}</h5>
+                    <div class="container mb-2">
+                        <div class="progress-group">
+                            <div class="wrapper">
+                                <div class="step step01 complete">
+                                    <progress class="progress" value="100" max="100"></progress>
+                                    <div class="progress-circle"></div>
+                                </div>
+                                <div class="step step02 complete">
+                                    <progress class="progress" value="100" max="100"></progress>
+                                    <div class="progress-circle"></div>
+                                </div>
+                                <div class="step step03 complete">
+                                    <progress class="progress" value="100" max="100"></progress>
+                                    <div class="progress-circle"></div>
+                                </div>
+                                <div class="step step04 complete">
+                                    <progress class="progress" value="100" max="100"></progress>
+                                    <div class="progress-circle"></div>
+                                </div>
+                                <div class="step step05">
+                                    <progress class="progress" value="20" max="100"></progress>
+                                    <div class="progress-circle"></div>
+                                </div>
+                            </div>
+                            <div class="progress-labels">
+                                <div class="label">Estudios</div>
+                                <div class="label">Años</div>
+                                <div class="label">Evaluaciones</div>
+                                <div class="label">Asignaturas</div>
+                                <div class="label">Horario</div>
                             </div>
                         </div>
                     </div>
+
+                    <section>
+                        <h3>Paso 1 de 5 | <b>Estudios</b></h3>
+                        <hr class="bg-light mt-1">
+
+                        <div class="row mt-4">
+                            <div class="col-lg-8">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Nombre</th>
+                                            <th class="pointer" (click)="createStudy()">
+                                                Añadir <i class="fas fa-plus text-primary ml-1"></i>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let study of studies; let i=index">
+                                            <td>{{ i + 1 }}</td>
+                                            <td>
+                                                <input type="text" class="form-control mb-2" [(ngModel)]="study.name" />
+                                            </td>
+                                            <td>
+                                                <ng-container *ngIf="study.id == 0">
+                                                    <button class="btn btn-primary rounded-25 mr-2"
+                                                        (click)="storeStudy(study, i)" [disabled]="study.name == ''">
+                                                        <i class="fa fa-save"></i>
+                                                    </button>
+                                                    <button class="btn btn-danger rounded-25"
+                                                        (click)="deleteStudyFront(i)">
+                                                        <i class="fa fa-trash"></i>
+                                                    </button>
+                                                </ng-container>
+                                                <ng-container *ngIf="study.id > 0">
+                                                    <button class="btn btn-secondary rounded-25 mr-2"
+                                                        (click)="updateStudy(study, i)">
+                                                        <i class="fas fa-pen"></i>
+                                                    </button>
+                                                    <button class="btn btn-danger rounded-25"
+                                                        (click)="deleteStudy(study.id, i)">
+                                                        <i class="fa fa-trash"></i>
+                                                    </button>
+                                                </ng-container>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="list-group w-100 mb-3">
+                                    <a class="list-group-item list-group-item-action"
+                                        *ngFor="let study of studies; let i = index">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div class="font-weight-bold">{{ study.name }}</div>
+                                            <button class="btn btn-primary rounded-25" (click)="selectStudy(i)">
+                                                Seleccionar <i class="fas fa-sign-in-alt ml-1"></i>
+                                            </button>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
                 </div>
             </div>
 
@@ -133,31 +224,22 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
                         <b>Tutorial</b>
-                        <button type="button" class="close">
-                            <span>&times;</span>
-                        </button>
                     </div>
                     <hr class="mt-1 mb-1">
-                    Parece que aún no has añadido asignaturas, añadelas <b class="pointer"
+                    Parece que aún no has añadido asignaturas, añadelas <b class="pointer text-primary"
                         routerLink="/subjects">aquí</b>
                 </div>
             </div>
-            <div class="card rounded-25" *ngIf="!timetable && this.loading[2] == false" data-aos="zoom-in">
+            <div class="card rounded-25" *ngIf="!timetable && this.loading[0] == false" data-aos="zoom-in">
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
                         <b>Tutorial</b>
-                        <button type="button" class="close">
-                            <span>&times;</span>
-                        </button>
                     </div>
                     <hr class="mt-1 mb-1">
-                    Parece que aún no has generado un horario, generalo <b class="pointer"
+                    Parece que aún no has generado un horario, generalo <b class="pointer text-primary"
                         routerLink="/timetable">aquí</b>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<div class="container mt-4" *ngIf="this.loading[1] == true">
-    Cargando...
 </div>

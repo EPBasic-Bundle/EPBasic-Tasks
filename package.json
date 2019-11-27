@@ -33,6 +33,7 @@
     "ng2-pdf-viewer": "^5.3.4",
     "ngx-bootstrap": "^5.2.0",
     "ngx-editor": "^4.1.0",
+    "ngx-skeleton-loader": "^1.2.2",
     "ngx-ui-switch": "^8.2.0",
     "ngx-uploader": "^7.1.0",
     "rrule": "2.6.2",
