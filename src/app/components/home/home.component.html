@@ -40,8 +40,11 @@
             </div>
 
             <div class="card rounded-25" *ngIf="!subjects || !subjects[0] && this.loading[0] == false">
-                <div class="card-body">
-                    <section>
+                <div class="card-body" *ngIf="editMode == true">
+                    <button class="btn btn-secondary rounded-25 float-right ml-2" (click)="goBack()" *ngIf="step > 1">
+                        <i class="fas fa-chevron-circle-left mr-2"></i>Atras
+                    </button>
+                    <ng-container *ngIf="step == 1">
                         <h3>Paso 1 de 3 | <b>Estudios</b></h3>
                         <hr class="bg-light mt-1">
 
@@ -81,16 +84,15 @@
                                                 <i class="fa fa-trash"></i>
                                             </button>
                                         </ng-container>
-                                        <button class="btn btn-primary rounded-25 float-right"
-                                            (click)="selectStudy(study.id)">
+                                        <button class="btn btn-primary rounded-25 float-right" (click)="selectStudy(i)">
                                             Seleccionar <i class="fas fa-sign-in-alt ml-1"></i>
                                         </button>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
-                    </section>
-                    <section>
+                    </ng-container>
+                    <ng-container *ngIf="step == 2">
                         <h3>Paso 2 de 3 | <b>Años</b></h3>
                         <hr class="bg-light mt-1">
 
@@ -106,12 +108,12 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let year of years; let i=index">
+                                <tr *ngFor="let year of studies[sStudyIdx].years; let i=index">
                                     <td>{{ i + 1 }}</td>
-                                    <td>
+                                    <td style="width: 150px;">
                                         <ngb-datepicker [(ngModel)]="year.start"></ngb-datepicker>
                                     </td>
-                                    <td>
+                                    <td style="width: 150px;">
                                         <ngb-datepicker [(ngModel)]="year.end"></ngb-datepicker>
                                     </td>
                                     <td>
@@ -133,16 +135,15 @@
                                                 <i class="fa fa-trash"></i>
                                             </button>
                                         </ng-container>
-                                        <button class="btn btn-primary rounded-25 float-right"
-                                            (click)="selectYear(year.id)">
-                                            <i class="fas fa-sign-in-alt ml-1"></i>
+                                        <button class="btn btn-primary rounded-25 float-right" (click)="selectYear(i)">
+                                            Seleccionar <i class="fas fa-sign-in-alt ml-1"></i>
                                         </button>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
-                    </section>
-                    <section>
+                    </ng-container>
+                    <ng-container *ngIf="step == 3">
                         <h3>Paso 3 de 3 | <b>Evaluaciones</b></h3>
                         <hr class="bg-light mt-1">
 
@@ -158,12 +159,13 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let evaluation of evaluations; let i=index">
+                                <tr
+                                    *ngFor="let evaluation of studies[sStudyIdx].years[sYearIdx].evaluations; let i=index">
                                     <td>{{ i + 1 }}</td>
-                                    <td>
+                                    <td style="width: 150px;">
                                         <ngb-datepicker [(ngModel)]="evaluation.start"></ngb-datepicker>
                                     </td>
-                                    <td>
+                                    <td style="width: 150px;">
                                         <ngb-datepicker [(ngModel)]="evaluation.end"></ngb-datepicker>
                                     </td>
                                     <td>
@@ -192,8 +194,51 @@
                                 </tr>
                             </tbody>
                         </table>
-                    </section>
+                    </ng-container>
                 </div>
+
+                <ng-container *ngIf="editMode == false">
+                    <div class="card-body" *ngFor="let study of studies; let i = index">
+                        <div class="card border border-primary rounded-25">
+                            <div class="row no-gutters">
+                                <div class="col-md-4">
+                                    <img src="./assets/images/study.png"
+                                        class="card-img rounded-left-25 no-rounded-right" alt="...">
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-body">
+                                        <h5 class="card-title font-weight-bold">{{ study.name }}</h5>
+                                        <hr class="bg-light">
+
+                                        <div class="card-text">
+                                            <div class="row">
+                                                <div class="col" *ngFor="let year of study.years; let e=index">
+                                                    <div class="card rounded-10">
+                                                        <div
+                                                            class="card-body p-2 d-flex justify-content-center align-items-center">
+                                                            <div class="font-weight-bold" style="font-size: 40px">
+                                                                {{ e + 1 }}.
+                                                            </div>
+                                                        </div>
+                                                        <button
+                                                            class="btn btn-primary rounded-bottom-10 no-rounded-top">Seleccionar
+                                                            <i class="fas fa-hand-pointer"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+
+                <button class="btn btn-block btn-secondary rounded-bottom-25 no-rounded-top"
+                    (click)="editMode = !editMode">
+                    <i class="fas fa-edit" [class.fa-edit]="editMode == false" [class.fa-eye]="editMode == true"></i>
+                </button>
             </div>
 
             <div class="accordion" data-aos="zoom-in" *ngIf="subjects">
@@ -230,7 +275,8 @@
                                                 </i>
                                             </div>
                                         </div>
-                                        <span class="small" *ngIf="!subject.tasks || !subject.tasks[0]">No tienes tareas
+                                        <span class="small" *ngIf="!subject.tasks || !subject.tasks[0]">No tienes
+                                            tareas
                                             pendientes</span>
                                     </div>
                                     <div class="col-lg-4 col-md-4 mb-2">
@@ -279,6 +325,7 @@
                 </ng-container>
             </div>
         </div>
+
         <div class="col-lg-2">
             <div class="card rounded-25 bg-dark text-light" *ngIf="timetable" data-aos="zoom-in">
                 <div class="card-header rounded-top-25 d-flex justify-content-between">
@@ -313,7 +360,7 @@
                         <b>Tutorial</b>
                     </div>
                     <hr class="mt-1 mb-1">
-                    Parece que aún no has añadido asignaturas, añadelas <b class="pointer text-primary"
+                    Parece que aún no has añadido asignaturas, añádelas <b class="pointer text-primary"
                         routerLink="/subjects">aquí</b>
                 </div>
             </div>
@@ -323,7 +370,7 @@
                         <b>Tutorial</b>
                     </div>
                     <hr class="mt-1 mb-1">
-                    Parece que aún no has generado un horario, generalo <b class="pointer text-primary"
+                    Parece que aún no has generado un horario, genéralo <b class="pointer text-primary"
                         routerLink="/timetable">aquí</b>
                 </div>
             </div>

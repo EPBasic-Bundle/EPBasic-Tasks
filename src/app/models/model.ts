@@ -28,6 +28,7 @@ export class Subject {
         public updated_at?: string,
         public tasks?: Task[],
         public exams?: Exam[],
+        public projects?,
     ) { }
 }
 
@@ -148,6 +149,7 @@ export class Study {
         public name: string,
         public created_at?: string,
         public updated_at?: string,
+        public years?: Year[],
     ) { }
 }
 
@@ -159,6 +161,7 @@ export class Year {
         public end,
         public created_at?: string,
         public updated_at?: string,
+        public evaluations?: Evaluation[],
     ) { }
 }
 

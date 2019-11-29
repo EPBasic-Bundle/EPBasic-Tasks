@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../services/api.service';
-import { Subject, Timetable, Study, Year, Evaluation } from '../../models/model';
+import { Subject, Timetable, Study } from '../../models/model';
 import { ToastService } from '../../services/toast.service';
 
 @Component({
@@ -19,13 +19,14 @@ export class HomeComponent implements OnInit {
     dayHour;
 
     studies: Study[] = [];
-    years: Year[] = [];
-    evaluations: Evaluation[] = [];
 
     loading = [false, false];
 
-    sStudyId;
-    sYearId;
+    sYearIdx;
+    sStudyIdx;
+
+    step = 1;
+    editMode: boolean = false;
 
     constructor(
         private apiService: ApiService,
@@ -96,36 +97,20 @@ export class HomeComponent implements OnInit {
             resp => {
                 if (resp.status === 'success') {
                     this.studies = resp.studies;
-                }
-            }
-        );
-    }
 
-    getYears() {
-        this.apiService.get('years/' + this.sStudyId).subscribe(
-            resp => {
-                if (resp.status === 'success') {
-                    this.years = resp.years;
+                    for (let i = 0; i < this.studies.length; i++) {
+                        for (let e = 0; e < this.studies[i].years.length; e++) {
+                            this.studies[i].years[e].start = this.formatDate(this.studies[i].years[e].start);
+                            this.studies[i].years[e].end = this.formatDate(this.studies[i].years[e].end);
 
-                    for (let i = 0; i < this.years.length; i++) {
-                        this.years[i].start = this.formatDate(this.years[i].start);
-                        this.years[i].end = this.formatDate(this.years[i].end);
+                            for (let o = 0; o < this.studies[i].years[e].evaluations.length; o++) {
+                                this.studies[i].years[e].evaluations[o].start = this.formatDate(this.studies[i].years[e].evaluations[o].start);
+                                this.studies[i].years[e].evaluations[o].end = this.formatDate(this.studies[i].years[e].evaluations[o].end);
+                            }
+                        }
                     }
-                }
-            }
-        );
-    }
 
-    getEvaluations() {
-        this.apiService.get('evaluations/' + this.sYearId).subscribe(
-            resp => {
-                if (resp.status === 'success') {
-                    this.evaluations = resp.evaluations;
-
-                    for (let i = 0; i < this.evaluations.length; i++) {
-                        this.evaluations[i].start = this.formatDate(this.evaluations[i].start);
-                        this.evaluations[i].end = this.formatDate(this.evaluations[i].end);
-                    }
+                    console.log(this.studies);
                 }
             }
         );
@@ -253,10 +238,10 @@ export class HomeComponent implements OnInit {
         this.studies.splice(index, 1);
     }
 
-    selectStudy(id) {
-        this.sStudyId = id;
+    selectStudy(index) {
+        this.sStudyIdx = index;
 
-        this.getYears();
+        this.step = 2;
     }
 
     /***************/
@@ -296,27 +281,31 @@ export class HomeComponent implements OnInit {
         );
     }
 
-    /*********/
+    /********/
     /* YEAR */
-    /*********/
+    /********/
 
     createYear() {
-        this.years.push({
+        if (!this.studies[this.sStudyIdx].years) {
+            this.studies[this.sStudyIdx].years = [];
+        }
+
+        this.studies[this.sStudyIdx].years.push({
             id: 0,
             start: null,
             end: null,
-            study_id: this.sStudyId
+            study_id: this.studies[this.sStudyIdx].id
         });
     }
 
     deleteYearFront(index) {
-        this.years.splice(index, 1);
+        this.studies[this.sStudyIdx].years.splice(index, 1);
     }
 
-    selectYear(id) {
-        this.sYearId = id;
+    selectYear(index) {
+        this.sYearIdx = index;
 
-        this.getEvaluations();
+        this.step = 3;
     }
 
     /***************/
@@ -330,10 +319,10 @@ export class HomeComponent implements OnInit {
         this.apiService.post('year', year).subscribe(
             resp => {
                 if (resp.status === 'success') {
-                    this.years[index] = resp.year;
+                    this.studies[this.sStudyIdx].years[index] = resp.year;
 
-                    this.years[index].start = this.formatDate(resp.year.start);
-                    this.years[index].end = this.formatDate(resp.year.end);
+                    this.studies[this.sStudyIdx].years[index].start = this.formatDate(resp.year.start);
+                    this.studies[this.sStudyIdx].years[index].end = this.formatDate(resp.year.end);
 
                     this.showToast('Año añadido correctamente', 'success');
                 }
@@ -348,10 +337,10 @@ export class HomeComponent implements OnInit {
         this.apiService.put('year/' + year.id, year).subscribe(
             resp => {
                 if (resp.status === 'success') {
-                    this.years[index] = resp.year;
+                    this.studies[this.sStudyIdx].years[index] = resp.year;
 
-                    this.years[index].start = this.formatDate(resp.year.start);
-                    this.years[index].end = this.formatDate(resp.year.end);
+                    this.studies[this.sStudyIdx].years[index].start = this.formatDate(resp.year.start);
+                    this.studies[this.sStudyIdx].years[index].end = this.formatDate(resp.year.end);
 
                     this.showToast('Año actualizado correctamente', 'success');
                 }
@@ -363,7 +352,7 @@ export class HomeComponent implements OnInit {
         this.apiService.delete('year/' + year_id).subscribe(
             resp => {
                 if (resp.status === 'success') {
-                    this.years.splice(index, 1);
+                    this.studies[this.sStudyIdx].years.splice(index, 1);
                     this.showToast('Año eliminado correctamente', 'success');
                 }
             }
@@ -375,16 +364,20 @@ export class HomeComponent implements OnInit {
     /**************/
 
     createEvaluation() {
-        this.evaluations.push({
+        if (!this.studies[this.sStudyIdx].years[this.sYearIdx].evaluations) {
+            this.studies[this.sStudyIdx].years[this.sYearIdx].evaluations = [];
+        }
+
+        this.studies[this.sStudyIdx].years[this.sYearIdx].evaluations.push({
             id: 0,
             start: null,
             end: null,
-            year_id: this.sYearId,
+            year_id: this.studies[this.sStudyIdx].years[this.sYearIdx].id,
         });
     }
 
     deleteEvaluationFront(index) {
-        this.evaluations.splice(index, 1);
+        this.studies[this.sStudyIdx].years[this.sYearIdx].evaluations.splice(index, 1);
     }
 
     /***************/
@@ -398,10 +391,10 @@ export class HomeComponent implements OnInit {
         this.apiService.post('evaluation', evaluation).subscribe(
             resp => {
                 if (resp.status === 'success') {
-                    this.evaluations[index] = resp.evaluation;
+                    this.studies[this.sStudyIdx].years[this.sYearIdx].evaluations[index] = resp.evaluation;
 
-                    this.evaluations[index].start = this.formatDate(resp.evaluation.start);
-                    this.evaluations[index].end = this.formatDate(resp.evaluation.end);
+                    this.studies[this.sStudyIdx].years[this.sYearIdx].evaluations[index].start = this.formatDate(resp.evaluation.start);
+                    this.studies[this.sStudyIdx].years[this.sYearIdx].evaluations[index].end = this.formatDate(resp.evaluation.end);
 
                     this.showToast('Evaluación añadido correctamente', 'success');
                 }
@@ -416,10 +409,10 @@ export class HomeComponent implements OnInit {
         this.apiService.put('evaluation/' + evaluation.id, evaluation).subscribe(
             resp => {
                 if (resp.status === 'success') {
-                    this.evaluations[index] = resp.evaluation;
+                    this.studies[this.sStudyIdx].years[this.sYearIdx].evaluations[index] = resp.evaluation;
 
-                    this.evaluations[index].start = this.formatDate(resp.evaluation.start);
-                    this.evaluations[index].end = this.formatDate(resp.evaluation.end);
+                    this.studies[this.sStudyIdx].years[this.sYearIdx].evaluations[index].start = this.formatDate(resp.evaluation.start);
+                    this.studies[this.sStudyIdx].years[this.sYearIdx].evaluations[index].end = this.formatDate(resp.evaluation.end);
 
                     this.showToast('Evaluación actualizado correctamente', 'success');
                 }
@@ -431,7 +424,7 @@ export class HomeComponent implements OnInit {
         this.apiService.delete('evaluation/' + evaluation_id).subscribe(
             resp => {
                 if (resp.status === 'success') {
-                    this.evaluations.splice(index, 1);
+                    this.studies[this.sStudyIdx].years[this.sYearIdx].evaluations.splice(index, 1);
                     this.showToast('Evaluación eliminado correctamente', 'success');
                 }
             }
@@ -441,6 +434,10 @@ export class HomeComponent implements OnInit {
     /*********/
     /* OTROS */
     /*********/
+
+    goBack() {
+        this.step = this.step - 1;
+    }
 
     showToast(text, type) {
         switch (type) {

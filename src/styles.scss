@@ -140,6 +140,26 @@ h3 {
   border-bottom-right-radius: 25px !important;
 }
 
+.rounded-top-10 {
+  border-top-left-radius: 10px !important;
+  border-top-right-radius: 10px !important;
+}
+
+.rounded-bottom-10 {
+  border-bottom-left-radius: 10px !important;
+  border-bottom-right-radius: 10px !important;
+}
+
+.rounded-left-10 {
+  border-top-left-radius: 10px !important;
+  border-bottom-left-radius: 10px !important;
+}
+
+.rounded-right-10 {
+  border-top-right-radius: 10px !important;
+  border-bottom-right-radius: 10px !important;
+}
+
 .rounded-input {
   border-top-left-radius: 25px;
   border-bottom-left-radius: 25px;
