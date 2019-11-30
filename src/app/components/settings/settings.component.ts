@@ -3,6 +3,7 @@ import { ApiService } from 'src/app/services/api.service';
 import { User } from 'src/app/models/model';
 import { environment } from '../../../environments/environment';
 import { ToastService } from '../../services/toast.service';
+import { saveAs } from 'file-saver';
 
 @Component({
     selector: 'app-settings',
@@ -71,5 +72,13 @@ export class SettingsComponent {
                 break;
             }
         }
+    }
+
+    generateUserPDF() {
+        this.apiService.getFile('generate-pdf').subscribe(
+            resp => {
+                saveAs(resp, 'pdf.pdf');
+            }
+        );
     }
 }

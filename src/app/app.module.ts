@@ -38,6 +38,7 @@ import { ExamComponent } from './components/exam/exam.component';
 
 import { UiSwitchModule } from 'ngx-ui-switch';
 import { StudySelectorComponent } from './components/imports/study-selector/study-selector.component';
+import { UnitsPipe } from './pipes/units.pipe';
 
 registerLocaleData(localeEs);
 
@@ -59,6 +60,7 @@ registerLocaleData(localeEs);
         SubjectsComponent,
         ExamComponent,
         StudySelectorComponent,
+        UnitsPipe,
     ],
     imports: [
         BrowserModule,

@@ -265,10 +265,10 @@ export class StudySelectorComponent implements OnInit {
         this.apiService.get('change-year/' + year_id).subscribe(
             resp => {
                 this.apiService.setStorage(resp);
+
+                this.router.navigate(['/']);
             }
         );
-
-        this.router.navigate(['/']);
     }
 
     goBack() {

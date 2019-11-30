@@ -9,7 +9,7 @@
                         *ngIf="task.done == true"></i>
                     {{ task.title }}
                 </h1>
-                <span>
+                <span *ngIf="task.delivery_date">
                     Entregar <span class="text-primary">{{ daysRemaining() }}</span>
                 </span>
             </div>
@@ -17,9 +17,9 @@
             <div class="row">
                 <div class="col-lg-2" *ngIf="task.book_id != null">
                     <img [src]="'./assets/images/' + task.book.image" alt="..." class="img-thumbnail"
-                        *ngIf="book.pdf_name == null">
+                        *ngIf="book && book.pdf_name == null">
                     <img [src]="'./assets/images/' + task.book.image" alt="..." class="img-thumbnail pointer"
-                        [routerLink]="['/book/', task.book_id]" *ngIf="book.pdf_name != null">
+                        [routerLink]="['/book/', task.book_id]" *ngIf="book && book.pdf_name != null">
                 </div>
                 <div class="col-lg-10">
                     <p [innerHtml]="task.description"></p>
@@ -32,12 +32,12 @@
                     <hr>
                     <ng-container *ngFor="let page of task.pages; let i=index">
                         <h3>Página
-                            <span class="font-weight-bold" *ngIf="book.pdf_name == null">
+                            <span class="font-weight-bold" *ngIf="book && book.pdf_name == null">
                                 {{ page.number }}
                             </span>
                             <span class="font-weight-bold pointer"
                                 [routerLink]="['/book/' + task.book_id + '/' + page.number]"
-                                *ngIf="book.pdf_name != null">
+                                *ngIf="book && book.pdf_name != null">
                                 {{ page.number }}
                             </span>
                         </h3>
@@ -55,7 +55,7 @@
                         <hr>
                     </ng-container>
                 </div>
-                <div class="col-lg-4">
+                <div class="col-lg-4" *ngIf="task.delivery_date">
                     <span class="text-primary">Día de entrega</span>
                     <h3 class="text-light">{{ deliveryDate() }}</h3>
                 </div>

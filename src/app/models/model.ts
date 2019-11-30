@@ -67,6 +67,7 @@ export class Unity {
     constructor(
         public id: number,
         public subject_id: number,
+        public evaluation_id: number,
         public number: number,
         public created_at?: string,
         public updated_at?: string,

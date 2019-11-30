@@ -90,10 +90,20 @@
                 </div>
             </div>
 
+            <div class="row mb-4">
+                <div class="col" *ngFor="let evaluation of evaluations; let i=index">
+                    <button type="button" class="btn btn-primary btn-sm btn-block rounded-25 font-weight-bold"
+                        (click)="selectEvaluation(evaluation.id)">
+                        <i class="fas fa-calendar-week"></i> Evaluación {{ i + 1 }}
+                    </button>
+                </div>
+            </div>
+
             <div class="accordion mb-4">
-                <ng-container *ngFor="let unity of units; let i=index; let fst=first; let lst=last;">
+                <ng-container
+                    *ngFor="let unity of units | units: sEvaluationId; let i=index; let fst=first; let lst=last;">
                     <div class="card" [class.rounded-top-25]="fst == true" [class.rounded-bottom-25]="lst == true">
-                        <div class="card-header pointer" (click)="collapse(i)">
+                        <div class="card-header pointer" (click)="collapse(unity.id)">
                             <h3 class="m-1">
                                 Unidad {{ unity.number }}
                                 <span class="badge badge-warning float-right" container="body" placement="top"
@@ -103,7 +113,7 @@
                             </h3>
                         </div>
 
-                        <div class="collapse show" [ngbCollapse]="isCollapsed(i)">
+                        <div class="collapse show" [ngbCollapse]="isCollapsed(unity.id)">
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-lg-4">
@@ -297,6 +307,7 @@
             <thead>
                 <tr>
                     <th>Numero de unidad</th>
+                    <th>Evaluación</th>
                     <th>#</th>
                 </tr>
             </thead>
@@ -304,6 +315,18 @@
                 <tr *ngFor="let unity of units; let i=index">
                     <td style="width:500px">
                         <input type="number" class="form-control" [(ngModel)]="unity.number" />
+                    </td>
+                    <td>
+                        <button class="btn btn-block btn-primary"
+                            (click)="openEvaluationSelectorModal(evaluationSelectorModal, i)">
+                            <i class="fas fa-calendar-week mr-1"></i>
+
+                            <ng-container *ngFor="let evaluation of evaluations; let i=index">
+                                <span class="font-weight-bold" *ngIf="evaluation.id == unity.evaluation_id">
+                                    {{ i + 1 }}
+                                </span>
+                            </ng-container>
+                        </button>
                     </td>
                     <td style="width:500px">
                         <ng-container *ngIf="unity.id == 0">
@@ -315,7 +338,7 @@
                             </button>
                         </ng-container>
                         <ng-container *ngIf="unity.id > 0">
-                            <button class="btn  rounded-25 mr-2" (click)="setCurrentUnity(i)"
+                            <button class="btn  rounded-25 mr-2" (click)="setCurrentUnity(unity.id)"
                                 [class.btn-primary]="subject.current_unity != unity.id"
                                 [class.btn-dark]="subject.current_unity == unity.id">
                                 <i class="fas fa-check"></i>
@@ -709,6 +732,25 @@
                 <hr>
                 <button class="btn btn-sm btn-block btn-primary mt-2 mb-2"
                     (click)="setDate(selectableDay)">Seleccionar</button>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #evaluationSelectorModal let-close="close">
+    <div class="modal-header">
+        <h5 class="modal-title">Seleccionar evaluación</h5>
+        <button type="button" class="close" (click)="closeEvaluationSelectorModal()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="input-group">
+            <div class="list-group w-100 mb-3">
+                <a class="list-group-item list-group-item-action pointer"
+                    *ngFor="let evaluation of evaluations; let i=index" (click)="changeEvaluation(evaluation.id)">
+                    {{ i + 1 }}
+                </a>
             </div>
         </div>
     </div>

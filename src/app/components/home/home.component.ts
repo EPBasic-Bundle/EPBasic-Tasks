@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { Subject, Timetable } from '../../models/model';
-import { ToastService } from '../../services/toast.service';
 
 @Component({
     selector: 'app-home',

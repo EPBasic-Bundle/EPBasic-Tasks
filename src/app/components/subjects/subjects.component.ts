@@ -52,7 +52,12 @@ export class SubjectsComponent implements OnInit {
             user_id: null,
             name: '',
             primary_color: '#fff',
-            secondary_color: '#fff'
+            secondary_color: '#fff',
+            tasks_percentage: 0,
+            exams_percentage: 0,
+            projects_percentage: 0,
+            behavior_percentage: 0,
+            tasks_has_mark: false,
         });
     }
 

@@ -2,7 +2,7 @@ import { Component, OnInit, EventEmitter } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ApiService } from '../../services/api.service';
-import { Subject, Unity, Book, Task, Exam, Timetable } from '../../models/model';
+import { Subject, Unity, Book, Task, Exam, Timetable, Evaluation } from '../../models/model';
 import { environment } from '../../../environments/environment';
 import { UploadOutput, UploadInput, UploadFile, humanizeBytes, UploaderOptions } from 'ngx-uploader';
 import { ToastService } from '../../services/toast.service';
@@ -23,6 +23,7 @@ export class SubjectComponent implements OnInit {
     exams: Exam[];
     timetable: Timetable;
     subjects: Subject[];
+    evaluations: Evaluation[];
 
     images = ['books.png', 'paper.png', 'pdf.png'];
 
@@ -33,12 +34,16 @@ export class SubjectComponent implements OnInit {
     unityDeleteModal;
     dateSelectorModal;
     descriptionModal;
+    evaluationSelectorModal;
 
     sUnityIdx: number;
     sBookIdx: number;
     sTaskIdx: number;
     sExamIdx: number;
     sTSubjectIdxs;
+
+    sUnityId: number;
+    sEvaluationId: number;
 
     dateSelectorType: number;
 
@@ -67,8 +72,8 @@ export class SubjectComponent implements OnInit {
         public toastService: ToastService
     ) {
         this.options = { concurrency: 1, maxUploads: 3 };
-        this.files = []; // local uploading files array
-        this.uploadInput = new EventEmitter<UploadInput>(); // input events, we use this to emit data to ngx-uploader
+        this.files = [];
+        this.uploadInput = new EventEmitter<UploadInput>();
         this.humanizeBytes = humanizeBytes;
     }
 
@@ -104,6 +109,7 @@ export class SubjectComponent implements OnInit {
                 if (resp.status === 'success') {
                     this.subject = resp.subject;
 
+                    this.getEvaluations();
                     this.getUnits();
                 }
             }, () => this.loading[0] = false
@@ -126,9 +132,7 @@ export class SubjectComponent implements OnInit {
                 if (resp.status === 'success') {
                     this.units = resp.units;
 
-                    if (this.subject.current_unity > 0) {
-                        this.collapse(this.findUnityIndex(this.subject.current_unity));
-                    }
+                    this.autoCollapse();
                 }
             }
         );
@@ -154,8 +158,8 @@ export class SubjectComponent implements OnInit {
         );
     }
 
-    getTasks(unity_index) {
-        this.apiService.get('tasks/' + this.units[unity_index].id).subscribe(
+    getTasks(unity_id) {
+        this.apiService.get('tasks/' + unity_id).subscribe(
             resp => {
                 if (resp.status === 'success') {
                     this.tasks = resp.tasks;
@@ -164,8 +168,8 @@ export class SubjectComponent implements OnInit {
         );
     }
 
-    getExams(unity_index) {
-        this.apiService.get('exams/' + this.units[unity_index].id).subscribe(
+    getExams(unity_id) {
+        this.apiService.get('exams/' + unity_id).subscribe(
             resp => {
                 if (resp.status === 'success') {
                     this.exams = resp.exams;
@@ -195,28 +199,50 @@ export class SubjectComponent implements OnInit {
         );
     }
 
+    getEvaluations() {
+        this.apiService.get('evaluations').subscribe(
+            resp => {
+                if (resp.status === 'success') {
+                    this.evaluations = resp.evaluations;
+                }
+            }
+        );
+    }
+
     /***********/
-    /* COLAPSE */
+    /* COLLAPSE */
     /***********/
 
-    collapse(unity_index) {
+    autoCollapse() {
+        let unity_id;
+
+        if (this.subject.current_unity > 0) {
+            unity_id = this.subject.current_unity;
+        } else {
+            unity_id = this.units[0].id;
+        }
+
+        this.selectEvaluation(this.units.find(unity => unity.id == unity_id).evaluation_id);
+
+        this.collapse(unity_id);
+    }
+
+    collapse(unity_id) {
         this.exams = [];
         this.tasks = [];
 
-        if (this.sUnityIdx === unity_index) {
-            this.sUnityIdx = null;
+        if (this.sUnityId == unity_id) {
+            this.sUnityId = null;
         } else {
-            this.sUnityIdx = unity_index;
+            this.sUnityId = unity_id;
 
-            if (this.units[unity_index].id !== 0) {
-                this.getTasks(unity_index);
-                this.getExams(unity_index);
-            }
+            this.getTasks(unity_id);
+            this.getExams(unity_id);
         }
     }
 
-    isCollapsed(unity_index) {
-        if (this.sUnityIdx === unity_index) {
+    isCollapsed(unity_id) {
+        if (this.sUnityId === unity_id) {
             return false;
         } else {
             return true;
@@ -296,13 +322,11 @@ export class SubjectComponent implements OnInit {
                 break;
             case 'uploading':
                 if (typeof output.file !== 'undefined') {
-                    // update current data in files array for uploading file
                     const index = this.files.findIndex((file) => typeof output.file !== 'undefined' && file.id === output.file.id);
                     this.files[index] = output.file;
                 }
                 break;
             case 'removed':
-                // remove file from array when removed
                 this.files = this.files.filter((file: UploadFile) => file !== output.file);
                 break;
             case 'dragOver':
@@ -364,11 +388,23 @@ export class SubjectComponent implements OnInit {
         this.units.unshift({
             id: 0,
             subject_id: this.subject.id,
+            evaluation_id: this.evaluations[0].id,
             number: auto_number,
             tasks: []
         });
     }
 
+    setCurrentUnity(unity_id) {
+        this.apiService.get('subject/set-current-unity/' + unity_id).subscribe(
+            resp => {
+                if (resp.status === 'success') {
+                    this.subject = resp.subject;
+
+                    this.autoCollapse();
+                }
+            }
+        );
+    }
 
     deleteUnityFront(index) {
         this.units.splice(index, 1);
@@ -384,6 +420,8 @@ export class SubjectComponent implements OnInit {
                 if (resp.status === 'success') {
                     this.units[index] = resp.unity;
                     this.showToast('Unidad añadida correctamente', 'success');
+
+                    this.autoCollapse();
                 }
             }
         );
@@ -432,7 +470,7 @@ export class SubjectComponent implements OnInit {
             id: 0,
             subject_id: this.subject.id,
             book_id: null,
-            unity_id: this.units[this.sUnityIdx].id,
+            unity_id: this.sUnityId,
             title: '',
             description: '',
             delivery_date: null,
@@ -490,6 +528,20 @@ export class SubjectComponent implements OnInit {
     deleteExercise(number, index) {
         const page = this.tasks[this.sTaskIdx].pages[index];
         page.exercises.splice(this.findExercise(number, index), 1);
+    }
+
+    markTaskDone(index) {
+        const taskId = this.tasks[index].id;
+
+        this.apiService.get('task/done/' + taskId).subscribe(
+            resp => {
+                if (resp.status === 'success') {
+                    this.tasks[index] = resp.task;
+
+                    this.getTasksToDo();
+                }
+            }
+        );
     }
 
     deleteTaskFront(index) {
@@ -559,20 +611,33 @@ export class SubjectComponent implements OnInit {
             title: '',
             description: '',
             subject_id: this.subject.id,
-            unity_id: this.units[this.sUnityIdx].id,
+            unity_id: this.sUnityId,
             mark: null,
             done: false,
             exam_date: null
         });
     }
 
+    markExamDone(index) {
+        const examId = this.exams[index].id;
+
+        this.apiService.get('exam/done/' + examId).subscribe(
+            resp => {
+                if (resp.status === 'success') {
+                    this.exams[index] = resp.exam;
+
+                    this.getExamsToDo();
+                }
+            }
+        );
+    }
 
     deleteExamFront(index) {
         this.exams.splice(index, 1);
     }
 
     /******************/
-    /* UNITS CRUD */
+    /* EXAMS CRUD */
     /*****************/
 
     storeExam(exam, index) {
@@ -729,6 +794,20 @@ export class SubjectComponent implements OnInit {
         );
     }
 
+    /**************/
+    /* EVALUATION */
+    /**************/
+
+    changeEvaluation(evaluation_id) {
+        this.units[this.sUnityIdx].evaluation_id = evaluation_id;
+
+        this.closeEvaluationSelectorModal();
+    }
+
+    selectEvaluation(evaluation_id) {
+        this.sEvaluationId = evaluation_id;
+    }
+
     /**********/
     /* MODALS */
     /**********/
@@ -789,6 +868,12 @@ export class SubjectComponent implements OnInit {
         this.descriptionModal = this.modalService.open(content, { size: 'lg', centered: true });
     }
 
+    openEvaluationSelectorModal(content, index) {
+        this.sUnityIdx = index;
+
+        this.evaluationSelectorModal = this.modalService.open(content, { size: 'sm', centered: true });
+    }
+
     closeUnityDeleteModal() {
         this.unityDeleteModal.close();
     }
@@ -814,16 +899,16 @@ export class SubjectComponent implements OnInit {
         this.descriptionModal.close();
     }
 
+    closeEvaluationSelectorModal() {
+        this.evaluationSelectorModal.close();
+    }
+
     /*********/
     /* FINDS */
     /*********/
 
     findBook(book_id) {
         return this.books.find(book => book.id === book_id);
-    }
-
-    findUnityIndex(unity_id) {
-        return this.units.findIndex(unity => unity.id === unity_id);
     }
 
     findSubject(subject_id: number) {
@@ -833,46 +918,6 @@ export class SubjectComponent implements OnInit {
     /*********/
     /* OTROS */
     /*********/
-
-    markTaskDone(index) {
-        const taskId = this.tasks[index].id;
-
-        this.apiService.get('task/done/' + taskId).subscribe(
-            resp => {
-                if (resp.status === 'success') {
-                    this.tasks[index] = resp.task;
-
-                    this.getTasksToDo();
-                }
-            }
-        );
-    }
-
-    markExamDone(index) {
-        const examId = this.exams[index].id;
-
-        this.apiService.get('exam/done/' + examId).subscribe(
-            resp => {
-                if (resp.status === 'success') {
-                    this.exams[index] = resp.exam;
-
-                    this.getExamsToDo();
-                }
-            }
-        );
-    }
-
-    setCurrentUnity(index) {
-        const unityId = this.units[index].id;
-
-        this.apiService.get('subject/set-current-unity/' + unityId).subscribe(
-            resp => {
-                if (resp.status === 'success') {
-                    this.subject = resp.subject;
-                }
-            }
-        );
-    }
 
     showToast(text, type) {
         switch (type) {
