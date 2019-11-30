@@ -30,7 +30,6 @@ export class ApiService {
         let tokens = JSON.parse(localStorage.getItem('tokens'));
         let identities = JSON.parse(localStorage.getItem('identities'));
         let userIdx;
-        let set: boolean;
 
         if (tokens && tokens[0] && identities && identities[0]) {
             const identityIndex = identities.findIndex(identity => identity.sub === resp.identity.sub);
@@ -39,21 +38,22 @@ export class ApiService {
                 tokens.push(resp.token);
                 identities.push(resp.identity);
 
-                userIdx = tokens.length - 1;
-                set = true;
+                localStorage.setItem('userIdx', JSON.stringify(tokens.length - 1));
+            } else {
+                const tokenIndex = identities.findIndex(token => token);
+
+                tokens[tokenIndex] = resp.token;
+                identities[identityIndex] = resp.identity;
             }
         } else {
             tokens = [resp.token];
             identities = [resp.identity];
-            userIdx = 0;
-            set = true;
+
+            localStorage.setItem('userIdx', JSON.stringify(0));
         }
 
-        if (set === true) {
-            localStorage.setItem('identities', JSON.stringify(identities));
-            localStorage.setItem('tokens', JSON.stringify(tokens));
-            localStorage.setItem('userIdx', userIdx);
-        }
+        localStorage.setItem('identities', JSON.stringify(identities));
+        localStorage.setItem('tokens', JSON.stringify(tokens));
     }
 
     removeUserOfStorage(userIdx) {

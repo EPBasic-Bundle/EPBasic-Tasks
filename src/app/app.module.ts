@@ -37,6 +37,7 @@ import { SubjectsComponent } from './components/subjects/subjects.component';
 import { ExamComponent } from './components/exam/exam.component';
 
 import { UiSwitchModule } from 'ngx-ui-switch';
+import { StudySelectorComponent } from './components/imports/study-selector/study-selector.component';
 
 registerLocaleData(localeEs);
 
@@ -57,6 +58,7 @@ registerLocaleData(localeEs);
         ToastComponent,
         SubjectsComponent,
         ExamComponent,
+        StudySelectorComponent,
     ],
     imports: [
         BrowserModule,
