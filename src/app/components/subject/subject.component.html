@@ -497,8 +497,7 @@
                             [(ngModel)]="exam.mark" />
                     </td>
                     <td>
-                        <button class="btn btn-primary btn-sm rounded-25" [disabled]="exam.id != 0"
-                            *ngIf="timetable && timetable.subjects"
+                        <button class="btn btn-primary btn-sm rounded-25" *ngIf="timetable && timetable.subjects"
                             (click)="openDateSelectorModal(dateSelectorModal, i, 2)">
                             <i class="far fa-calendar-check"></i>
                             Seleccionar

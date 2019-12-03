@@ -577,8 +577,6 @@ export class SubjectComponent implements OnInit {
         this.apiService.put('task/' + task.id, task).subscribe(
             resp => {
                 if (resp.status === 'success') {
-                    const frontTask = this.tasks[index];
-
                     this.tasks[index] = resp.task;
                     this.showToast('Tarea actualizada correctamente', 'success');
 
@@ -684,6 +682,22 @@ export class SubjectComponent implements OnInit {
                 if (resp.status === 'success') {
                     this.exams[index] = resp.exam;
                     this.showToast('Examen actualizado correctamente', 'success');
+
+                    this.apiService.get('event/exam/' + this.exams[index].id).subscribe(
+                        resp => {
+                            if (resp.status === 'success') {
+                                let event = resp.event;
+
+                                if (event == null) {
+                                    this.storeEvent(2);
+                                } else {
+                                    if (event.start !== this.settedDateTimeStart) {
+                                        this.updateEvent(event);
+                                    }
+                                }
+                            }
+                        }
+                    );
 
                     this.getExamsToDo();
                 }
