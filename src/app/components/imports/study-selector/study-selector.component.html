@@ -1,4 +1,4 @@
-<div class="card rounded-25">
+<div class="card rounded-25" *ngIf="loading == false">
     <div class="card-body" *ngIf="editMode == true">
         <button class="btn btn-secondary rounded-25 float-right ml-2" (click)="goBack()" *ngIf="step > 1">
             <i class="fas fa-chevron-circle-left mr-2"></i>Atras

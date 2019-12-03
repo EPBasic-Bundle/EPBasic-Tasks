@@ -298,6 +298,12 @@ h3 {
     background-color: rgb(50, 50, 50);
   }
 
+  select {
+    border-color: rgb(40, 40, 40);
+    color: white;
+    background-color: rgb(40, 40, 40);
+  }
+
   .table {
     color: #eee;
   }
@@ -352,12 +358,63 @@ h3 {
     }
   }
 
+  mwl-calendar-week-view-hour-segment,
+  mwl-calendar-day-view-hour-segment,
   mwl-calendar-month-cell {
     background-color: #343a40;
+
+    .fas {
+      color: #fff;
+    }
+  }
+
+  .cal-header {
+    background-color: #343a40;
+  }
+
+  .cal-day-headers .cal-today {
+    background-color: $primary !important;
   }
 
   .cal-month-view .cal-header .cal-cell {
     background-color: #343a40;
+  }
+
+  ejs-calendar {
+    background-color: #343a40;
+    color: #fff;
+    .e-day,
+    .e-title {
+      color: #fff !important;
+    }
+    th {
+      color: #fff;
+    }
+  }
+
+  .e-calendar .e-date-icon-prev,
+  .e-calendar .e-date-icon-next {
+    color: #fff;
+  }
+
+  .e-calendar .e-content td.e-selected span.e-day,
+  .e-calendar .e-content.e-year td > span.e-day {
+    background-color: $primary;
+    border-color: $primary;
+  }
+
+  .e-calendar .e-content td.e-today span.e-day {
+    border-color: $primary;
+  }
+
+  .e-btn.e-flat.e-primary,
+  .e-btn.e-flat.e-primary:hover {
+    color: #fff;
+  }
+
+  .btn-dark {
+    background-color: #282828;
+    border-color: #282828;
   }
 }
 

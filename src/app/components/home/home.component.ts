@@ -16,8 +16,11 @@ export class HomeComponent implements OnInit {
     cSubjectsIds = [];
     weekDay;
     dayHour;
+    showStudySelector: boolean = false;
 
     loading = [false, false];
+
+    events: Date[] = [];
 
     constructor(private apiService: ApiService) { }
 
@@ -25,6 +28,7 @@ export class HomeComponent implements OnInit {
         this.timeNow();
         this.getSubjectsWithAll();
         this.getTimetable();
+        this.getEvents();
     }
 
     /*****************/
@@ -76,6 +80,22 @@ export class HomeComponent implements OnInit {
                     }
                 }
             }, () => this.loading[0] = false
+        );
+    }
+
+    getEvents() {
+        this.apiService.get('events').subscribe(
+            resp => {
+                if (resp.status === 'success') {
+                    let events = [];
+
+                    resp.events.forEach(event => {
+                        events.push(new Date(event.start));
+                    });
+
+                    this.events = events;
+                }
+            }
         );
     }
 

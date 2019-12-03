@@ -4,39 +4,12 @@
 <div class="container-fluid mt-4 mb-5" *ngIf="this.loading[0] == false">
     <div class="row justify-content-center">
         <div class="col-lg-6 col-md-12 mb-4">
-
-            <div class="container mb-2">
-                <div class="progress-group">
-                    <div class="wrapper">
-                        <div class="step complete">
-                            <progress class="progress" value="100" max="100"></progress>
-                            <div class="progress-circle"></div>
-                        </div>
-                        <div class="step complete">
-                            <progress class="progress" value="100" max="100"></progress>
-                            <div class="progress-circle"></div>
-                        </div>
-                        <div class="step complete">
-                            <progress class="progress" value="100" max="100"></progress>
-                            <div class="progress-circle"></div>
-                        </div>
-                        <div class="step complete">
-                            <progress class="progress" value="0" max="100"></progress>
-                            <div class="progress-circle"></div>
-                        </div>
-                        <div class="step step05">
-                            <progress class="progress" value="0" max="100"></progress>
-                            <div class="progress-circle"></div>
-                        </div>
-                    </div>
-                    <div class="progress-labels">
-                        <div class="label">Estudios</div>
-                        <div class="label">Años</div>
-                        <div class="label">Evaluaciones</div>
-                        <div class="label">Asignaturas</div>
-                        <div class="label">Horario</div>
-                    </div>
-                </div>
+            <div class="mb-4">
+                <button class="btn btn-block rounded-25 mb-4" [class.btn-primary]="showStudySelector == true"
+                    [class.btn-secondary]="showStudySelector == false" (click)="showStudySelector = !showStudySelector">
+                    <i class="fas fa-book-reader mr-1"></i> Seleccionar estudios
+                </button>
+                <app-study-selector *ngIf="!subjects || showStudySelector == true"></app-study-selector>
             </div>
 
             <div class="accordion" data-aos="zoom-in" *ngIf="subjects">
@@ -122,59 +95,61 @@
                     </div>
                 </ng-container>
             </div>
-
-            <div class="mt-4">
-                <app-study-selector></app-study-selector>
-            </div>
         </div>
 
         <div class="col-lg-2">
-            <div class="card rounded-25 bg-dark text-light" *ngIf="timetable" data-aos="zoom-in">
-                <div class="card-header rounded-top-25 d-flex justify-content-between">
-                    <h3>Horario
-                        <span *ngIf="subjectsOfTomorrow == true">de mañana</span>
-                    </h3>
-                    <span>{{ dayHour }}</span>
-                </div>
-                <div class="card-body pb-0 pt-0">
-                    <p class="mt-2 text-center" *ngIf="!subjectsOfDay[0]">¡Disfruta del fin de semana!</p>
-                    <ng-container *ngIf="subjectsOfDay && subjectsOfDay[0]">
-                        <hr class="bg-light">
-                        <div *ngFor="let subject of subjectsOfDay; let i=index">
-                            <div [routerLink]="['/subject', findSubject(subject.subject_id).id]" class="pointer">
-                                <span
-                                    [class.subjectNow]="inSubjectTime(this.timetable.hours[i].hour_start, this.timetable.hours[i].hour_end) == true">
-                                    {{ findSubject(subject.subject_id).name }}
-                                </span>
-                                <div class="float-right circle"
-                                    [ngStyle]="{ background: findSubject(subject.subject_id).primary_color }"></div>
-                            </div>
+            <div class="col-lg-12 mb-4">
+                <div class="card rounded-25 bg-dark text-light" *ngIf="timetable" data-aos="zoom-in">
+                    <div class="card-header rounded-top-25 d-flex justify-content-between">
+                        <h3>Horario
+                            <span *ngIf="subjectsOfTomorrow == true">de mañana</span>
+                        </h3>
+                        <span>{{ dayHour }}</span>
+                    </div>
+                    <div class="card-body pb-0 pt-0">
+                        <p class="mt-2 text-center" *ngIf="!subjectsOfDay[0]">¡Disfruta del fin de semana!</p>
+                        <ng-container *ngIf="subjectsOfDay && subjectsOfDay[0]">
                             <hr class="bg-light">
+                            <div *ngFor="let subject of subjectsOfDay; let i=index">
+                                <div [routerLink]="['/subject', findSubject(subject.subject_id).id]" class="pointer">
+                                    <span
+                                        [class.subjectNow]="inSubjectTime(this.timetable.hours[i].hour_start, this.timetable.hours[i].hour_end) == true">
+                                        {{ findSubject(subject.subject_id).name }}
+                                    </span>
+                                    <div class="float-right circle"
+                                        [ngStyle]="{ background: findSubject(subject.subject_id).primary_color }"></div>
+                                </div>
+                                <hr class="bg-light">
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
+                <div class="card rounded-25 mb-4"
+                    *ngIf="!subjects && this.loading[1] == false || !subjects[0] && this.loading[1] == false"
+                    data-aos="zoom-in">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <b>Tutorial</b>
                         </div>
-                    </ng-container>
+                        <hr class="mt-1 mb-1">
+                        Parece que aún no has añadido asignaturas, añádelas <b class="pointer text-primary"
+                            routerLink="/subjects">aquí</b>
+                    </div>
+                </div>
+                <div class="card rounded-25" *ngIf="!timetable && this.loading[0] == false" data-aos="zoom-in">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <b>Tutorial</b>
+                        </div>
+                        <hr class="mt-1 mb-1">
+                        Parece que aún no has generado un horario, genéralo <b class="pointer text-primary"
+                            routerLink="/timetable">aquí</b>
+                    </div>
                 </div>
             </div>
-            <div class="card rounded-25 mb-4"
-                *ngIf="!subjects && this.loading[1] == false || !subjects[0] && this.loading[1] == false"
-                data-aos="zoom-in">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <b>Tutorial</b>
-                    </div>
-                    <hr class="mt-1 mb-1">
-                    Parece que aún no has añadido asignaturas, añádelas <b class="pointer text-primary"
-                        routerLink="/subjects">aquí</b>
-                </div>
-            </div>
-            <div class="card rounded-25" *ngIf="!timetable && this.loading[0] == false" data-aos="zoom-in">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <b>Tutorial</b>
-                    </div>
-                    <hr class="mt-1 mb-1">
-                    Parece que aún no has generado un horario, genéralo <b class="pointer text-primary"
-                        routerLink="/timetable">aquí</b>
-                </div>
+            <div class="col-lg-12">
+                <ejs-calendar class="rounded-25" [values]="events" isMultiSelection="true">
+                </ejs-calendar>
             </div>
         </div>
     </div>

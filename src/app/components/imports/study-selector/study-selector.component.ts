@@ -18,6 +18,8 @@ export class StudySelectorComponent implements OnInit {
     step = 1;
     editMode: boolean = false;
 
+    loading: boolean;
+
     constructor(
         private apiService: ApiService,
         public toastService: ToastService,
@@ -29,8 +31,12 @@ export class StudySelectorComponent implements OnInit {
     }
 
     getStudies() {
+        this.loading = true;
+
         this.apiService.get('studies').subscribe(
             resp => {
+                this.loading = false;
+
                 if (resp.status === 'success') {
                     this.studies = resp.studies;
 
@@ -46,6 +52,8 @@ export class StudySelectorComponent implements OnInit {
                         }
                     }
                 }
+            }, () => {
+                this.loading = false;
             }
         );
     }

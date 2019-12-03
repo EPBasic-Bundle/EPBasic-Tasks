@@ -48,6 +48,8 @@ export class CalendarComponent implements OnInit {
     page = 4;
     pageSize = 6;
 
+    type;
+
     constructor(
         private modalService: NgbModal,
         private apiService: ApiService,
