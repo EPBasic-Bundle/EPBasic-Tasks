@@ -82,7 +82,13 @@
             <div class="card rounded-25 mb-3">
                 <div class="card-body pt-0 pb-0 pr-0">
                     <button class="btn btn-primary float-right rounded-right-25 no-rounded-left"
-                        (click)="openModal(unitsModal, 'md', false)">
+                        *ngIf="evaluations && evaluations[0]" (click)="openModal(unitsModal, 'md', false)">
+                        <i class="fas fa-list-ol"></i>
+                        Unidades
+                    </button>
+                    <button class="btn btn-primary float-right rounded-right-25 no-rounded-left"
+                        *ngIf="!evaluations || !evaluations[0]" placement="top" container="body"
+                        ngbTooltip="Añade evaluaciones para poder crear unidades" disabled>
                         <i class="fas fa-list-ol"></i>
                         Unidades
                     </button>
@@ -384,6 +390,7 @@
                 <tr>
                     <th>Datos principales</th>
                     <th>Ejercicios</th>
+                    <th *ngIf="subject.tasks_has_mark == true">Nota</th>
                     <th>Entrega</th>
                     <th>#</th>
                 </tr>
@@ -411,9 +418,12 @@
                             <i class="fas fa-book"></i> Libros
                         </button>
                     </td>
+                    <td style="width:150px" *ngIf="subject.tasks_has_mark == true">
+                        <input type="number" class="form-control mb-2" max="10" min="0" step="0.01"
+                            [(ngModel)]="task.mark" />
+                    </td>
                     <td>
-                        <button class="btn btn-primary btn-sm rounded-25" [disabled]="task.id != 0"
-                            *ngIf="timetable && timetable.subjects"
+                        <button class="btn btn-primary btn-sm rounded-25" *ngIf="timetable && timetable.subjects"
                             (click)="openDateSelectorModal(dateSelectorModal, i, 1)">
                             <i class="far fa-calendar-check"></i>
                             Seleccionar

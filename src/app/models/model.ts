@@ -85,6 +85,7 @@ export class Task {
         public title: string,
         public description: string,
         public delivery_date: string,
+        public mark: number,
         public done: boolean,
         public created_at?: string,
         public updated_at?: string,

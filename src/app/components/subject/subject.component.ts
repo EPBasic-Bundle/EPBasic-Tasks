@@ -6,6 +6,7 @@ import { Subject, Unity, Book, Task, Exam, Timetable, Evaluation } from '../../m
 import { environment } from '../../../environments/environment';
 import { UploadOutput, UploadInput, UploadFile, humanizeBytes, UploaderOptions } from 'ngx-uploader';
 import { ToastService } from '../../services/toast.service';
+import { toJSDate } from '@ng-bootstrap/ng-bootstrap/datepicker/ngb-calendar';
 
 @Component({
     selector: 'app-subject',
@@ -474,6 +475,7 @@ export class SubjectComponent implements OnInit {
             title: '',
             description: '',
             delivery_date: null,
+            mark: null,
             done: false
         });
     }
@@ -559,7 +561,7 @@ export class SubjectComponent implements OnInit {
                     this.tasks[index] = resp.task;
                     this.showToast('Tarea añadida correctamente', 'success');
 
-                    if (this.tasks[index].delivery_date != null) {
+                    if (this.tasks[index].delivery_date !== null) {
                         this.storeEvent(1);
                     }
 
@@ -575,8 +577,27 @@ export class SubjectComponent implements OnInit {
         this.apiService.put('task/' + task.id, task).subscribe(
             resp => {
                 if (resp.status === 'success') {
+                    const frontTask = this.tasks[index];
+
                     this.tasks[index] = resp.task;
                     this.showToast('Tarea actualizada correctamente', 'success');
+
+
+                    this.apiService.get('event/task/' + this.tasks[index].id).subscribe(
+                        resp => {
+                            if (resp.status === 'success') {
+                                let event = resp.event;
+
+                                if (event == null) {
+                                    this.storeEvent(1);
+                                } else {
+                                    if (event.start !== this.settedDateTimeStart) {
+                                        this.updateEvent(event);
+                                    }
+                                }
+                            }
+                        }
+                    );
 
                     this.getTasksToDo();
                 }
@@ -789,6 +810,19 @@ export class SubjectComponent implements OnInit {
             resp => {
                 if (resp.status === 'success') {
                     this.showToast('Evento creado correctamente', 'success');
+                }
+            }
+        );
+    }
+
+    updateEvent(event) {
+        event.start = this.settedDateTimeStart;
+        event.end = this.settedDateTimeEnd;
+
+        this.apiService.put('event/' + event.id, event).subscribe(
+            resp => {
+                if (resp.status === 'success') {
+                    this.showToast('Evento actualizado correctamente', 'success');
                 }
             }
         );

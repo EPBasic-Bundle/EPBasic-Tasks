@@ -15,49 +15,68 @@
             </div>
             <hr>
             <div class="row">
-                <div class="col-lg-2" *ngIf="task.book_id != null">
-                    <img [src]="'./assets/images/' + task.book.image" alt="..." class="img-thumbnail"
-                        *ngIf="book && book.pdf_name == null">
-                    <img [src]="'./assets/images/' + task.book.image" alt="..." class="img-thumbnail pointer"
-                        [routerLink]="['/book/', task.book_id]" *ngIf="book && book.pdf_name != null">
+                <div class="col-lg-8">
+                    <div class="row">
+                        <div class="col-lg-2" *ngIf="task.book_id != null">
+                            <img [src]="'./assets/images/' + task.book.image" alt="..." class="img-thumbnail"
+                                *ngIf="book && book.pdf_name == null">
+                            <img [src]="'./assets/images/' + task.book.image" alt="..." class="img-thumbnail pointer"
+                                [routerLink]="['/book/', task.book_id]" *ngIf="book && book.pdf_name != null">
+                        </div>
+                        <div class="col-lg-10">
+                            <p [innerHtml]="task.description"></p>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-lg-10">
-                    <p [innerHtml]="task.description"></p>
+                <div class="col-lg-4">
+                    <div class="card rounded-25" *ngIf="task.mark != null">
+                        <div class="card-body pt-2 pb-1 d-flex justify-content-center">
+                            <h1 *ngIf="task.mark !== null">
+                                <span class="text-primary">{{ task.mark }}</span> / 10
+                            </h1>
+                            <h1 class="text-warning" *ngIf="task.mark == null">Sin Asignar</h1>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 ml-4" *ngIf="task.delivery_date">
+                        <span class="text-primary">Día de entrega</span>
+                        <h3 class="text-light">{{ deliveryDate() }}</h3>
+                    </div>
                 </div>
             </div>
+
             <hr *ngIf="task.pages[0]">
             <div class="row">
-                <div class="col-lg-8" *ngIf="task.pages[0]">
-                    <h3 class="font-weight-bold">Tareas</h3>
-                    <hr>
-                    <ng-container *ngFor="let page of task.pages; let i=index">
-                        <h3>Página
-                            <span class="font-weight-bold" *ngIf="book && book.pdf_name == null">
-                                {{ page.number }}
-                            </span>
-                            <span class="font-weight-bold pointer"
-                                [routerLink]="['/book/' + task.book_id + '/' + page.number]"
-                                *ngIf="book && book.pdf_name != null">
-                                {{ page.number }}
-                            </span>
-                        </h3>
-                        <div class="row">
-                            <div class="col-lg-1 col-md-1 col-sm-1 m-2 pointer"
-                                *ngFor="let exercise of page.exercises; let e=index;"
-                                (click)="markAsDone(exercise.id, i, e)">
-                                <span class="badge badge-pill badge-dark p-3">
-                                    <p>{{ exercise.number }}</p>
-                                    <i class="fas fa-check-circle text-primary fa-lg"
-                                        [class.fas]="exercise.done == true" [class.far]="exercise.done == false"></i>
-                                </span>
-                            </div>
-                        </div>
+                <div class="col-lg-8">
+                    <ng-container *ngIf="task.pages[0]">
+                        <h3 class="font-weight-bold">Tareas</h3>
                         <hr>
+                        <ng-container *ngFor="let page of task.pages; let i=index">
+                            <h3>Página
+                                <span class="font-weight-bold" *ngIf="book && book.pdf_name == null">
+                                    {{ page.number }}
+                                </span>
+                                <span class="font-weight-bold pointer"
+                                    [routerLink]="['/book/' + task.book_id + '/' + page.number]"
+                                    *ngIf="book && book.pdf_name != null">
+                                    {{ page.number }}
+                                </span>
+                            </h3>
+                            <div class="row">
+                                <div class="col-lg-1 col-md-1 col-sm-1 m-2 pointer"
+                                    *ngFor="let exercise of page.exercises; let e=index;"
+                                    (click)="markAsDone(exercise.id, i, e)">
+                                    <span class="badge badge-pill badge-dark p-3">
+                                        <p>{{ exercise.number }}</p>
+                                        <i class="fas fa-check-circle text-primary fa-lg"
+                                            [class.fas]="exercise.done == true"
+                                            [class.far]="exercise.done == false"></i>
+                                    </span>
+                                </div>
+                            </div>
+                            <hr>
+                        </ng-container>
                     </ng-container>
-                </div>
-                <div class="col-lg-4" *ngIf="task.delivery_date">
-                    <span class="text-primary">Día de entrega</span>
-                    <h3 class="text-light">{{ deliveryDate() }}</h3>
                 </div>
             </div>
         </div>
