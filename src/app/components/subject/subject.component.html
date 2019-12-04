@@ -83,7 +83,8 @@
                 <div class="card-body pb-0 pt-3">
                     <ng-container *ngIf="projectsToDo[0]">
                         <hr class="mt-0 mb-1">
-                        <div *ngFor="let project of projectsToDo;" class="pointer" [routerLink]="['/exam/', exam.id]">
+                        <div *ngFor="let project of projectsToDo;" class="pointer"
+                            [routerLink]="['/project/', project.id]">
                             <div class="card-body d-flex justify-content-between pt-1 pb-1">
                                 <span>{{ project.title }}</span>
                                 <i class="fas fa-check-circle text-primary mt-1" [class.fas]="project.done == true"
