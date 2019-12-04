@@ -2,7 +2,7 @@ import { Component, OnInit, EventEmitter } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ApiService } from '../../services/api.service';
-import { Subject, Unity, Book, Task, Exam, Timetable, Evaluation } from '../../models/model';
+import { Subject, Unity, Book, Task, Exam, Timetable, Evaluation, Project } from '../../models/model';
 import { environment } from '../../../environments/environment';
 import { UploadOutput, UploadInput, UploadFile, humanizeBytes, UploaderOptions } from 'ngx-uploader';
 import { ToastService } from '../../services/toast.service';
@@ -20,11 +20,13 @@ export class SubjectComponent implements OnInit {
     books: Book[] = [];
     tasksToDo: Task[] = [];
     examsToDo: Exam[] = [];
+    projectsToDo: Project[] = [];
     tasks: Task[];
     exams: Exam[];
     timetable: Timetable;
     subjects: Subject[];
     evaluations: Evaluation[];
+    projects: Project[] = [];
 
     images = ['books.png', 'paper.png', 'pdf.png'];
 
@@ -41,6 +43,7 @@ export class SubjectComponent implements OnInit {
     sBookIdx: number;
     sTaskIdx: number;
     sExamIdx: number;
+    sProjectIdx: number;
     sTSubjectIdxs;
 
     sUnityId: number;
@@ -90,8 +93,10 @@ export class SubjectComponent implements OnInit {
                 if (this.subjectId > 0) {
                     this.getSubject();
                     this.getBooks();
+
                     this.getTasksToDo();
                     this.getExamsToDo();
+                    this.getProjectsToDo();
 
                     this.getSubjects();
                     this.getTimetable();
@@ -163,6 +168,16 @@ export class SubjectComponent implements OnInit {
         );
     }
 
+    getProjectsToDo() {
+        this.apiService.get('projects/todo/' + this.subjectId).subscribe(
+            resp => {
+                if (resp.status === 'success') {
+                    this.projectsToDo = resp.projects;
+                }
+            }
+        );
+    }
+
     getTasks(unity_id) {
         this.apiService.get('tasks/' + unity_id).subscribe(
             resp => {
@@ -178,6 +193,16 @@ export class SubjectComponent implements OnInit {
             resp => {
                 if (resp.status === 'success') {
                     this.exams = resp.exams;
+                }
+            }
+        );
+    }
+
+    getProjects(unity_id) {
+        this.apiService.get('projects/' + unity_id).subscribe(
+            resp => {
+                if (resp.status === 'success') {
+                    this.projects = resp.projects;
                 }
             }
         );
@@ -235,6 +260,7 @@ export class SubjectComponent implements OnInit {
     collapse(unity_id) {
         this.exams = [];
         this.tasks = [];
+        this.projects = [];
 
         if (this.sUnityId == unity_id) {
             this.sUnityId = null;
@@ -243,6 +269,7 @@ export class SubjectComponent implements OnInit {
 
             this.getTasks(unity_id);
             this.getExams(unity_id);
+            this.getProjects(unity_id);
         }
     }
 
@@ -722,6 +749,108 @@ export class SubjectComponent implements OnInit {
         );
     }
 
+    /*************/
+    /* PROJECTS */
+    /************/
+
+    createProject() {
+        if (!this.exams) {
+            this.projects = [];
+        }
+
+        this.projects.unshift({
+            id: 0,
+            title: '',
+            description: '',
+            subject_id: this.subject.id,
+            unity_id: this.sUnityId,
+            mark: null,
+            done: false,
+            delivery_date: null
+        });
+    }
+
+    markProjectDone(index) {
+        const projectId = this.projects[index].id;
+
+        this.apiService.get('project/done/' + projectId).subscribe(
+            resp => {
+                if (resp.status === 'success') {
+                    this.projects[index] = resp.project;
+
+                    this.getProjectsToDo();
+                }
+            }
+        );
+    }
+
+    deleteProjectFront(index) {
+        this.exams.splice(index, 1);
+    }
+
+    /******************/
+    /* EXAMS CRUD */
+    /*****************/
+
+    storeProject(project, index) {
+        this.apiService.post('project', project).subscribe(
+            resp => {
+                if (resp.status === 'success') {
+                    this.projects[index] = resp.project;
+                    this.showToast('Proyecto añadido correctamente', 'success');
+
+                    if (this.projects[index].delivery_date != null) {
+                        this.storeEvent(3);
+                    }
+
+                    this.getProjectsToDo();
+                }
+            }
+        );
+    }
+
+    updateProject(project, index) {
+        this.apiService.put('project/' + project.id, project).subscribe(
+            resp => {
+                if (resp.status === 'success') {
+                    this.projects[index] = resp.project;
+                    this.showToast('Proyecto actualizado correctamente', 'success');
+
+                    this.apiService.get('event/project/' + this.projects[index].id).subscribe(
+                        resp => {
+                            if (resp.status === 'success') {
+                                let event = resp.event;
+
+                                if (event == null) {
+                                    this.storeEvent(3);
+                                } else {
+                                    if (event.start !== this.settedDateTimeStart) {
+                                        this.updateEvent(event);
+                                    }
+                                }
+                            }
+                        }
+                    );
+
+                    this.getProjectsToDo();
+                }
+            }
+        );
+    }
+
+    deleteProject(project_id, index) {
+        this.apiService.delete('project/' + project_id).subscribe(
+            resp => {
+                if (resp.status === 'success') {
+                    this.projects.splice(index, 1);
+                    this.showToast('Proyecto eliminado correctamente', 'success');
+
+                    this.getProjectsToDo();
+                }
+            }
+        );
+    }
+
     /******************/
     /* DATE SELECTOR */
     /*****************/
@@ -775,7 +904,7 @@ export class SubjectComponent implements OnInit {
         this.selectableDays = nextSubjectsDays;
     }
 
-    setDate(selectedDay, rowIndex = null) {
+    setDate(selectedDay, rowIndex = -1) {
         let settedDate;
 
         if (rowIndex >= 0) {
@@ -796,6 +925,9 @@ export class SubjectComponent implements OnInit {
                 break;
             case 2:
                 this.exams[this.sExamIdx].exam_date = settedDate;
+                break;
+            case 3:
+                this.projects[this.sProjectIdx].delivery_date = settedDate;
                 break;
         }
 
@@ -827,6 +959,7 @@ export class SubjectComponent implements OnInit {
             secondary_color: this.subject.secondary_color,
             task_id: null,
             exam_id: null,
+            project_id: null,
         }
 
         switch (type) {
@@ -837,6 +970,10 @@ export class SubjectComponent implements OnInit {
             case 2:
                 event.exam_id = this.exams[this.sExamIdx].id;
                 event.title = 'Examen ' + this.subject.name;
+                break;
+            case 3:
+                event.project_id = this.projects[this.sProjectIdx].id;
+                event.title = 'Proyecto ' + this.subject.name;
                 break;
         }
 
@@ -923,6 +1060,9 @@ export class SubjectComponent implements OnInit {
             case 2:
                 this.sExamIdx = index;
                 break;
+            case 3:
+                this.sProjectIdx = index;
+                break;
         }
 
         this.dateSelectorModal = this.modalService.open(content, { size: 'xl', centered: true });
@@ -938,6 +1078,9 @@ export class SubjectComponent implements OnInit {
                 break;
             case 2:
                 this.sExamIdx = index;
+                break;
+            case 3:
+                this.sProjectIdx = index;
                 break;
         }
 

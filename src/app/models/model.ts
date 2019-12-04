@@ -28,7 +28,7 @@ export class Subject {
         public updated_at?: string,
         public tasks?: Task[],
         public exams?: Exam[],
-        public projects?,
+        public projects?: Exam[],
     ) { }
 }
 
@@ -140,6 +140,21 @@ export class Exam {
         public mark: number,
         public done: boolean,
         public exam_date: string,
+        public created_at?: string,
+        public updated_at?: string,
+    ) { }
+}
+
+export class Project {
+    constructor(
+        public id: number,
+        public title: string,
+        public description: string,
+        public subject_id: number,
+        public unity_id: number,
+        public mark: number,
+        public done: boolean,
+        public delivery_date: string,
         public created_at?: string,
         public updated_at?: string,
     ) { }

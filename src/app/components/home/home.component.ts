@@ -74,7 +74,7 @@ export class HomeComponent implements OnInit {
 
                     // tslint:disable-next-line:prefer-for-of
                     for (let i = 0; i < this.subjects.length; i++) {
-                        if (this.subjects[i].tasks[0] || this.subjects[i].exams[0]) {
+                        if (this.subjects[i].tasks[0] || this.subjects[i].exams[0] || this.subjects[i].projects[0]) {
                             this.collapse(this.subjects[i].id);
                         }
                     }
@@ -84,7 +84,7 @@ export class HomeComponent implements OnInit {
     }
 
     getEvents() {
-        this.apiService.get('events').subscribe(
+        this.apiService.get('events/not-passed').subscribe(
             resp => {
                 if (resp.status === 'success') {
                     let events = [];
@@ -200,6 +200,18 @@ export class HomeComponent implements OnInit {
             resp => {
                 if (resp.status === 'success') {
                     this.subjects[subject_index].exams.splice(exam_index, 1);
+                }
+            }
+        );
+    }
+
+    markProjectDone(subject_index, project_index) {
+        const projectId = this.subjects[subject_index].projects[project_index].id;
+
+        this.apiService.get('project/done/' + projectId).subscribe(
+            resp => {
+                if (resp.status === 'success') {
+                    this.subjects[subject_index].projects.splice(project_index, 1);
                 }
             }
         );

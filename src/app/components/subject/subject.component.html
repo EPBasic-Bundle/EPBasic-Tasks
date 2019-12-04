@@ -52,7 +52,7 @@
                 </div>
             </div>
 
-            <div class="card rounded-25" *ngIf="examsToDo">
+            <div class="card rounded-25 mb-4" *ngIf="examsToDo">
                 <div class="card-header rounded-top-25 d-flex justify-content-between">
                     <h2 class="mt-1 mb-1">Examenes</h2>
                 </div>
@@ -73,6 +73,30 @@
                         </div>
                     </ng-container>
                     <p class="text-center" *ngIf="!examsToDo[0]">¡Felicidades, no tienes examenes!</p>
+                </div>
+            </div>
+
+            <div class="card rounded-25" *ngIf="projectsToDo">
+                <div class="card-header rounded-top-25 d-flex justify-content-between">
+                    <h2 class="mt-1 mb-1">Proyectos</h2>
+                </div>
+                <div class="card-body pb-0 pt-3">
+                    <ng-container *ngIf="projectsToDo[0]">
+                        <hr class="mt-0 mb-1">
+                        <div *ngFor="let project of projectsToDo;" class="pointer" [routerLink]="['/exam/', exam.id]">
+                            <div class="card-body d-flex justify-content-between pt-1 pb-1">
+                                <span>{{ project.title }}</span>
+                                <i class="fas fa-check-circle text-primary mt-1" [class.fas]="project.done == true"
+                                    [class.far]="project.done == false"
+                                    [class.text-danger]="project.mark < 5 && project.done == true"
+                                    [class.text-warning]="project.mark == 5 && project.done == true"
+                                    [class.text-success]="project.mark > 5 && project.done == true">
+                                </i>
+                            </div>
+                            <hr class="mt-1">
+                        </div>
+                    </ng-container>
+                    <p class="text-center" *ngIf="!projectsToDo[0]">¡Felicidades, no tienes proyectos!</p>
                 </div>
             </div>
 
@@ -204,8 +228,9 @@
                                                 </div>
                                             </div>
                                         </ng-container>
-                                        <span class="small" *ngIf="!exams || !exams[0]">No hay examenes en esta
-                                            unidad</span>
+                                        <span class="small" *ngIf="!exams || !exams[0]">
+                                            No hay examenes en esta unidad
+                                        </span>
                                     </div>
                                     <div class="col-lg-4">
                                         <div class="d-flex justify-content-between">
@@ -217,9 +242,37 @@
                                             </button>
                                         </div>
                                         <hr class="mt-0 mb-1">
-                                        <span class="small">No hay proyectos en esta unidad</span>
+                                        <ng-container *ngIf="projects && projects[0]">
+                                            <div class="card rounded-25 mb-2 mt-2" *ngFor="let project of projects">
+                                                <div class="card-body d-flex justify-content-between pb-1 pt-1"
+                                                    *ngIf="project.id != 0">
+                                                    <div class="col-lg-10 pointer pl-0"
+                                                        [routerLink]="['/exam/', project.id]">
+                                                        <span>{{ project.title }}</span>
+                                                    </div>
+
+                                                    <i class="fas fa-check-circle text-primary mt-1 pointer"
+                                                        (click)="markProjectDone(i)" [class.fas]="project.done == true"
+                                                        [class.far]="project.done == false"
+                                                        [class.text-danger]="project.mark < 5 && project.done == true"
+                                                        [class.text-warning]="project.mark == 5 && project.done == true"
+                                                        [class.text-success]="project.mark > 5 && project.done == true">
+                                                    </i>
+                                                </div>
+                                                <div class="card-body d-flex justify-content-between pb-1 pt-1"
+                                                    *ngIf="project.id == 0">
+                                                    <span>{{ project.title }}</span>
+                                                    <span class="badge badge-warning float-right" container="body"
+                                                        placement="top" ngbTooltip="Proyecto sin guardar">
+                                                        <i class="fas fa-save"></i>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </ng-container>
+                                        <span class="small" *ngIf="!projects || !projects[0]">
+                                            No hay proyectos en esta unidad
+                                        </span>
                                     </div>
-                                    <div class="col-lg-4"></div>
                                 </div>
                             </div>
                         </div>
@@ -477,7 +530,7 @@
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th>Titulo</th>
+                    <th>Título</th>
                     <th>Nota</th>
                     <th>Fecha examen</th>
                     <th>#</th>
@@ -539,6 +592,80 @@
     </div>
 </ng-template>
 
+<ng-template #projectsModal let-close="close">
+    <div class="modal-header">
+        <h5 class="modal-title">Añadir proyectos</h5>
+        <button type="button" class="close" (click)="modal.close()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <button class="btn btn-primary float-right mb-4" (click)="createProject()">Nuevo proyecto</button>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Nota</th>
+                    <th>Fecha entrega</th>
+                    <th>#</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let project of projects; let i=index">
+                    <td>
+                        <input type="text" class="form-control mb-2" [(ngModel)]="project.title" />
+                        <button class="btn btn-block btn-primary"
+                            (click)="openDescriptionModal(descriptionModal, i, 3)">
+                            <i class="fas fa-align-justify"></i> Descripción
+                        </button>
+                    </td>
+                    <td>
+                        <input type="number" class="form-control mb-2" max="10" min="0" step="0.01"
+                            [(ngModel)]="project.mark" />
+                    </td>
+                    <td>
+                        <button class="btn btn-primary btn-sm rounded-25" *ngIf="timetable && timetable.subjects"
+                            (click)="openDateSelectorModal(dateSelectorModal, i, 3)">
+                            <i class="far fa-calendar-check"></i>
+                            Seleccionar
+                        </button>
+                        <button class="btn btn-primary btn-sm rounded-25" container="body" placement="top"
+                            ngbTooltip="Genera un horario para poder seleccionar el día de entrega"
+                            *ngIf="!timetable|| !timetable.subjects" disabled>
+                            <i class="far fa-calendar-check"></i>
+                            Seleccionar
+                        </button>
+                    </td>
+                    <td>
+                        <ng-container *ngIf="project.id == 0">
+                            <button class="btn btn-primary rounded-25 mr-2" (click)="storeProject(project, i)"
+                                [disabled]="project.title == '' || project.mark > 10">
+                                <i class="fa fa-save"></i>
+                            </button>
+                            <button class="btn btn-danger rounded-25" (click)="deleteProjectFront(i)">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </ng-container>
+                        <ng-container *ngIf="project.id > 0">
+                            <button class="btn btn-secondary rounded-25 mr-2" (click)="updateProject(project, i)">
+                                <i class="fas fa-pen"></i>
+                            </button>
+                            <button class="btn btn-danger rounded-25" (click)="deleteProject(project.id, i)">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </ng-container>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" (click)="modal.close()">
+            Cerrar
+        </button>
+    </div>
+</ng-template>
+
 <ng-template #descriptionModal let-close="close">
     <div class="modal-header">
         <h5 class="modal-title">Descripción</h5>
@@ -553,25 +680,12 @@
         <app-ngx-editor [placeholder]="'Escribe la descripción...'" [spellcheck]="false"
             [(ngModel)]="exams[sExamIdx].description" *ngIf="sExamIdx >= 0">
         </app-ngx-editor>
+        <app-ngx-editor [placeholder]="'Escribe la descripción...'" [spellcheck]="false"
+            [(ngModel)]="projects[sProjectIdx].description" *ngIf="sProjectIdx >= 0">
+        </app-ngx-editor>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-outline-secondary" (click)="closeDescriptionModal()">
-            Cerrar
-        </button>
-    </div>
-</ng-template>
-
-<ng-template #projectsModal let-close="close">
-    <div class="modal-header">
-        <h5 class="modal-title">Añadir projectos</h5>
-        <button type="button" class="close" (click)="modal.close()">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body">
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-outline-secondary" (click)="modal.close()">
             Cerrar
         </button>
     </div>
@@ -712,8 +826,8 @@
     <div class="modal-body">
         <div class="btn-group btn-block mb-4" role="group">
             <button type="button" class="btn btn-secondary rounded-left-25" [class.btn-dark]="mode == 1"
-                (click)="mode = 1"> Calendario
-                <i class="fas fa-calendar-alt mr-1"></i>
+                (click)="mode = 1">
+                <i class="fas fa-calendar-alt mr-1"></i> Calendario
             </button>
             <button type="button" class="btn btn-secondary rounded-right-25" [class.btn-dark]="mode == 2"
                 (click)="mode = 2">

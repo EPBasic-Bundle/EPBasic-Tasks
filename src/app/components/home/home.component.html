@@ -2,7 +2,7 @@
     Cargando...
 </div>
 <div class="container-fluid mt-4 mb-5" *ngIf="this.loading[0] == false">
-    <div class="row justify-content-center">
+    <div class="row justify-content-center" data-aos="zoom-in">
         <div class="col-lg-6 col-md-12 mb-4">
             <div class="mb-4">
                 <button class="btn btn-block rounded-25 mb-4" [class.btn-primary]="showStudySelector == true"
@@ -12,7 +12,7 @@
                 <app-study-selector *ngIf="!subjects || showStudySelector == true"></app-study-selector>
             </div>
 
-            <div class="accordion" data-aos="zoom-in" *ngIf="subjects">
+            <div class="accordion" *ngIf="subjects">
                 <ng-container *ngFor="let subject of subjects; let i=index; let fst=first; let lst=last;">
                     <div class="card" [class.rounded-top-25]="fst == true" [class.rounded-bottom-25]="lst == true">
                         <div class="card-header pointer d-flex justify-content-between">
@@ -34,8 +34,7 @@
                                         <hr class="mt-1 mb-1">
                                         <div class="card rounded-25 mt-2"
                                             *ngFor="let task of subject.tasks; let e=index">
-                                            <div class="card-body d-flex justify-content-between pb-1 pt-1"
-                                                *ngIf="task.id != 0">
+                                            <div class="card-body d-flex justify-content-between pb-1 pt-1">
                                                 <div class="col-lg-10 pointer pl-0" [routerLink]="['/task/', task.id]">
                                                     <span>{{ task.title }}</span>
                                                 </div>
@@ -46,17 +45,16 @@
                                                 </i>
                                             </div>
                                         </div>
-                                        <span class="small" *ngIf="!subject.tasks || !subject.tasks[0]">No tienes
-                                            tareas
-                                            pendientes</span>
+                                        <span class="small" *ngIf="!subject.tasks || !subject.tasks[0]">
+                                            No tienes tareas pendientes
+                                        </span>
                                     </div>
                                     <div class="col-lg-4 col-md-4 mb-2">
                                         <b>Examenes</b>
                                         <hr class="mt-1 mb-2">
                                         <div class="card rounded-25 mb-2 mt-2"
                                             *ngFor="let exam of subject.exams; let e=index">
-                                            <div class="card-body d-flex justify-content-between pb-1 pt-1"
-                                                *ngIf="exam.id != 0">
+                                            <div class="card-body d-flex justify-content-between pb-1 pt-1">
                                                 <div class="col-lg-10 pointer pl-0" [routerLink]="['/exam/', exam.id]">
                                                     <span>{{ exam.title }}</span>
                                                 </div>
@@ -69,22 +67,31 @@
                                                     [class.text-success]="exam.mark > 5 && exam.done == true">
                                                 </i>
                                             </div>
-                                            <div class="card-body d-flex justify-content-between pb-1 pt-1"
-                                                *ngIf="exam.id == 0">
-                                                <span>{{ exam.title }}</span>
-                                                <span class="badge badge-warning float-right" container="body"
-                                                    placement="top" ngbTooltip="Examen sin guardar">
-                                                    <i class="fas fa-save"></i>
-                                                </span>
-                                            </div>
                                         </div>
                                         <span class="small" *ngIf="!subject.exams || !subject.exams[0]">
                                             No tienes examenes pendientes
                                         </span>
                                     </div>
-                                    <div class="col-lg-4 col-md-4">
+                                    <div class="col-lg-4 col-md-4 mb-2">
                                         <b>Proyectos</b>
-                                        <hr class="mt-1 mb-1">
+                                        <hr class="mt-1 mb-2">
+                                        <div class="card rounded-25 mb-2 mt-2"
+                                            *ngFor="let project of subject.projects; let e=index">
+                                            <div class="card-body d-flex justify-content-between pb-1 pt-1">
+                                                <div class="col-lg-10 pointer pl-0"
+                                                    [routerLink]="['/project/', project.id]">
+                                                    <span>{{ project.title }}</span>
+                                                </div>
+
+                                                <i class="fas fa-check-circle text-primary mt-1 pointer"
+                                                    (click)="markProjectDone(i, e)" [class.fas]="project.done == true"
+                                                    [class.far]="project.done == false"
+                                                    [class.text-danger]="project.mark < 5 && project.done == true"
+                                                    [class.text-warning]="project.mark == 5 && project.done == true"
+                                                    [class.text-success]="project.mark > 5 && project.done == true">
+                                                </i>
+                                            </div>
+                                        </div>
                                         <span class="small" *ngIf="!subject.projects || !subject.projects[0]">
                                             No tienes proyectos pendientes
                                         </span>
@@ -99,7 +106,7 @@
 
         <div class="col-lg-2">
             <div class="col-lg-12 mb-4">
-                <div class="card rounded-25 bg-dark text-light" *ngIf="timetable" data-aos="zoom-in">
+                <div class="card rounded-25 bg-dark text-light" *ngIf="timetable">
                     <div class="card-header rounded-top-25 d-flex justify-content-between">
                         <h3>Horario
                             <span *ngIf="subjectsOfTomorrow == true">de mañana</span>

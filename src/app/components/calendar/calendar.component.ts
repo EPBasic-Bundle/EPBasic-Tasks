@@ -170,6 +170,8 @@ export class CalendarComponent implements OnInit {
                         this.apiService.put('task/start/' + event.task_id, resp.event.start);
                     } if (resp.event.exam_id > 0) {
                         this.apiService.put('exam/start/' + event.exam_id, resp.event.start);
+                    } if (resp.event.project_id > 0) {
+                        this.apiService.put('project/start/' + event.project_id, resp.event.start);
                     }
 
                     this.events[index] = this.convertEvent(resp.event);
@@ -227,6 +229,7 @@ export class CalendarComponent implements OnInit {
             secondary_color: event.color.secondary,
             task_id: event.task_id,
             exam_id: event.exam_id,
+            project_id: event.project_id,
         }
     }
 
