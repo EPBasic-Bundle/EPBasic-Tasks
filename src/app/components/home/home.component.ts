@@ -113,9 +113,8 @@ export class HomeComponent implements OnInit {
 
     getSubjectsOfDay(add = 0) {
         this.subjectsOfDay = [];
-        let subjectRow;
 
-        for (subjectRow of this.timetable.subjects) {
+        for (let subjectRow of this.timetable.subjects) {
             this.subjectsOfDay.push(subjectRow[this.weekDay + add]);
         }
     }

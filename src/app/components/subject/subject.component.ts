@@ -50,6 +50,7 @@ export class SubjectComponent implements OnInit {
 
     settedDateTimeStart: string;
     settedDateTimeEnd: string;
+    settedDate;
 
     subjectId;
 
@@ -65,6 +66,9 @@ export class SubjectComponent implements OnInit {
     baseURL: string = environment.server;
 
     loading = [false, false];
+
+    mode = 1;
+    subjectsOfDay;
 
     constructor(
         private apiService: ApiService,
@@ -771,11 +775,20 @@ export class SubjectComponent implements OnInit {
         this.selectableDays = nextSubjectsDays;
     }
 
-    setDate(selectedDay) {
-        const settedDate = (selectedDay.year + '/' + selectedDay.month + '/' + selectedDay.day);
+    setDate(selectedDay, rowIndex = null) {
+        let settedDate;
 
-        this.settedDateTimeStart = (settedDate + ' ' + selectedDay.hour_start);
-        this.settedDateTimeEnd = (settedDate + ' ' + selectedDay.hour_end);
+        if (rowIndex >= 0) {
+            settedDate = this.formatDate(this.settedDate);
+
+            this.settedDateTimeStart = (settedDate + ' ' + this.timetable.hours[rowIndex].hour_start);
+            this.settedDateTimeEnd = (settedDate + ' ' + this.timetable.hours[rowIndex].hour_start);
+        } else {
+            settedDate = this.formatDate(selectedDay);
+
+            this.settedDateTimeStart = (settedDate + ' ' + selectedDay.hour_start);
+            this.settedDateTimeEnd = (settedDate + ' ' + selectedDay.hour_end);
+        }
 
         switch (this.dateSelectorType) {
             case 1:
@@ -787,6 +800,21 @@ export class SubjectComponent implements OnInit {
         }
 
         this.dateSelectorModal.close();
+    }
+
+    searchDay() {
+        const date = new Date(this.formatDate(this.settedDate));
+
+        const day = date.getDay() - 1;
+
+        this.subjectsOfDay = [];
+
+        if (day >= 0 && day <= 4) {
+            for (let subjectRow of this.timetable.subjects) {
+                this.subjectsOfDay.push(subjectRow[day]);
+            }
+
+        }
     }
 
     generateEvent(type) {
@@ -978,5 +1006,9 @@ export class SubjectComponent implements OnInit {
                 break;
             }
         }
+    }
+
+    formatDate(date) {
+        return (date.year + '-' + date.month + '-' + date.day);
     }
 }
