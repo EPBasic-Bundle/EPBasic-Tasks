@@ -921,13 +921,13 @@ export class SubjectComponent implements OnInit {
 
         switch (this.dateSelectorType) {
             case 1:
-                this.tasks[this.sTaskIdx].delivery_date = settedDate;
+                this.tasks[this.sTaskIdx].delivery_date = this.settedDateTimeStart;
                 break;
             case 2:
-                this.exams[this.sExamIdx].exam_date = settedDate;
+                this.exams[this.sExamIdx].exam_date = this.settedDateTimeStart;
                 break;
             case 3:
-                this.projects[this.sProjectIdx].delivery_date = settedDate;
+                this.projects[this.sProjectIdx].delivery_date = this.settedDateTimeStart;
                 break;
         }
 
