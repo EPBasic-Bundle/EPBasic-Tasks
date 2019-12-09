@@ -14,6 +14,7 @@ import { SettingsComponent } from './components/settings/settings.component';
 import { BookComponent } from './components/book/book.component';
 import { SubjectsComponent } from './components/subjects/subjects.component';
 import { ExamComponent } from './components/exam/exam.component';
+import { MarksComponent } from './components/marks/marks.component';
 
 const routes: Routes = [
     {
@@ -32,6 +33,11 @@ const routes: Routes = [
     {
         path: 'calendar',
         component: CalendarComponent,
+        canActivate: [IdentityGuard]
+    },
+    {
+        path: 'marks',
+        component: MarksComponent,
         canActivate: [IdentityGuard]
     },
     {

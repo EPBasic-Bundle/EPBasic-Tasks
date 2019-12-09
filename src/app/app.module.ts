@@ -38,9 +38,11 @@ import { SettingsComponent } from './components/settings/settings.component';
 import { BookComponent } from './components/book/book.component';
 import { SubjectsComponent } from './components/subjects/subjects.component';
 import { ExamComponent } from './components/exam/exam.component';
+import { MarksComponent } from './components/marks/marks.component';
 
 import { UnitsPipe } from './pipes/units.pipe';
 import { EventsPipe } from './pipes/event.pipe';
+import { EvaluationsPipe } from './pipes/evaluations.pipe';
 
 registerLocaleData(localeEs);
 
@@ -62,8 +64,10 @@ registerLocaleData(localeEs);
         SubjectsComponent,
         ExamComponent,
         StudySelectorComponent,
+        MarksComponent,
         UnitsPipe,
         EventsPipe,
+        EvaluationsPipe
     ],
     imports: [
         BrowserModule,

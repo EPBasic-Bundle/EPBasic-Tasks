@@ -190,5 +190,18 @@ export class Evaluation {
         public end,
         public created_at?: string,
         public updated_at?: string,
+        public marks?: Mark[],
+    ) { }
+}
+
+export class Mark {
+    constructor(
+        public id: number,
+        public evaluation_id: number,
+        public subject_id: number,
+        public mark_wd: number,
+        public mark: number,
+        public created_at?: string,
+        public updated_at?: string,
     ) { }
 }

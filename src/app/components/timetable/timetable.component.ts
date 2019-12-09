@@ -112,8 +112,6 @@ export class TimetableComponent implements OnInit {
     }
 
     addRows(rows) {
-        this.rows = +this.rows;
-
         let subjects;
 
         for (let i of Array(rows)) {
