@@ -9,7 +9,6 @@ import { ApiService } from '../../services/api.service';
 })
 export class MarksComponent implements OnInit {
     evaluations: Evaluation[] = [];
-    sEvaluations: Evaluation[] = [];
 
     subjects: Subject[] = [];
 
@@ -50,7 +49,16 @@ export class MarksComponent implements OnInit {
                 if (resp.status === 'success') {
                     this.evaluations = resp.evaluations;
 
-                    this.sEvaluationId = this.evaluations[0].id;
+                    if (this.evaluations && this.evaluations[0]) {
+                        for (let i = 0; i < this.evaluations.length; i++) {
+                            if (this.evaluations[i].marks[0]) {
+                                this.sEvaluationId = this.evaluations[i].id;
+                                break;
+                            }
+
+                            this.sEvaluationId = this.evaluations[0].id;
+                        }
+                    }
                 }
             }, () => {
                 this.loading = false;

@@ -142,7 +142,9 @@ export class SubjectComponent implements OnInit {
                 if (resp.status === 'success') {
                     this.units = resp.units;
 
-                    this.autoCollapse();
+                    if (this.units && this.units[0]) {
+                        this.autoCollapse();
+                    }
                 }
             }
         );
