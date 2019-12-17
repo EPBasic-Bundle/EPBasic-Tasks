@@ -42,7 +42,7 @@ import { MarksComponent } from './components/marks/marks.component';
 
 import { UnitsPipe } from './pipes/units.pipe';
 import { EventsPipe } from './pipes/event.pipe';
-import { EvaluationsPipe } from './pipes/evaluations.pipe';
+import { ReportCardsPipe } from './pipes/report_cards.pipe';
 
 registerLocaleData(localeEs);
 
@@ -67,7 +67,7 @@ registerLocaleData(localeEs);
         MarksComponent,
         UnitsPipe,
         EventsPipe,
-        EvaluationsPipe
+        ReportCardsPipe
     ],
     imports: [
         BrowserModule,

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Evaluation, Subject } from '../../models/model';
+import { Evaluation, Subject, ReportCard } from '../../models/model';
 import { ApiService } from '../../services/api.service';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
     selector: 'app-marks',
@@ -9,10 +10,12 @@ import { ApiService } from '../../services/api.service';
 })
 export class MarksComponent implements OnInit {
     evaluations: Evaluation[] = [];
+    report_cards: ReportCard[] = [];
 
     subjects: Subject[] = [];
 
-    sEvaluationId: number;
+    sEvaluationId: number = null;
+    sType: number = null;
 
     loading: boolean;
     editMode: boolean = false;
@@ -21,7 +24,8 @@ export class MarksComponent implements OnInit {
     rowIndex: number;
 
     constructor(
-        private apiService: ApiService
+        private apiService: ApiService,
+        public toastService: ToastService
     ) { }
 
     ngOnInit() {
@@ -42,23 +46,28 @@ export class MarksComponent implements OnInit {
     getEvaluations() {
         this.loading = true;
 
-        this.apiService.get('evaluations/marks').subscribe(
+        this.apiService.get('evaluations').subscribe(
+            resp => {
+                if (resp.status === 'success') {
+                    this.evaluations = resp.evaluations;
+
+                    this.getReportCards();
+                }
+            }, () => {
+                this.loading = false;
+            }
+        );
+    }
+
+    getReportCards() {
+        this.loading = true;
+
+        this.apiService.get('report-cards').subscribe(
             resp => {
                 this.loading = false;
 
                 if (resp.status === 'success') {
-                    this.evaluations = resp.evaluations;
-
-                    if (this.evaluations && this.evaluations[0]) {
-                        for (let i = 0; i < this.evaluations.length; i++) {
-                            if (this.evaluations[i].marks[0]) {
-                                this.sEvaluationId = this.evaluations[i].id;
-                                break;
-                            }
-
-                            this.sEvaluationId = this.evaluations[0].id;
-                        }
-                    }
+                    this.report_cards = resp.report_cards;
                 }
             }, () => {
                 this.loading = false;
@@ -70,31 +79,25 @@ export class MarksComponent implements OnInit {
         this.sEvaluationId = evaluation_id;
     }
 
-    saveMarks() {
+    storeReportCard(report_card) {
+        this.apiService.post('report-card', report_card).subscribe(
+            resp => {
+                if (resp.status === 'success') {
+                    if (report_card.id != 0) {
+                        this.showToast('Boletín actualizado correctamente', 'success');
+                    } else {
+                        this.showToast('Boletín creado correctamente', 'success');
+                    }
 
+                    this.getReportCards();
+                }
+            }
+        );
     }
 
-    addRows(rows) {
-        const index = this.findEvaluationIdx(this.sEvaluationId);
-
-        let number;
-
-        for (let i of Array(rows)) {
-
-            if (!this.evaluations[0]) {
-                number = 0;
-            } else {
-                number = this.evaluations[index].marks.length;
-            }
-
-            this.evaluations[index].marks.splice(this.rowIndex, 0, {
-                id: null,
-                subject_id: this.subjects[number].id,
-                evaluation_id: this.evaluations[index].id,
-                mark_wd: 0,
-                mark: 0
-            });
-        }
+    undefine() {
+        this.sEvaluationId = null;
+        this.sType = null;
     }
 
     findSubject(subject_id: number) {
@@ -109,5 +112,18 @@ export class MarksComponent implements OnInit {
 
     findEvaluationIdx(evaluation_id) {
         return this.evaluations.findIndex(evaluation => evaluation.id === evaluation_id);
+    }
+
+    showToast(text, type) {
+        switch (type) {
+            case 'success': {
+                this.toastService.show(text, { classname: 'bg-dark text-light', delay: 5000 });
+                break;
+            }
+            case 'danger': {
+                this.toastService.show(text, { classname: 'bg-danger text-light', delay: 5000 });
+                break;
+            }
+        }
     }
 }

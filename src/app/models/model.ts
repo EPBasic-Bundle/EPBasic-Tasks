@@ -197,7 +197,7 @@ export class Evaluation {
 export class Mark {
     constructor(
         public id: number,
-        public evaluation_id: number,
+        public report_card_id: number,
         public subject_id: number,
         public mark_wd: number,
         public mark: number,
@@ -205,3 +205,15 @@ export class Mark {
         public updated_at?: string,
     ) { }
 }
+
+export class ReportCard {
+    constructor(
+        public id: number,
+        public evaluation_id: number,
+        public type: number,
+        public created_at?: string,
+        public updated_at?: string,
+        public marks?: Mark[],
+    ) { }
+}
+
