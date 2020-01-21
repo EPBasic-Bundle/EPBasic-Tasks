@@ -26,6 +26,7 @@ export class Subject {
         public tasks_has_mark?: boolean,
         public created_at?: string,
         public updated_at?: string,
+        public units?: Unity[],
         public tasks?: Task[],
         public exams?: Exam[],
         public projects?: Exam[],
@@ -73,6 +74,7 @@ export class Unity {
         public updated_at?: string,
         public tasks?: Task[],
         public exams?: Exam[],
+        public projects?: Project[],
     ) { }
 }
 

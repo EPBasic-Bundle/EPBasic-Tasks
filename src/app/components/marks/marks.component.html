@@ -1,10 +1,10 @@
-<div class="container mt-4">
-    <ng-container *ngIf="loading == true">
+<div class="container-fluid mt-4">
+    <div *ngIf="loading == true">
         Cargando...
-    </ng-container>
-    <ng-container *ngIf="loading == false">
-        <div class="row" data-aos="zoom-in">
-            <div class="col-lg-10" *ngIf="evaluations && evaluations[0]">
+    </div>
+    <div data-aos="zoom-in" *ngIf="loading == false">
+        <div class="row justify-content-center">
+            <div class="col-lg-7">
                 <nav>
                     <ol class="breadcrumb bg-dark rounded-25">
                         <li class="breadcrumb-item text-primary pointer" *ngIf="sEvaluationId != null"
@@ -24,7 +24,29 @@
                         </li>
                     </ol>
                 </nav>
-
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-2" *ngIf="sType == 1">
+                <div class="card rounded-25">
+                    <div class="list-group m-4">
+                        <a class="list-group-item list-group-item-action pr-2" *ngFor="let subject of subjects">
+                            <div class="row justify-content-between">
+                                <h3 class="col-lg-7 col-md-9 mt-1 pointer" [routerLink]="['/subject', subject.id]">
+                                    {{ subject.name }}
+                                </h3>
+                                <div class="col-lg-5 col-md-3">
+                                    <button class="btn btn-sm btn-block btn-secondary rounded-25" *ngIf="subject.id > 0"
+                                        (click)="getSubject(subject.id)">
+                                        <i class="fas fa-check-circle"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-7" *ngIf="evaluations && evaluations[0]">
                 <div class="card rounded-25">
                     <div class="card-body">
                         <button type="button" class="btn btn-primary btn-sm btn-block rounded-25 font-weight-bold mb-4"
@@ -127,12 +149,126 @@
                         </div>
 
                         <div class="mt-4" *ngIf="sType == 1">
-                            <div class="jumbotron rounded-25">
-                                <h1 class="display-4">Información</h1>
+                            <div class="jumbotron rounded-25" *ngIf="!subject">
+                                <h1 class="display-4">Ayuda</h1>
                                 <p class="lead">
-                                    Esta característica no se encuentra disponible, vuelva en unos días.
+                                    Seleccione una asignatura para calcular la nota de esta mediante las tareas,
+                                    examanes y projectos añadidos previamente.
                                 </p>
                             </div>
+
+                            <div class="accordion mb-4" *ngIf="subject">
+                                <ng-container
+                                    *ngFor="let unity of subject.units; let i=index; let fst=first; let lst=last;">
+                                    <div class="card" [class.rounded-top-25]="fst == true"
+                                        [class.rounded-bottom-25]="lst == true">
+                                        <div class="card-header pointer" (click)="collapse(unity.unity.id)">
+                                            <h3 class="m-1">
+                                                Unidad {{ unity.unity.number }}
+                                            </h3>
+                                        </div>
+
+                                        <div class="collapse show" [ngbCollapse]="isCollapsed(unity.unity.id) == true">
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-lg-4">
+                                                        <div class="d-flex justify-content-between">
+                                                            <h3>Tareas</h3>
+                                                        </div>
+                                                        <hr class="mt-0 mb-1">
+                                                        <ng-container *ngIf="unity.data.tasks && unity.data.tasks[0]">
+                                                            <div class="card rounded-25 mb-2 mt-2"
+                                                                *ngFor="let task of unity.data.tasks; let i=index">
+                                                                <div
+                                                                    class="card-body d-flex justify-content-between pb-1 pt-1">
+                                                                    <div class="col-lg-10 pointer pl-0"
+                                                                        [routerLink]="['/task/', task.id]">
+                                                                        <span>{{ task.title }}</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </ng-container>
+                                                        <span class="small"
+                                                            *ngIf="!unity.data.tasks || !unity.data.tasks[0]">
+                                                            No hay tareas en esta unidad
+                                                        </span>
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <div class="d-flex justify-content-between">
+                                                            <h3>Exámenes</h3>
+                                                        </div>
+                                                        <hr class="mt-0 mb-1">
+                                                        <ng-container *ngIf="unity.data.exams && unity.data.exams[0]">
+                                                            <div class="card rounded-25 mb-2 mt-2"
+                                                                *ngFor="let exam of unity.data.exams">
+                                                                <div
+                                                                    class="card-body d-flex justify-content-between pb-1 pt-1">
+                                                                    <div class="col-lg-10 pointer pl-0"
+                                                                        [routerLink]="['/exam/', exam.id]">
+                                                                        <span>{{ exam.title }}</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </ng-container>
+                                                        <span class="small"
+                                                            *ngIf="!unity.data.exams || !unity.data.exams[0]">
+                                                            No hay examenes en esta unidad
+                                                        </span>
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <div class="d-flex justify-content-between">
+                                                            <h3>Proyectos</h3>
+                                                        </div>
+                                                        <hr class="mt-0 mb-1">
+                                                        <ng-container
+                                                            *ngIf="unity.data.projects && unity.data.projects[0]">
+                                                            <div class="card rounded-25 mb-2 mt-2"
+                                                                *ngFor="let project of unity.data.projects">
+                                                                <div
+                                                                    class="card-body d-flex justify-content-between pb-1 pt-1">
+                                                                    <div class="col-lg-10 pointer pl-0"
+                                                                        [routerLink]="['/exam/', project.id]">
+                                                                        <span>{{ project.title }}</span>
+                                                                    </div>
+                                                                </div>
+                                                                <div
+                                                                    class="card-body d-flex justify-content-between pb-1 pt-1">
+                                                                    <span>{{ project.title }}</span>
+                                                                </div>
+                                                            </div>
+                                                        </ng-container>
+                                                        <span class="small"
+                                                            *ngIf="!unity.data.projects || !unity.data.projects[0]">
+                                                            No hay proyectos en esta unidad
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                            </div>
+
+                            <ng-container *ngIf="subject">
+                                <div class="row">
+                                    <div class="col">
+                                        <h1 class="text-center">Tareas</h1>
+                                        <hr class="bg-light mt-0">
+                                    </div>
+                                    <div class="col">
+                                        <h1 class="text-center">Examenes</h1>
+                                        <hr class="bg-light mt-0">
+                                    </div>
+                                    <div class="col">
+                                        <h1 class="text-center">Proyectos</h1>
+                                        <hr class="bg-light mt-0">
+                                    </div>
+                                    <div class="col">
+                                        <h1 class="text-center text-primary">Nota</h1>
+                                        <hr class="bg-primary mt-0">
+                                    </div>
+                                </div>
+                            </ng-container>
                         </div>
 
                         <div class="jumbotron rounded-25" *ngIf="sEvaluationId == null || sType == null">
@@ -156,5 +292,5 @@
                 </div>
             </div>
         </div>
-    </ng-container>
+    </div>
 </div>

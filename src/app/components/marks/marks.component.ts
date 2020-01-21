@@ -13,6 +13,7 @@ export class MarksComponent implements OnInit {
     report_cards: ReportCard[] = [];
 
     subjects: Subject[] = [];
+    subject: Subject;
 
     sEvaluationId: number = null;
     sType: number = null;
@@ -22,6 +23,8 @@ export class MarksComponent implements OnInit {
 
     rows: number;
     rowIndex: number;
+
+    sUnityId: number;
 
     constructor(
         private apiService: ApiService,
@@ -98,6 +101,32 @@ export class MarksComponent implements OnInit {
     undefine() {
         this.sEvaluationId = null;
         this.sType = null;
+    }
+
+    getSubject(id) {
+        this.apiService.get('subject/evaluationWithAll/' + id + '/' + this.sEvaluationId).subscribe(
+            resp => {
+                if (resp.status === 'success') {
+                    this.subject = resp.subject;
+                }
+            }
+        );
+    }
+
+    collapse(unity_id) {
+        if (this.sUnityId == unity_id) {
+            this.sUnityId = null;
+        } else {
+            this.sUnityId = unity_id;
+        }
+    }
+
+    isCollapsed(unity_id) {
+        if (this.sUnityId === unity_id) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     findSubject(subject_id: number) {

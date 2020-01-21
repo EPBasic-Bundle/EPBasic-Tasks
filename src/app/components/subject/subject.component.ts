@@ -6,7 +6,6 @@ import { Subject, Unity, Book, Task, Exam, Timetable, Evaluation, Project } from
 import { environment } from '../../../environments/environment';
 import { UploadOutput, UploadInput, UploadFile, humanizeBytes, UploaderOptions } from 'ngx-uploader';
 import { ToastService } from '../../services/toast.service';
-import { toJSDate } from '@ng-bootstrap/ng-bootstrap/datepicker/ngb-calendar';
 
 @Component({
     selector: 'app-subject',
