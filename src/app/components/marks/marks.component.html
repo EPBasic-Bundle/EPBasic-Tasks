@@ -235,8 +235,8 @@
                                     <span>{{ project.title }}</span>
                                   </div>
                                   <i class="fas fa-check-circle text-primary mt-1 pointer" (click)="addMark(project, 3)"
-                                    [class.fas]="isAdded(project.id, 1) == true"
-                                    [class.far]="isAdded(project.id, 1) == false"></i>
+                                    [class.fas]="isAdded(project.id, 3) == true"
+                                    [class.far]="isAdded(project.id, 3) == false"></i>
                                 </div>
                               </div>
                             </ng-container>
@@ -260,11 +260,11 @@
                     <hr class="bg-light mt-0">
 
                     <ng-container *ngFor="let task_mark of tasks_marks">
-                      <span class="ml-1 mr-1 small">
+                      <span class="ml-1 small">
                         {{ task_mark.title }}
                       </span>
 
-                      <span class="float-right ml-1 mr-1">
+                      <span class="float-right mr-1">
                         {{ task_mark.mark }}
                       </span>
 
@@ -274,7 +274,9 @@
                     <hr class="bg-light" *ngIf="tasks_marks && tasks_marks[0]">
                     <p>
                       <span class="text-primary">Media:</span>
-                      {{ calcTotal(tasks_marks) }}
+                      <span class="float-right mr-1">
+                        {{ calcTotal(tasks_marks) }}
+                      </span>
                     </p>
                   </div>
 
@@ -283,11 +285,11 @@
                     <hr class="bg-light mt-0">
 
                     <ng-container *ngFor="let exam_mark of exams_marks">
-                      <span class="ml-1 mr-1 small">
+                      <span class="ml-1 small">
                         {{ exam_mark.title }}
                       </span>
 
-                      <span class="float-right ml-1 mr-1">
+                      <span class="float-right mr-1">
                         {{ exam_mark.mark }}
                       </span>
 
@@ -297,7 +299,9 @@
                     <hr class="bg-light" *ngIf="exams_marks && exams_marks[0]">
                     <p>
                       <span class="text-primary">Media:</span>
-                      {{ calcTotal(exams_marks) }}
+                      <span class="float-right mr-1">
+                        {{ calcTotal(exams_marks) }}
+                      </span>
                     </p>
                   </div>
 
@@ -306,11 +310,11 @@
                     <hr class="bg-light mt-0">
 
                     <ng-container *ngFor="let projects_mark of projects_marks">
-                      <span class="ml-1 mr-1 small">
+                      <span class="ml-1 small">
                         {{ projects_mark.title }}
                       </span>
 
-                      <span class="float-right ml-1 mr-1">
+                      <span class="float-right mr-1">
                         {{ projects_mark.mark }}
                       </span>
                       <br class="m-1">
@@ -319,7 +323,9 @@
                     <hr class="bg-light" *ngIf="projects_marks && projects_marks[0]">
                     <p>
                       <span class="text-primary">Media:</span>
-                      {{ calcTotal(projects_marks) }}
+                      <span class="float-right mr-1">
+                        {{ calcTotal(projects_marks) }}
+                      </span>
                     </p>
                   </div>
 
@@ -329,25 +335,40 @@
                     <hr class="bg-primary mt-0">
                     <span class="text-primary">Tareas:</span>
                     <span class="small">
-                      ( {{ calcTotal(tasks_marks) }} x {{ subject.tasks_percentage }} ) / 100 =
+                      {{ subject.tasks_percentage }}% de {{ calcTotal(tasks_marks) }}
                     </span>
-                    {{ calcAverage(tasks_marks, subject.tasks_percentage) }}
+                    <span class="float-right mr-2">
+                      {{ calcAverage(tasks_marks, subject.tasks_percentage) }}
+                    </span>
 
                     <hr class="bg-light m-1">
                     <span class="text-primary">Examenes:</span>
                     <span class="small">
-                      ( {{ calcTotal(exams_marks) }} x {{ subject.exams_percentage }} ) / 100 =
+                      {{ subject.exams_percentage }}% de {{ calcTotal(exams_marks) }}
                     </span>
-                    {{ calcAverage(exams_marks, subject.exams_percentage) }}
+                    <span class="float-right mr-2">
+                      {{ calcAverage(exams_marks, subject.exams_percentage) }}
+                    </span>
 
                     <hr class="bg-light m-1">
                     <span class="text-primary">Proyectos:</span>
                     <span class="small">
-                      ( {{ calcTotal(projects_marks) }} x {{ subject.projects_percentage }} ) / 100 =
+                      {{ subject.projects_percentage }}% de {{ calcTotal(projects_marks) }}
                     </span>
-                    {{ calcAverage(projects_marks, subject.projects_percentage) }}
+                    <span class="float-right mr-2">
+                      {{ calcAverage(projects_marks, subject.projects_percentage) }}
+                    </span>
 
-                    <!--{{ calcAllTotal() }}-->
+                    <hr class="bg-light m-2">
+                    <span class="text-primary">
+                      Nota:
+                    </span>
+                    <span class="float-right mr-2">
+                      {{ ( calcAverage(tasks_marks, subject.tasks_percentage) + 
+                        calcAverage(exams_marks, subject.exams_percentage) + 
+                        calcAverage(projects_marks, subject.projects_percentage) )
+                      }}
+                    </span>
                   </div>
                 </div>
               </ng-container>
