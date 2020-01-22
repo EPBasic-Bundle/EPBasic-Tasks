@@ -72,6 +72,13 @@ export class Unity {
         public number: number,
         public created_at?: string,
         public updated_at?: string,
+        public data?: Data,
+        public tasks?: Task[],
+    ) { }
+}
+
+export class Data {
+    constructor(
         public tasks?: Task[],
         public exams?: Exam[],
         public projects?: Project[],

@@ -409,12 +409,7 @@
                             </button>
 
                             <button class="btn btn-danger rounded-25"
-                                (click)="openUnityDeleteModal(unityDeleteModal, i)"
-                                *ngIf="unity.tasks && unity.tasks[0]">
-                                <i class="fa fa-trash"></i>
-                            </button>
-                            <button class="btn btn-danger rounded-25" (click)="deleteUnity(unity.id, i)"
-                                *ngIf="!unity.tasks || !unity.tasks[0]">
+                                (click)="openUnityDeleteModal(unityDeleteModal, i)">
                                 <i class="fa fa-trash"></i>
                             </button>
                         </ng-container>

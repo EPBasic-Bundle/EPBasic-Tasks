@@ -1,296 +1,378 @@
 <div class="container-fluid mt-4">
-    <div *ngIf="loading == true">
-        Cargando...
+  <div *ngIf="loading == true">
+    Cargando...
+  </div>
+
+  <div data-aos="zoom-in" *ngIf="loading == false">
+
+    <div class="row justify-content-center">
+      <div class="col-lg-7">
+        <nav>
+          <ol class="breadcrumb bg-dark rounded-25">
+            <li class="breadcrumb-item text-primary pointer" *ngIf="sEvaluationId != null" (click)="undefine()">
+              Evaluación {{ findEvaluationIdx(sEvaluationId) + 1 }}
+            </li>
+            <li class="breadcrumb-item" *ngIf="sEvaluationId == null">
+              Sin seleccionar
+            </li>
+            <li class="breadcrumb-item text-primary pointer" *ngIf="sType != null" (click)="sType = null">
+              <span *ngIf="sType == 1">Calcular</span>
+              <span *ngIf="sType == 2">Borrador</span>
+              <span *ngIf="sType == 3">Notas</span>
+            </li>
+            <li class="breadcrumb-item" *ngIf="sType == null">
+              Sin seleccionar
+            </li>
+          </ol>
+        </nav>
+      </div>
     </div>
-    <div data-aos="zoom-in" *ngIf="loading == false">
-        <div class="row justify-content-center">
-            <div class="col-lg-7">
-                <nav>
-                    <ol class="breadcrumb bg-dark rounded-25">
-                        <li class="breadcrumb-item text-primary pointer" *ngIf="sEvaluationId != null"
-                            (click)="undefine()">
-                            Evaluación {{ findEvaluationIdx(sEvaluationId) + 1 }}
-                        </li>
-                        <li class="breadcrumb-item" *ngIf="sEvaluationId == null">
-                            Sin seleccionar
-                        </li>
-                        <li class="breadcrumb-item text-primary pointer" *ngIf="sType != null" (click)="sType = null">
-                            <span *ngIf="sType == 1">Calcular</span>
-                            <span *ngIf="sType == 2">Borrador</span>
-                            <span *ngIf="sType == 3">Notas</span>
-                        </li>
-                        <li class="breadcrumb-item" *ngIf="sType == null">
-                            Sin seleccionar
-                        </li>
-                    </ol>
-                </nav>
-            </div>
+
+    <div class="row justify-content-center">
+      <div class="col-lg-2" *ngIf="sType == 1">
+        <div class="card rounded-25">
+          <div class="list-group m-4">
+            <a class="list-group-item list-group-item-action pr-2" *ngFor="let subject of subjects">
+              <div class="row justify-content-between">
+                <h3 class="col-lg-7 col-md-9 mt-1 pointer" [routerLink]="['/subject', subject.id]">
+                  {{ subject.name }}
+                </h3>
+                <div class="col-lg-5 col-md-3">
+                  <button class="btn btn-sm btn-block btn-secondary rounded-25" *ngIf="subject.id > 0"
+                    (click)="getSubject(subject.id)">
+                    <i class="fas fa-check-circle"></i>
+                  </button>
+                </div>
+              </div>
+            </a>
+          </div>
         </div>
-        <div class="row justify-content-center">
-            <div class="col-lg-2" *ngIf="sType == 1">
-                <div class="card rounded-25">
-                    <div class="list-group m-4">
-                        <a class="list-group-item list-group-item-action pr-2" *ngFor="let subject of subjects">
-                            <div class="row justify-content-between">
-                                <h3 class="col-lg-7 col-md-9 mt-1 pointer" [routerLink]="['/subject', subject.id]">
-                                    {{ subject.name }}
-                                </h3>
-                                <div class="col-lg-5 col-md-3">
-                                    <button class="btn btn-sm btn-block btn-secondary rounded-25" *ngIf="subject.id > 0"
-                                        (click)="getSubject(subject.id)">
-                                        <i class="fas fa-check-circle"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
+      </div>
+
+      <div class="col-lg-7" *ngIf="evaluations && evaluations[0]">
+        <div class="card rounded-25">
+          <div class="card-body">
+            <button type="button" class="btn btn-primary btn-sm btn-block rounded-25 font-weight-bold mb-4"
+              *ngIf="sEvaluationId != null" (click)="undefine()">
+              <i class="fas fa-calendar-week mr-1"></i> Evaluaciones
+            </button>
+
+            <div class="row" *ngIf="sEvaluationId == null">
+              <div class="col" *ngFor="let evaluation of evaluations; let i=index">
+                <button type="button" class="btn btn-primary btn-sm btn-block rounded-25 font-weight-bold"
+                  (click)="selectEvaluation(evaluation.id)">
+                  <i class="fas fa-calendar-week mr-1"></i> Evaluación {{ i + 1 }}
+                </button>
+              </div>
             </div>
-            <div class="col-lg-7" *ngIf="evaluations && evaluations[0]">
-                <div class="card rounded-25">
-                    <div class="card-body">
-                        <button type="button" class="btn btn-primary btn-sm btn-block rounded-25 font-weight-bold mb-4"
-                            *ngIf="sEvaluationId != null" (click)="undefine()">
-                            <i class="fas fa-calendar-week mr-1"></i> Evaluaciones
-                        </button>
 
-                        <div class="row" *ngIf="sEvaluationId == null">
-                            <div class="col" *ngFor="let evaluation of evaluations; let i=index">
-                                <button type="button"
-                                    class="btn btn-primary btn-sm btn-block rounded-25 font-weight-bold"
-                                    (click)="selectEvaluation(evaluation.id)">
-                                    <i class="fas fa-calendar-week mr-1"></i> Evaluación {{ i + 1 }}
-                                </button>
-                            </div>
-                        </div>
+            <div class="row mt-4" *ngIf="sEvaluationId != null">
 
-                        <div class="row mt-4" *ngIf="sEvaluationId != null">
-                            <div class="col">
-                                <button type="button" class="btn btn-dark btn-sm btn-block rounded-25 font-weight-bold"
-                                    (click)="sType = 1">
-                                    <i class="fas fa-calculator mr-1"></i> Calcular
-                                </button>
-                            </div>
-                            <div class="col">
-                                <button type="button" class="btn btn-dark btn-sm btn-block rounded-25 font-weight-bold"
-                                    (click)="sType = 2">
-                                    <i class="fas fa-folder-minus mr-1"></i> Borrador
-                                </button>
-                            </div>
-                            <div class="col">
-                                <button type="button" class="btn btn-dark btn-sm btn-block rounded-25 font-weight-bold"
-                                    (click)="sType = 3">
-                                    <i class="fas fa-equals mr-1"></i> Notas
-                                </button>
-                            </div>
-                        </div>
+              <div class="col">
+                <button type="button" class="btn btn-dark btn-sm btn-block rounded-25 font-weight-bold"
+                  (click)="sType = 1">
+                  <i class="fas fa-calculator mr-1"></i> Calcular
+                </button>
+              </div>
 
-                        <div class="mt-4" *ngIf="sType != 1">
-                            <ng-container
-                                *ngFor="let report_card of report_cards | report_cards: [sEvaluationId, sType, subjects]; let i=index">
-                                <table class="table table-striped table-dark">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">Asignatura</th>
-                                            <th scope="col">Nota</th>
-                                            <th scope="col">Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr *ngFor="let mark of report_card.marks; let e=index">
-                                            <th scope="row">{{ e + 1}} </th>
-                                            <ng-container *ngIf="editMode == false">
-                                                <td>
-                                                    {{ findSubject(mark.subject_id).name }}
-                                                </td>
-                                                <td>
-                                                    {{ mark.mark_wd }}
-                                                </td>
-                                                <td>
-                                                    {{ mark.mark }}
-                                                </td>
-                                            </ng-container>
-                                            <ng-container *ngIf="editMode == true">
-                                                <td>{{ findSubject(mark.subject_id).name }}</td>
-                                                <td>
-                                                    <input type="number" class="form-control" max="10" min="0"
-                                                        step="0.01" [(ngModel)]="mark.mark_wd" />
-                                                </td>
-                                                <td>
-                                                    <input type="number" class="form-control" max="10" min="0"
-                                                        step="0.01" [(ngModel)]="mark.mark" />
-                                                </td>
-                                            </ng-container>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <ng-container *ngIf="editMode == true">
-                                    <div class="row">
-                                        <div class="col">
-                                            <button class="btn btn-block btn-secondary" (click)="editMode = false">
-                                                <i class="fas fa-eye mr-1"></i> Ver
-                                            </button>
-                                        </div>
-                                        <div class="col">
-                                            <button class="btn btn-block btn-primary"
-                                                (click)="storeReportCard(report_card)">
-                                                <i class="fas fa-save mr-1"></i> Guardar
-                                            </button>
-                                        </div>
-                                    </div>
-                                </ng-container>
-                                <ng-container *ngIf="editMode == false">
-                                    <button class="btn btn-block btn-secondary" (click)="editMode = true">
-                                        <i class="fas fa-edit mr-1"></i> Modificar
-                                    </button>
-                                </ng-container>
-                            </ng-container>
-                        </div>
+              <div class="col">
+                <button type="button" class="btn btn-dark btn-sm btn-block rounded-25 font-weight-bold"
+                  (click)="sType = 2">
+                  <i class="fas fa-folder-minus mr-1"></i> Borrador
+                </button>
+              </div>
 
-                        <div class="mt-4" *ngIf="sType == 1">
-                            <div class="jumbotron rounded-25" *ngIf="!subject">
-                                <h1 class="display-4">Ayuda</h1>
-                                <p class="lead">
-                                    Seleccione una asignatura para calcular la nota de esta mediante las tareas,
-                                    examanes y projectos añadidos previamente.
-                                </p>
-                            </div>
+              <div class="col">
+                <button type="button" class="btn btn-dark btn-sm btn-block rounded-25 font-weight-bold"
+                  (click)="sType = 3">
+                  <i class="fas fa-equals mr-1"></i> Notas
+                </button>
+              </div>
 
-                            <div class="accordion mb-4" *ngIf="subject">
-                                <ng-container
-                                    *ngFor="let unity of subject.units; let i=index; let fst=first; let lst=last;">
-                                    <div class="card" [class.rounded-top-25]="fst == true"
-                                        [class.rounded-bottom-25]="lst == true">
-                                        <div class="card-header pointer" (click)="collapse(unity.unity.id)">
-                                            <h3 class="m-1">
-                                                Unidad {{ unity.unity.number }}
-                                            </h3>
-                                        </div>
-
-                                        <div class="collapse show" [ngbCollapse]="isCollapsed(unity.unity.id) == true">
-                                            <div class="card-body">
-                                                <div class="row">
-                                                    <div class="col-lg-4">
-                                                        <div class="d-flex justify-content-between">
-                                                            <h3>Tareas</h3>
-                                                        </div>
-                                                        <hr class="mt-0 mb-1">
-                                                        <ng-container *ngIf="unity.data.tasks && unity.data.tasks[0]">
-                                                            <div class="card rounded-25 mb-2 mt-2"
-                                                                *ngFor="let task of unity.data.tasks; let i=index">
-                                                                <div
-                                                                    class="card-body d-flex justify-content-between pb-1 pt-1">
-                                                                    <div class="col-lg-10 pointer pl-0"
-                                                                        [routerLink]="['/task/', task.id]">
-                                                                        <span>{{ task.title }}</span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </ng-container>
-                                                        <span class="small"
-                                                            *ngIf="!unity.data.tasks || !unity.data.tasks[0]">
-                                                            No hay tareas en esta unidad
-                                                        </span>
-                                                    </div>
-                                                    <div class="col-lg-4">
-                                                        <div class="d-flex justify-content-between">
-                                                            <h3>Exámenes</h3>
-                                                        </div>
-                                                        <hr class="mt-0 mb-1">
-                                                        <ng-container *ngIf="unity.data.exams && unity.data.exams[0]">
-                                                            <div class="card rounded-25 mb-2 mt-2"
-                                                                *ngFor="let exam of unity.data.exams">
-                                                                <div
-                                                                    class="card-body d-flex justify-content-between pb-1 pt-1">
-                                                                    <div class="col-lg-10 pointer pl-0"
-                                                                        [routerLink]="['/exam/', exam.id]">
-                                                                        <span>{{ exam.title }}</span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </ng-container>
-                                                        <span class="small"
-                                                            *ngIf="!unity.data.exams || !unity.data.exams[0]">
-                                                            No hay examenes en esta unidad
-                                                        </span>
-                                                    </div>
-                                                    <div class="col-lg-4">
-                                                        <div class="d-flex justify-content-between">
-                                                            <h3>Proyectos</h3>
-                                                        </div>
-                                                        <hr class="mt-0 mb-1">
-                                                        <ng-container
-                                                            *ngIf="unity.data.projects && unity.data.projects[0]">
-                                                            <div class="card rounded-25 mb-2 mt-2"
-                                                                *ngFor="let project of unity.data.projects">
-                                                                <div
-                                                                    class="card-body d-flex justify-content-between pb-1 pt-1">
-                                                                    <div class="col-lg-10 pointer pl-0"
-                                                                        [routerLink]="['/exam/', project.id]">
-                                                                        <span>{{ project.title }}</span>
-                                                                    </div>
-                                                                </div>
-                                                                <div
-                                                                    class="card-body d-flex justify-content-between pb-1 pt-1">
-                                                                    <span>{{ project.title }}</span>
-                                                                </div>
-                                                            </div>
-                                                        </ng-container>
-                                                        <span class="small"
-                                                            *ngIf="!unity.data.projects || !unity.data.projects[0]">
-                                                            No hay proyectos en esta unidad
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </ng-container>
-                            </div>
-
-                            <ng-container *ngIf="subject">
-                                <div class="row">
-                                    <div class="col">
-                                        <h1 class="text-center">Tareas</h1>
-                                        <hr class="bg-light mt-0">
-                                    </div>
-                                    <div class="col">
-                                        <h1 class="text-center">Examenes</h1>
-                                        <hr class="bg-light mt-0">
-                                    </div>
-                                    <div class="col">
-                                        <h1 class="text-center">Proyectos</h1>
-                                        <hr class="bg-light mt-0">
-                                    </div>
-                                    <div class="col">
-                                        <h1 class="text-center text-primary">Nota</h1>
-                                        <hr class="bg-primary mt-0">
-                                    </div>
-                                </div>
-                            </ng-container>
-                        </div>
-
-                        <div class="jumbotron rounded-25" *ngIf="sEvaluationId == null || sType == null">
-                            <h1 class="display-4">Ayuda</h1>
-                            <p class="lead">
-                                Selecciona una evaluación y un tipo de boletín para visualizarlo
-                            </p>
-                        </div>
-                    </div>
-                </div>
             </div>
-            <div class="col-lg-10" *ngIf="!evaluations || !evaluations[0]">
-                <div class="jumbotron rounded-25">
-                    <h1 class="display-4">Aviso</h1>
-                    <p class="lead">
-                        Para el funcionamiento de esta página es necesario añadir evaluaciones.
+
+            <div class="mt-4" *ngIf="sType != 1">
+              <ng-container *ngFor="let report_card of report_cards | 
+                report_cards: [sEvaluationId, sType, subjects]; let i=index">
+
+                <table class="table table-striped table-dark">
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Asignatura</th>
+                      <th scope="col">Nota</th>
+                      <th scope="col">Total</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let mark of report_card.marks; let e=index">
+                      <th scope="row">{{ e + 1}} </th>
+
+                      <ng-container *ngIf="editMode == false">
+                        <td>{{ findSubject(mark.subject_id).name }}</td>
+                        <td>{{ mark.mark_wd }}</td>
+                        <td>{{ mark.mark }}</td>
+                      </ng-container>
+
+                      <ng-container *ngIf="editMode == true">
+                        <td>{{ findSubject(mark.subject_id).name }}</td>
+                        <td>
+                          <input type="number" class="form-control" max="10" min="0" step="0.01"
+                            [(ngModel)]="mark.mark_wd" />
+                        </td>
+                        <td>
+                          <input type="number" class="form-control" max="10" min="0" step="0.01"
+                            [(ngModel)]="mark.mark" />
+                        </td>
+                      </ng-container>
+
+                    </tr>
+                  </tbody>
+                </table>
+
+                <ng-container *ngIf="editMode == true">
+                  <div class="row">
+                    <div class="col">
+                      <button class="btn btn-block btn-secondary" (click)="editMode = false">
+                        <i class="fas fa-eye mr-1"></i> Ver
+                      </button>
+                    </div>
+                    <div class="col">
+                      <button class="btn btn-block btn-primary" (click)="storeReportCard(report_card)">
+                        <i class="fas fa-save mr-1"></i> Guardar
+                      </button>
+                    </div>
+                  </div>
+                </ng-container>
+
+                <ng-container *ngIf="editMode == false">
+                  <button class="btn btn-block btn-secondary" (click)="editMode = true">
+                    <i class="fas fa-edit mr-1"></i> Modificar
+                  </button>
+                </ng-container>
+
+              </ng-container>
+            </div>
+
+            <div class="mt-4" *ngIf="sType == 1">
+              <div class="jumbotron rounded-25" *ngIf="!subject">
+                <h1 class="display-4">Ayuda</h1>
+                <p class="lead">
+                  Seleccione una asignatura para calcular la nota de esta mediante las tareas,
+                  examanes y projectos añadidos previamente.
+                </p>
+              </div>
+
+              <div class="accordion mb-4" *ngIf="subject">
+                <ng-container *ngFor="let unity of subject.units; let i=index; let fst=first; let lst=last;">
+                  <div class="card" [class.rounded-top-25]="fst == true" [class.rounded-bottom-25]="lst == true">
+                    <div class="card-header pointer" (click)="collapse(unity.id)">
+                      <h3 class="m-1">
+                        Unidad {{ unity.number }}
+                      </h3>
+                    </div>
+
+                    <div class="collapse show" [ngbCollapse]="isCollapsed(unity.id) == true">
+                      <div class="card-body">
+                        <div class="row">
+
+                          <div class="col-lg-4">
+                            <div class="d-flex justify-content-between">
+                              <h3>Tareas</h3>
+                            </div>
+                            <hr class="mt-0 mb-1">
+
+                            <ng-container *ngIf="unity.data.tasks && unity.data.tasks[0]">
+                              <div class="card rounded-25 mb-2 mt-2" *ngFor="let task of unity.data.tasks; let i=index">
+                                <div class="card-body d-flex justify-content-between pb-1 pt-1">
+                                  <div class="col-lg-10 pointer pl-0" (click)="addMark(task, 1)">
+                                    <span>{{ task.title }}</span>
+                                  </div>
+                                  <i class="fas fa-check-circle text-primary mt-1 pointer" (click)="addMark(task, 1)"
+                                    [class.fas]="isAdded(task.id, 1) == true"
+                                    [class.far]="isAdded(task.id, 1) == false"></i>
+                                </div>
+                              </div>
+                            </ng-container>
+
+                            <span class="small" *ngIf="!unity.data.tasks || !unity.data.tasks[0]">
+                              No hay tareas en esta unidad
+                            </span>
+                          </div>
+                          <div class="col-lg-4">
+                            <div class="d-flex justify-content-between">
+                              <h3>Exámenes</h3>
+                            </div>
+                            <hr class="mt-0 mb-1">
+
+                            <ng-container *ngIf="unity.data.exams && unity.data.exams[0]">
+                              <div class="card rounded-25 mb-2 mt-2" *ngFor="let exam of unity.data.exams">
+                                <div class="card-body d-flex justify-content-between pb-1 pt-1">
+                                  <div class="col-lg-10 pointer pl-0" (click)="addMark(exam, 2)">
+                                    <span>{{ exam.title }}</span>
+                                  </div>
+                                  <i class="fas fa-check-circle text-primary mt-1 pointer" (click)="addMark(exam, 2)"
+                                    [class.fas]="isAdded(exam.id, 2) == true"
+                                    [class.far]="isAdded(exam.id, 2) == false"></i>
+                                </div>
+                              </div>
+                            </ng-container>
+
+                            <span class="small" *ngIf="!unity.data.exams || !unity.data.exams[0]">
+                              No hay examenes en esta unidad
+                            </span>
+                          </div>
+                          <div class="col-lg-4">
+                            <div class="d-flex justify-content-between">
+                              <h3>Proyectos</h3>
+                            </div>
+                            <hr class="mt-0 mb-1">
+
+                            <ng-container *ngIf="unity.data.projects && unity.data.projects[0]">
+                              <div class="card rounded-25 mb-2 mt-2" *ngFor="let project of unity.data.projects">
+                                <div class="card-body d-flex justify-content-between pb-1 pt-1">
+                                  <div class="col-lg-10 pointer pl-0" (click)="addMark(project, 3)">
+                                    <span>{{ project.title }}</span>
+                                  </div>
+                                  <i class="fas fa-check-circle text-primary mt-1 pointer" (click)="addMark(project, 3)"
+                                    [class.fas]="isAdded(project.id, 1) == true"
+                                    [class.far]="isAdded(project.id, 1) == false"></i>
+                                </div>
+                              </div>
+                            </ng-container>
+
+                            <span class="small" *ngIf="!unity.data.projects || !unity.data.projects[0]">
+                              No hay proyectos en esta unidad
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+              </div>
+
+              <ng-container *ngIf="subject">
+                <div class="row">
+
+                  <div class="col">
+                    <h1 class="text-center">Tareas</h1>
+                    <hr class="bg-light mt-0">
+
+                    <ng-container *ngFor="let task_mark of tasks_marks">
+                      <span class="ml-1 mr-1 small">
+                        {{ task_mark.title }}
+                      </span>
+
+                      <span class="float-right ml-1 mr-1">
+                        {{ task_mark.mark }}
+                      </span>
+
+                      <br class="m-1">
+                    </ng-container>
+
+                    <hr class="bg-light" *ngIf="tasks_marks && tasks_marks[0]">
+                    <p>
+                      <span class="text-primary">Media:</span>
+                      {{ calcTotal(tasks_marks) }}
                     </p>
-                    <a class="btn btn-primary btn-block rounded-25 mt-4 mb-0" routerLink="/home" role="button">
-                        Evaluaciones
-                    </a>
+                  </div>
+
+                  <div class="col">
+                    <h1 class="text-center">Examenes</h1>
+                    <hr class="bg-light mt-0">
+
+                    <ng-container *ngFor="let exam_mark of exams_marks">
+                      <span class="ml-1 mr-1 small">
+                        {{ exam_mark.title }}
+                      </span>
+
+                      <span class="float-right ml-1 mr-1">
+                        {{ exam_mark.mark }}
+                      </span>
+
+                      <br class="m-1">
+                    </ng-container>
+
+                    <hr class="bg-light" *ngIf="exams_marks && exams_marks[0]">
+                    <p>
+                      <span class="text-primary">Media:</span>
+                      {{ calcTotal(exams_marks) }}
+                    </p>
+                  </div>
+
+                  <div class="col">
+                    <h1 class="text-center">Proyectos</h1>
+                    <hr class="bg-light mt-0">
+
+                    <ng-container *ngFor="let projects_mark of projects_marks">
+                      <span class="ml-1 mr-1 small">
+                        {{ projects_mark.title }}
+                      </span>
+
+                      <span class="float-right ml-1 mr-1">
+                        {{ projects_mark.mark }}
+                      </span>
+                      <br class="m-1">
+                    </ng-container>
+
+                    <hr class="bg-light" *ngIf="projects_marks && projects_marks[0]">
+                    <p>
+                      <span class="text-primary">Media:</span>
+                      {{ calcTotal(projects_marks) }}
+                    </p>
+                  </div>
+
+                  <div class="col">
+                    <h1 class="text-center text-primary">Nota</h1>
+
+                    <hr class="bg-primary mt-0">
+                    <span class="text-primary">Tareas:</span>
+                    <span class="small">
+                      ( {{ calcTotal(tasks_marks) }} x {{ subject.tasks_percentage }} ) / 100 =
+                    </span>
+                    {{ calcAverage(tasks_marks, subject.tasks_percentage) }}
+
+                    <hr class="bg-light m-1">
+                    <span class="text-primary">Examenes:</span>
+                    <span class="small">
+                      ( {{ calcTotal(exams_marks) }} x {{ subject.exams_percentage }} ) / 100 =
+                    </span>
+                    {{ calcAverage(exams_marks, subject.exams_percentage) }}
+
+                    <hr class="bg-light m-1">
+                    <span class="text-primary">Proyectos:</span>
+                    <span class="small">
+                      ( {{ calcTotal(projects_marks) }} x {{ subject.projects_percentage }} ) / 100 =
+                    </span>
+                    {{ calcAverage(projects_marks, subject.projects_percentage) }}
+
+                    <!--{{ calcAllTotal() }}-->
+                  </div>
                 </div>
+              </ng-container>
             </div>
+
+            <div class="jumbotron rounded-25" *ngIf="sEvaluationId == null || sType == null">
+              <h1 class="display-4">Ayuda</h1>
+              <p class="lead">
+                Selecciona una evaluación y un tipo de boletín para visualizarlo
+              </p>
+            </div>
+          </div>
         </div>
+      </div>
+      <div class="col-lg-10" *ngIf="!evaluations || !evaluations[0]">
+        <div class="jumbotron rounded-25">
+          <h1 class="display-4">Aviso</h1>
+          <p class="lead">
+            Para el funcionamiento de esta página es necesario añadir evaluaciones.
+          </p>
+          <a class="btn btn-primary btn-block rounded-25 mt-4 mb-0" routerLink="/home" role="button">
+            Evaluaciones
+          </a>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
