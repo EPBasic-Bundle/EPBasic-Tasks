@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Evaluation, Subject, ReportCard } from '../../models/model';
 import { ApiService } from '../../services/api.service';
 import { ToastService } from '../../services/toast.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'app-marks',
@@ -30,9 +31,14 @@ export class MarksComponent implements OnInit {
     exams_marks = [];
     projects_marks = [];
 
+    manualModal;
+    sManual;
+    mark: number;
+
     constructor(
         private apiService: ApiService,
-        public toastService: ToastService
+        public toastService: ToastService,
+        private modalService: NgbModal
     ) { }
 
     ngOnInit() {
@@ -157,7 +163,7 @@ export class MarksComponent implements OnInit {
                     this.tasks_marks.push({
                         'id': object.id,
                         'title': object.title,
-                        'mark': mark
+                        'mark': Math.round(mark * 100) / 100
                     });
                 }
                 break;
@@ -171,7 +177,7 @@ export class MarksComponent implements OnInit {
                     this.exams_marks.push({
                         'id': object.id,
                         'title': object.title,
-                        'mark': object.mark
+                        'mark': Math.round(object.mark * 100) / 100
                     });
                 }
                 break;
@@ -185,7 +191,7 @@ export class MarksComponent implements OnInit {
                     this.projects_marks.push({
                         'id': object.id,
                         'title': object.title,
-                        'mark': object.mark
+                        'mark': Math.round(object.mark * 100) / 100
                     });
                 }
                 break;
@@ -248,6 +254,64 @@ export class MarksComponent implements OnInit {
         this.tasks_marks = [];
         this.exams_marks = [];
         this.projects_marks = [];
+    }
+
+    addManualMark() {
+        switch (this.sManual) {
+            case 1: {
+                this.tasks_marks.push({
+                    'id': null,
+                    'title': 'Otro',
+                    'mark': Math.round(this.mark * 100) / 100
+                });
+
+                break;
+            }
+            case 2: {
+                this.exams_marks.push({
+                    'id': null,
+                    'title': 'Otro',
+                    'mark': Math.round(this.mark * 100) / 100
+                });
+
+                break;
+            }
+            case 3: {
+                this.projects_marks.push({
+                    'id': null,
+                    'title': 'Otro',
+                    'mark': Math.round(this.mark * 100) / 100
+                });
+
+                break;
+            }
+        }
+
+        this.mark = null;
+    }
+
+    mathRound(values) {
+        let value = 0;
+
+        for (let i = 0; i < values.length; i++) {
+            value += parseFloat(values[i]);
+        }
+
+        return Math.round(value * 100) / 100;
+    }
+
+    /**********/
+    /* MODALS */
+    /**********/
+
+    openManualModal(content, type) {
+        this.sManual = type;
+
+        this.manualModal = this.modalService.open(content, { size: 'sm', centered: true });
+    }
+
+    closeManualModal() {
+        this.manualModal.close();
     }
 
     /*********/

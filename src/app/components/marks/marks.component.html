@@ -3,7 +3,7 @@
     Cargando...
   </div>
 
-  <div data-aos="zoom-in" *ngIf="loading == false">
+  <div data-aos="zoom-in" *ngIf="loading == false" class="mb-5">
 
     <div class="row justify-content-center">
       <div class="col-lg-7">
@@ -256,8 +256,13 @@
                 <div class="row">
 
                   <div class="col">
-                    <h1 class="text-center">Tareas</h1>
-                    <hr class="bg-light mt-0">
+                    <div class="d-flex justify-content-between pr-2 pl-2 pb-1">
+                      <h1>Tareas</h1>
+                      <button class="btn btn-primary btn-sm rounded-25" (click)="openManualModal(manualModal, 1)">
+                        <i class="fas fa-pen mr-1"></i> Manual
+                      </button>
+                    </div>
+                    <hr class="bg-light mt-1">
 
                     <ng-container *ngFor="let task_mark of tasks_marks">
                       <span class="ml-1 small">
@@ -281,8 +286,13 @@
                   </div>
 
                   <div class="col">
-                    <h1 class="text-center">Examenes</h1>
-                    <hr class="bg-light mt-0">
+                    <div class="d-flex justify-content-between pr-2 pl-2 pb-1">
+                      <h1>Examenes</h1>
+                      <button class="btn btn-primary btn-sm rounded-25" (click)="openManualModal(manualModal, 2)">
+                        <i class="fas fa-pen mr-1"></i> Manual
+                      </button>
+                    </div>
+                    <hr class="bg-light mt-1">
 
                     <ng-container *ngFor="let exam_mark of exams_marks">
                       <span class="ml-1 small">
@@ -306,8 +316,13 @@
                   </div>
 
                   <div class="col">
-                    <h1 class="text-center">Proyectos</h1>
-                    <hr class="bg-light mt-0">
+                    <div class="d-flex justify-content-between pr-2 pl-2 pb-1">
+                      <h1>Proyectos</h1>
+                      <button class="btn btn-primary btn-sm rounded-25" (click)="openManualModal(manualModal, 3)">
+                        <i class="fas fa-pen mr-1"></i> Manual
+                      </button>
+                    </div>
+                    <hr class="bg-light mt-1">
 
                     <ng-container *ngFor="let projects_mark of projects_marks">
                       <span class="ml-1 small">
@@ -363,12 +378,26 @@
                     <span class="text-primary">
                       Nota:
                     </span>
-                    <span class="float-right mr-2">
-                      {{ ( calcAverage(tasks_marks, subject.tasks_percentage) + 
-                        calcAverage(exams_marks, subject.exams_percentage) + 
-                        calcAverage(projects_marks, subject.projects_percentage) )
+                    <div class="float-right mr-2">
+                      <span>
+                        {{ mathRound([
+                          calcAverage(tasks_marks, subject.tasks_percentage), 
+                          calcAverage(exams_marks, subject.exams_percentage), 
+                          calcAverage(projects_marks, subject.projects_percentage)  
+                        ])
                       }}
-                    </span>
+                      </span>
+                      -
+                      <span>
+                        {{ mathRound([
+                          calcAverage(tasks_marks, subject.tasks_percentage), 
+                          calcAverage(exams_marks, subject.exams_percentage), 
+                          calcAverage(projects_marks, subject.projects_percentage), 
+                          (10 / subject.behavior_percentage)]
+                        )
+                      }}
+                      </span>
+                    </div>
                   </div>
                 </div>
               </ng-container>
@@ -397,3 +426,64 @@
     </div>
   </div>
 </div>
+
+<ng-template #manualModal let-close="close">
+  <div class="modal-header">
+    <h5 class="modal-title">Notas</h5>
+    <button type="button" class="close" (click)="closeManualModal()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+
+    <ng-container *ngIf="sManual == 1">
+      <ng-container *ngFor="let task_mark of tasks_marks">
+        <span class="ml-1 small">
+          {{ task_mark.title }}
+        </span>
+        <span class="float-right mr-1">
+          {{ task_mark.mark }}
+        </span>
+        <br class="m-1">
+      </ng-container>
+    </ng-container>
+    <ng-container *ngIf="sManual == 2">
+      <ng-container *ngFor="let exam_mark of exams_marks">
+        <span class="ml-1 small">
+          {{ exam_mark.title }}
+        </span>
+        <span class="float-right mr-1">
+          {{ exam_mark.mark }}
+        </span>
+        <br class="m-1">
+      </ng-container>
+    </ng-container>
+    <ng-container *ngIf="sManual == 3">
+      <ng-container *ngFor="let project_mark of projects_marks">
+        <span class="ml-1 small">
+          {{ project_mark.title }}
+        </span>
+        <span class="float-right mr-1">
+          {{ project_mark.mark }}
+        </span>
+        <br class="m-1">
+      </ng-container>
+    </ng-container>
+
+    <hr class="bg-light" *ngIf="tasks_marks[0] && sManual == 1 || 
+      exams_marks[0] && sManual == 2 || 
+      projects_marks[0] && sManual == 3">
+
+    <div class="btn-group mb-2" role="group">
+      <button type="button" class="btn btn-secondary btn-sm" (click)="mark = i"
+        *ngFor="let i of [1,2,3,4,5,6,7,8,9,10]">
+        {{ i }}
+      </button>
+    </div>
+
+    <input type="number" class="form-control" max="10" min="0" step="0.01" [(ngModel)]="mark" />
+    <button class="btn btn-primary btn-block rounded-25 mt-3" (click)="addManualMark()" [disabled]="mark == null">
+      <i class="fas fa-plus mr-1"></i> Añadir
+    </button>
+  </div>
+</ng-template>
