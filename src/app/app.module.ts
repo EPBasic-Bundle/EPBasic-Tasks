@@ -15,6 +15,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { CalendarModule as SCalendarModule } from '@syncfusion/ej2-angular-calendars';
 import { UiSwitchModule } from 'ngx-ui-switch';
 import { NgxUploaderModule } from 'ngx-uploader';
+import { ChartsModule } from 'ng2-charts';
 
 import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
@@ -23,6 +24,7 @@ import { ColorPickerComponent } from './components/imports/color-picker/color-pi
 import { PdfReaderComponent } from './components/imports/pdf-reader/pdf-reader.component';
 import { ToastComponent } from './components/imports/toast/toast.component';
 import { StudySelectorComponent } from './components/imports/study-selector/study-selector.component';
+import { MarkChartsComponent } from './components/imports/mark-charts/mark-charts.component';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
@@ -32,11 +34,11 @@ import { CalendarComponent } from './components/calendar/calendar.component';
 import { ApiService } from './services/api.service';
 import { IdentityGuard } from './guards/identity.guard';
 import { SubjectComponent } from './components/subject/subject.component';
+import { SubjectsComponent } from './components/subjects/subjects.component';
 import { TaskComponent } from './components/task/task.component';
 import { AuthComponent } from './components/auth/auth.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { BookComponent } from './components/book/book.component';
-import { SubjectsComponent } from './components/subjects/subjects.component';
 import { ExamComponent } from './components/exam/exam.component';
 import { MarksComponent } from './components/marks/marks.component';
 
@@ -55,19 +57,20 @@ registerLocaleData(localeEs);
         TimetableComponent,
         ColorPickerComponent,
         SubjectComponent,
+        SubjectsComponent,
         TaskComponent,
         AuthComponent,
         SettingsComponent,
         PdfReaderComponent,
         BookComponent,
         ToastComponent,
-        SubjectsComponent,
         ExamComponent,
         StudySelectorComponent,
         MarksComponent,
         UnitsPipe,
         EventsPipe,
-        ReportCardsPipe
+        ReportCardsPipe,
+        MarkChartsComponent
     ],
     imports: [
         BrowserModule,
@@ -87,6 +90,7 @@ registerLocaleData(localeEs);
         UiSwitchModule,
         NgxSkeletonLoaderModule,
         SCalendarModule,
+        ChartsModule
     ],
     providers: [
         { provide: LOCALE_ID, useValue: 'es' },
@@ -94,6 +98,6 @@ registerLocaleData(localeEs);
         IdentityGuard
     ],
     bootstrap: [AppComponent],
-    exports: [ToastComponent, SubjectsComponent]
+    exports: [ToastComponent]
 })
 export class AppModule { }

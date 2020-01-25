@@ -1,163 +1,154 @@
 <div class="container mt-4" *ngIf="this.loading[0] == true">
-    Cargando...
+  Cargando...
 </div>
 <div class="container-fluid mt-4 mb-5" *ngIf="this.loading[0] == false">
-    <div class="row justify-content-center" data-aos="zoom-in">
-        <div class="col-lg-6 col-md-12 mb-4">
-            <div class="mb-4">
-                <button class="btn btn-block rounded-25 mb-4" [class.btn-primary]="showStudySelector == true"
-                    [class.btn-secondary]="showStudySelector == false" (click)="showStudySelector = !showStudySelector">
-                    <i class="fas fa-book-reader mr-1"></i> Seleccionar estudios
+  <div class="row justify-content-center" data-aos="zoom-in">
+    <div class="col-lg-6 col-md-12 mb-4">
+      <div class="mb-4">
+        <button class="btn btn-block rounded-25 mb-4" [class.btn-primary]="showStudySelector == true"
+          [class.btn-secondary]="showStudySelector == false" (click)="showStudySelector = !showStudySelector">
+          <i class="fas fa-book-reader mr-1"></i> Seleccionar estudios
+        </button>
+        <app-study-selector *ngIf="!subjects || showStudySelector == true"></app-study-selector>
+      </div>
+
+      <div class="accordion" *ngIf="subjects">
+        <ng-container *ngFor="let subject of subjects; let i=index; let fst=first; let lst=last;">
+          <div class="card" [class.rounded-top-25]="fst == true" [class.rounded-bottom-25]="lst == true">
+            <div class="card-header pointer d-flex justify-content-between">
+              <h3 class="col-lg-10 m-1" (click)="collapse(subject.id)">
+                {{ subject.name }}
+              </h3>
+              <div class="col-lg-2 col-sm-2">
+                <button class="btn btn-sm btn-block btn-primary rounded-25" [routerLink]="['/subject', subject.id]">
+                  <i class="fas fa-arrow-right"></i>
                 </button>
-                <app-study-selector *ngIf="!subjects || showStudySelector == true"></app-study-selector>
+              </div>
             </div>
-
-            <div class="accordion" *ngIf="subjects">
-                <ng-container *ngFor="let subject of subjects; let i=index; let fst=first; let lst=last;">
-                    <div class="card" [class.rounded-top-25]="fst == true" [class.rounded-bottom-25]="lst == true">
-                        <div class="card-header pointer d-flex justify-content-between">
-                            <h3 class="col-lg-10 m-1" (click)="collapse(subject.id)">
-                                {{ subject.name }}
-                            </h3>
-                            <div class="col-lg-2 col-sm-2">
-                                <button class="btn btn-sm btn-block btn-primary rounded-25"
-                                    [routerLink]="['/subject', subject.id]">
-                                    <i class="fas fa-arrow-right"></i>
-                                </button>
-                            </div>
+            <div class="collapse show" [ngbCollapse]="isCollapsed(subject.id)">
+              <div class="card-body pb-1">
+                <div class="row">
+                  <div class="col-lg-4 col-md-4 mb-2">
+                    <b>Tareas</b>
+                    <hr class="mt-1 mb-1">
+                    <div class="card rounded-25 mt-2" *ngFor="let task of subject.tasks; let e=index">
+                      <div class="card-body d-flex justify-content-between pb-1 pt-1">
+                        <div class="col-lg-10 pointer pl-0" [routerLink]="['/task/', task.id]">
+                          <span>{{ task.title }}</span>
                         </div>
-                        <div class="collapse show" [ngbCollapse]="isCollapsed(subject.id)">
-                            <div class="card-body pb-1">
-                                <div class="row">
-                                    <div class="col-lg-4 col-md-4 mb-2">
-                                        <b>Tareas</b>
-                                        <hr class="mt-1 mb-1">
-                                        <div class="card rounded-25 mt-2"
-                                            *ngFor="let task of subject.tasks; let e=index">
-                                            <div class="card-body d-flex justify-content-between pb-1 pt-1">
-                                                <div class="col-lg-10 pointer pl-0" [routerLink]="['/task/', task.id]">
-                                                    <span>{{ task.title }}</span>
-                                                </div>
 
-                                                <i class="fas fa-check-circle text-primary mt-1 pointer"
-                                                    (click)="markTaskDone(i, e)" *ngIf="task.id != 0"
-                                                    [class.fas]="task.done == true" [class.far]="task.done == false">
-                                                </i>
-                                            </div>
-                                        </div>
-                                        <span class="small" *ngIf="!subject.tasks || !subject.tasks[0]">
-                                            No tienes tareas pendientes
-                                        </span>
-                                    </div>
-                                    <div class="col-lg-4 col-md-4 mb-2">
-                                        <b>Examenes</b>
-                                        <hr class="mt-1 mb-2">
-                                        <div class="card rounded-25 mb-2 mt-2"
-                                            *ngFor="let exam of subject.exams; let e=index">
-                                            <div class="card-body d-flex justify-content-between pb-1 pt-1">
-                                                <div class="col-lg-10 pointer pl-0" [routerLink]="['/exam/', exam.id]">
-                                                    <span>{{ exam.title }}</span>
-                                                </div>
-
-                                                <i class="fas fa-check-circle text-primary mt-1 pointer"
-                                                    (click)="markExamDone(i, e)" [class.fas]="exam.done == true"
-                                                    [class.far]="exam.done == false"
-                                                    [class.text-danger]="exam.mark < 5 && exam.done == true"
-                                                    [class.text-warning]="exam.mark == 5 && exam.done == true"
-                                                    [class.text-success]="exam.mark > 5 && exam.done == true">
-                                                </i>
-                                            </div>
-                                        </div>
-                                        <span class="small" *ngIf="!subject.exams || !subject.exams[0]">
-                                            No tienes examenes pendientes
-                                        </span>
-                                    </div>
-                                    <div class="col-lg-4 col-md-4 mb-2">
-                                        <b>Proyectos</b>
-                                        <hr class="mt-1 mb-2">
-                                        <div class="card rounded-25 mb-2 mt-2"
-                                            *ngFor="let project of subject.projects; let e=index">
-                                            <div class="card-body d-flex justify-content-between pb-1 pt-1">
-                                                <div class="col-lg-10 pointer pl-0"
-                                                    [routerLink]="['/project/', project.id]">
-                                                    <span>{{ project.title }}</span>
-                                                </div>
-
-                                                <i class="fas fa-check-circle text-primary mt-1 pointer"
-                                                    (click)="markProjectDone(i, e)" [class.fas]="project.done == true"
-                                                    [class.far]="project.done == false"
-                                                    [class.text-danger]="project.mark < 5 && project.done == true"
-                                                    [class.text-warning]="project.mark == 5 && project.done == true"
-                                                    [class.text-success]="project.mark > 5 && project.done == true">
-                                                </i>
-                                            </div>
-                                        </div>
-                                        <span class="small" *ngIf="!subject.projects || !subject.projects[0]">
-                                            No tienes proyectos pendientes
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
+                        <i class="fas fa-check-circle text-primary mt-1 pointer" (click)="markTaskDone(i, e)"
+                          *ngIf="task.id != 0" [class.fas]="task.done == true" [class.far]="task.done == false">
+                        </i>
+                      </div>
+                    </div>
+                    <span class="small" *ngIf="!subject.tasks || !subject.tasks[0]">
+                      No tienes tareas pendientes
+                    </span>
+                  </div>
+                  <div class="col-lg-4 col-md-4 mb-2">
+                    <b>Examenes</b>
+                    <hr class="mt-1 mb-2">
+                    <div class="card rounded-25 mb-2 mt-2" *ngFor="let exam of subject.exams; let e=index">
+                      <div class="card-body d-flex justify-content-between pb-1 pt-1">
+                        <div class="col-lg-10 pointer pl-0" [routerLink]="['/exam/', exam.id]">
+                          <span>{{ exam.title }}</span>
                         </div>
-                    </div>
-                </ng-container>
-            </div>
-        </div>
 
-        <div class="col-lg-2">
-            <div class="col-lg-12 mb-4">
-                <div class="card rounded-25 bg-dark text-light" *ngIf="timetable">
-                    <div class="card-header rounded-top-25 d-flex justify-content-between">
-                        <h3>Horario
-                            <span *ngIf="subjectsOfTomorrow == true">de mañana</span>
-                        </h3>
-                        <span>{{ dayHour }}</span>
+                        <i class="fas fa-check-circle text-primary mt-1 pointer" (click)="markExamDone(i, e)"
+                          [class.fas]="exam.done == true" [class.far]="exam.done == false"
+                          [class.text-danger]="exam.mark < 5 && exam.done == true"
+                          [class.text-warning]="exam.mark == 5 && exam.done == true"
+                          [class.text-success]="exam.mark > 5 && exam.done == true">
+                        </i>
+                      </div>
                     </div>
-                    <div class="card-body pb-0 pt-0">
-                        <p class="mt-2 text-center" *ngIf="!subjectsOfDay[0]">¡Disfruta del fin de semana!</p>
-                        <ng-container *ngIf="subjectsOfDay && subjectsOfDay[0]">
-                            <hr class="bg-light">
-                            <div *ngFor="let subject of subjectsOfDay; let i=index">
-                                <div [routerLink]="['/subject', findSubject(subject.subject_id).id]" class="pointer">
-                                    <span
-                                        [class.subjectNow]="inSubjectTime(this.timetable.hours[i].hour_start, this.timetable.hours[i].hour_end) == true">
-                                        {{ findSubject(subject.subject_id).name }}
-                                    </span>
-                                    <div class="float-right circle"
-                                        [ngStyle]="{ background: findSubject(subject.subject_id).primary_color }"></div>
-                                </div>
-                                <hr class="bg-light">
-                            </div>
-                        </ng-container>
+                    <span class="small" *ngIf="!subject.exams || !subject.exams[0]">
+                      No tienes examenes pendientes
+                    </span>
+                  </div>
+                  <div class="col-lg-4 col-md-4 mb-2">
+                    <b>Proyectos</b>
+                    <hr class="mt-1 mb-2">
+                    <div class="card rounded-25 mb-2 mt-2" *ngFor="let project of subject.projects; let e=index">
+                      <div class="card-body d-flex justify-content-between pb-1 pt-1">
+                        <div class="col-lg-10 pointer pl-0" [routerLink]="['/project/', project.id]">
+                          <span>{{ project.title }}</span>
+                        </div>
+
+                        <i class="fas fa-check-circle text-primary mt-1 pointer" (click)="markProjectDone(i, e)"
+                          [class.fas]="project.done == true" [class.far]="project.done == false"
+                          [class.text-danger]="project.mark < 5 && project.done == true"
+                          [class.text-warning]="project.mark == 5 && project.done == true"
+                          [class.text-success]="project.mark > 5 && project.done == true">
+                        </i>
+                      </div>
                     </div>
+                    <span class="small" *ngIf="!subject.projects || !subject.projects[0]">
+                      No tienes proyectos pendientes
+                    </span>
+                  </div>
                 </div>
-                <div class="card rounded-25 mb-4"
-                    *ngIf="!subjects && this.loading[1] == false || !subjects[0] && this.loading[1] == false"
-                    data-aos="zoom-in">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between">
-                            <b>Tutorial</b>
-                        </div>
-                        <hr class="mt-1 mb-1">
-                        Parece que aún no has añadido asignaturas, añádelas <b class="pointer text-primary"
-                            routerLink="/subjects">aquí</b>
-                    </div>
-                </div>
-                <div class="card rounded-25" *ngIf="!timetable && this.loading[0] == false" data-aos="zoom-in">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between">
-                            <b>Tutorial</b>
-                        </div>
-                        <hr class="mt-1 mb-1">
-                        Parece que aún no has generado un horario, genéralo <b class="pointer text-primary"
-                            routerLink="/timetable">aquí</b>
-                    </div>
-                </div>
+              </div>
             </div>
-            <div class="col-lg-12">
-                <ejs-calendar class="rounded-25" [values]="events" isMultiSelection="true">
-                </ejs-calendar>
-            </div>
-        </div>
+          </div>
+        </ng-container>
+      </div>
     </div>
+
+    <div class="col-lg-2">
+      <div class="col-lg-12 mb-4">
+        <div class="card rounded-25 bg-dark text-light" *ngIf="timetable">
+          <div class="card-header rounded-top-25 d-flex justify-content-between">
+            <h3>Horario
+              <span *ngIf="subjectsOfTomorrow == true">de mañana</span>
+            </h3>
+            <span>{{ dayHour }}</span>
+          </div>
+          <div class="card-body pb-0 pt-0">
+            <p class="mt-2 text-center" *ngIf="!subjectsOfDay[0]">¡Disfruta del fin de semana!</p>
+            <ng-container *ngIf="subjectsOfDay && subjectsOfDay[0]">
+              <hr class="bg-light">
+              <div *ngFor="let subject of subjectsOfDay; let i=index">
+                <div [routerLink]="['/subject', findSubject(subject.subject_id).id]" class="pointer">
+                  <span
+                    [class.subjectNow]="inSubjectTime(this.timetable.hours[i].hour_start, this.timetable.hours[i].hour_end) == true">
+                    {{ findSubject(subject.subject_id).name }}
+                  </span>
+                  <div class="float-right circle"
+                    [ngStyle]="{ background: findSubject(subject.subject_id).primary_color }"></div>
+                </div>
+                <hr class="bg-light">
+              </div>
+            </ng-container>
+          </div>
+        </div>
+        <div class="card rounded-25 mb-4"
+          *ngIf="!subjects && this.loading[1] == false || !subjects[0] && this.loading[1] == false" data-aos="zoom-in">
+          <div class="card-body">
+            <div class="d-flex justify-content-between">
+              <b>Tutorial</b>
+            </div>
+            <hr class="mt-1 mb-1">
+            Parece que aún no has añadido asignaturas, añádelas <b class="pointer text-primary"
+              routerLink="/subjects">aquí</b>
+          </div>
+        </div>
+        <div class="card rounded-25" *ngIf="!timetable && this.loading[0] == false" data-aos="zoom-in">
+          <div class="card-body">
+            <div class="d-flex justify-content-between">
+              <b>Tutorial</b>
+            </div>
+            <hr class="mt-1 mb-1">
+            Parece que aún no has generado un horario, genéralo <b class="pointer text-primary"
+              routerLink="/timetable">aquí</b>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-12">
+        <ejs-calendar class="rounded-25" [values]="events" isMultiSelection="true">
+        </ejs-calendar>
+      </div>
+    </div>
+  </div>
 </div>

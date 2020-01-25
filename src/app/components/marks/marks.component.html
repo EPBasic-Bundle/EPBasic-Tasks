@@ -264,7 +264,7 @@
                     </div>
                     <hr class="bg-light mt-1">
 
-                    <ng-container *ngFor="let task_mark of tasks_marks">
+                    <ng-container *ngFor="let task_mark of tasks_marks; let i=index">
                       <span class="ml-1 small">
                         {{ task_mark.title }}
                       </span>
@@ -384,18 +384,15 @@
                           calcAverage(tasks_marks, subject.tasks_percentage), 
                           calcAverage(exams_marks, subject.exams_percentage), 
                           calcAverage(projects_marks, subject.projects_percentage)  
-                        ])
-                      }}
-                      </span>
-                      -
+                        ]) }}
+                      </span> -
                       <span>
                         {{ mathRound([
                           calcAverage(tasks_marks, subject.tasks_percentage), 
                           calcAverage(exams_marks, subject.exams_percentage), 
                           calcAverage(projects_marks, subject.projects_percentage), 
-                          (10 / subject.behavior_percentage)]
-                        )
-                      }}
+                          (10 / subject.behavior_percentage)
+                        ]) }}
                       </span>
                     </div>
                   </div>
@@ -412,7 +409,7 @@
           </div>
         </div>
       </div>
-      <div class="col-lg-10" *ngIf="!evaluations || !evaluations[0]">
+      <div class="col-lg-7" *ngIf="!evaluations || !evaluations[0]">
         <div class="jumbotron rounded-25">
           <h1 class="display-4">Aviso</h1>
           <p class="lead">
@@ -437,37 +434,53 @@
   <div class="modal-body">
 
     <ng-container *ngIf="sManual == 1">
-      <ng-container *ngFor="let task_mark of tasks_marks">
-        <span class="ml-1 small">
+      <div class="mb-1" *ngFor="let task_mark of tasks_marks; let i=index">
+        <span class="ml-1 small pointer" (click)="deleteMark(i, 1)" placement="top" ngbTooltip="Eliminar calificación">
           {{ task_mark.title }}
         </span>
-        <span class="float-right mr-1">
-          {{ task_mark.mark }}
-        </span>
+        <div class="float-right mr-1" (click)="addManualMark(task_mark.mark)">
+          <span class="pointer mr-3" placement="top" ngbTooltip="Añadir nueva calificación idéntica a esta">
+            {{ task_mark.mark }}
+          </span>
+          <i class="fas fa-trash text-danger pointer" (click)="deleteMark(i, 1)" placement="top"
+            ngbTooltip="Eliminar calificación"></i>
+        </div>
+
         <br class="m-1">
-      </ng-container>
+      </div>
     </ng-container>
+
     <ng-container *ngIf="sManual == 2">
-      <ng-container *ngFor="let exam_mark of exams_marks">
-        <span class="ml-1 small">
+      <div class="mb-1" *ngFor="let exam_mark of exams_marks; let i=index">
+        <span class="ml-1 small pointer" (click)="deleteMark(i, 2)" placement="top" ngbTooltip="Eliminar calificación">
           {{ exam_mark.title }}
         </span>
-        <span class="float-right mr-1">
-          {{ exam_mark.mark }}
-        </span>
+        <div class="float-right mr-1">
+          <span class="pointer mr-3" (click)="addManualMark(exam_mark.mark)" placement="top"
+            ngbTooltip="Añadir nueva calificación idéntica a esta">
+            {{ exam_mark.mark }}
+          </span>
+          <i class="fas fa-trash text-danger pointer" (click)="deleteMark(i, 2)" placement="top"
+            ngbTooltip="Eliminar calificación"></i>
+        </div>
         <br class="m-1">
-      </ng-container>
+      </div>
     </ng-container>
+
     <ng-container *ngIf="sManual == 3">
-      <ng-container *ngFor="let project_mark of projects_marks">
-        <span class="ml-1 small">
+      <div class="mb-1" *ngFor="let project_mark of projects_marks; let i=index">
+        <span class="ml-1 small pointer" (click)="deleteMark(i, 3)" placement="top" ngbTooltip="Eliminar calificación">
           {{ project_mark.title }}
         </span>
-        <span class="float-right mr-1">
-          {{ project_mark.mark }}
-        </span>
+        <div class="float-right mr-1" (click)="addManualMark(project_mark.mark)">
+          <span class="pointer mr-3" placement="top" ngbTooltip="Añadir nueva calificación idéntica a esta">
+            {{ project_mark.mark }}
+          </span>
+          <i class="fas fa-trash text-danger pointer" (click)="deleteMark(i, 3)" placement="top"
+            ngbTooltip="Eliminar calificación"></i>
+        </div>
         <br class="m-1">
-      </ng-container>
+      </div>
     </ng-container>
 
     <hr class="bg-light" *ngIf="tasks_marks[0] && sManual == 1 || 

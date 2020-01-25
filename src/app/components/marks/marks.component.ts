@@ -256,13 +256,18 @@ export class MarksComponent implements OnInit {
         this.projects_marks = [];
     }
 
-    addManualMark() {
+    addManualMark(mark = null) {
+        if (mark === null) {
+            mark = this.mark;
+        }
+        mark = Math.round(mark * 100) / 100;
+
         switch (this.sManual) {
             case 1: {
                 this.tasks_marks.push({
                     'id': null,
-                    'title': 'Otro',
-                    'mark': Math.round(this.mark * 100) / 100
+                    'title': 'Tarea',
+                    'mark': mark
                 });
 
                 break;
@@ -270,8 +275,8 @@ export class MarksComponent implements OnInit {
             case 2: {
                 this.exams_marks.push({
                     'id': null,
-                    'title': 'Otro',
-                    'mark': Math.round(this.mark * 100) / 100
+                    'title': 'Examen',
+                    'mark': mark
                 });
 
                 break;
@@ -279,8 +284,8 @@ export class MarksComponent implements OnInit {
             case 3: {
                 this.projects_marks.push({
                     'id': null,
-                    'title': 'Otro',
-                    'mark': Math.round(this.mark * 100) / 100
+                    'title': 'Proyecto',
+                    'mark': mark
                 });
 
                 break;
@@ -299,6 +304,24 @@ export class MarksComponent implements OnInit {
 
         return Math.round(value * 100) / 100;
     }
+
+    deleteMark(index, type) {
+        switch (type) {
+            case 1: {
+                this.tasks_marks.splice(index, 1);
+                break;
+            }
+            case 2: {
+                this.exams_marks.splice(index, 1);
+                break;
+            }
+            case 3: {
+                this.projects_marks.splice(index, 1);
+                break;
+            }
+        }
+    }
+
 
     /**********/
     /* MODALS */

@@ -1,238 +1,228 @@
 <div class="container-fluid mt-4 mb-5">
-    <div class="row d-flex justify-content-center">
-        <div class="col-lg-7 mb-4">
-            <div class="card rounded-25">
-                <div class="row text-center mt-4">
-                    <div class="col-md-4">
-                        <div class="btn-group">
-                            <div class="btn btn-primary rounded-left-25" mwlCalendarPreviousView [view]="view"
-                                [(viewDate)]="viewDate" (viewDateChange)="closeOpenMonthViewDay()">
-                                Anterior
-                            </div>
-                            <div class="btn btn-dark" mwlCalendarToday [(viewDate)]="viewDate">
-                                Hoy
-                            </div>
-                            <div class="btn btn-primary rounded-right-25" mwlCalendarNextView [view]="view"
-                                [(viewDate)]="viewDate" (viewDateChange)="closeOpenMonthViewDay()">
-                                Siguiente
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'es' }}</h3>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="btn-group">
-                            <div class="btn btn-primary rounded-left-25" (click)="setView(CalendarView.Month)"
-                                [class.active]="view === CalendarView.Month">
-                                Mes
-                            </div>
-                            <div class="btn btn-primary" (click)="setView(CalendarView.Week)"
-                                [class.active]="view === CalendarView.Week">
-                                Semana
-                            </div>
-                            <div class="btn btn-primary rounded-right-25" (click)="setView(CalendarView.Day)"
-                                [class.active]="view === CalendarView.Day">
-                                Día
-                            </div>
-                        </div>
-                    </div>
-                </div>
+  <div class="row d-flex justify-content-center">
+    <div class="col-lg-7 mb-4">
+      <div class="card rounded-25">
+        <div class="row text-center mt-4">
+          <div class="col-md-4">
+            <div class="btn-group">
+              <div class="btn btn-primary rounded-left-25" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate"
+                (viewDateChange)="closeOpenMonthViewDay()">
+                Anterior
+              </div>
+              <div class="btn btn-dark" mwlCalendarToday [(viewDate)]="viewDate">
+                Hoy
+              </div>
+              <div class="btn btn-primary rounded-right-25" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate"
+                (viewDateChange)="closeOpenMonthViewDay()">
+                Siguiente
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'es' }}</h3>
+          </div>
+          <div class="col-md-4">
+            <div class="btn-group">
+              <div class="btn btn-primary rounded-left-25" (click)="setView(CalendarView.Month)"
+                [class.active]="view === CalendarView.Month">
+                Mes
+              </div>
+              <div class="btn btn-primary" (click)="setView(CalendarView.Week)"
+                [class.active]="view === CalendarView.Week">
+                Semana
+              </div>
+              <div class="btn btn-primary rounded-right-25" (click)="setView(CalendarView.Day)"
+                [class.active]="view === CalendarView.Day">
+                Día
+              </div>
+            </div>
+          </div>
+        </div>
 
-                <div class="card-body">
-                    <div [ngSwitch]="view">
-                        <mwl-calendar-month-view *ngSwitchCase="CalendarView.Month" [viewDate]="viewDate"
-                            [events]="events | events:type" [refresh]="refresh" [activeDayIsOpen]="activeDayIsOpen"
-                            [locale]="locale" [weekStartsOn]="weekStartsOn" [weekendDays]="weekendDays"
-                            (dayClicked)="dayClicked($event.day)" (eventClicked)="handleEvent('Clicked', $event.event)"
-                            (eventTimesChanged)="eventTimesChanged($event)" [cellTemplate]="customCellTemplate">
-                        </mwl-calendar-month-view>
-                        <mwl-calendar-week-view *ngSwitchCase="CalendarView.Week" [viewDate]="viewDate"
-                            [events]="events | events:type" [refresh]="refresh" [locale]="locale"
-                            [weekStartsOn]="weekStartsOn" [weekendDays]="weekendDays"
-                            (eventClicked)="handleEvent('Clicked', $event.event)"
-                            (eventTimesChanged)="eventTimesChanged($event)">
-                        </mwl-calendar-week-view>
-                        <mwl-calendar-day-view *ngSwitchCase="CalendarView.Day" [viewDate]="viewDate"
-                            [events]="events | events:type" [refresh]="refresh" [locale]="locale"
-                            (eventClicked)="handleEvent('Clicked', $event.event)"
-                            (eventTimesChanged)="eventTimesChanged($event)">
-                        </mwl-calendar-day-view>
-                    </div>
+        <div class="card-body">
+          <div [ngSwitch]="view">
+            <mwl-calendar-month-view *ngSwitchCase="CalendarView.Month" [viewDate]="viewDate"
+              [events]="events | events:type" [refresh]="refresh" [activeDayIsOpen]="activeDayIsOpen" [locale]="locale"
+              [weekStartsOn]="weekStartsOn" [weekendDays]="weekendDays" (dayClicked)="dayClicked($event.day)"
+              (eventClicked)="handleEvent('Clicked', $event.event)" (eventTimesChanged)="eventTimesChanged($event)"
+              [cellTemplate]="customCellTemplate">
+            </mwl-calendar-month-view>
+            <mwl-calendar-week-view *ngSwitchCase="CalendarView.Week" [viewDate]="viewDate"
+              [events]="events | events:type" [refresh]="refresh" [locale]="locale" [weekStartsOn]="weekStartsOn"
+              [weekendDays]="weekendDays" (eventClicked)="handleEvent('Clicked', $event.event)"
+              (eventTimesChanged)="eventTimesChanged($event)">
+            </mwl-calendar-week-view>
+            <mwl-calendar-day-view *ngSwitchCase="CalendarView.Day" [viewDate]="viewDate"
+              [events]="events | events:type" [refresh]="refresh" [locale]="locale"
+              (eventClicked)="handleEvent('Clicked', $event.event)" (eventTimesChanged)="eventTimesChanged($event)">
+            </mwl-calendar-day-view>
+          </div>
 
 
-                    <ng-template #customCellTemplate let-day="day" let-locale="locale">
-                        <div class="cal-cell-top">
-                            <span class="cal-day-badge" *ngIf="day.badgeTotal > 0">{{ day.badgeTotal }}</span>
-                            <span
-                                class="cal-day-number">{{ day.date | calendarDate:'monthViewDayNumber':locale }}</span>
-                        </div>
+          <ng-template #customCellTemplate let-day="day" let-locale="locale">
+            <div class="cal-cell-top">
+              <span class="cal-day-badge" *ngIf="day.badgeTotal > 0">{{ day.badgeTotal }}</span>
+              <span class="cal-day-number">{{ day.date | calendarDate:'monthViewDayNumber':locale }}</span>
+            </div>
 
-                        <div class="row m-2">
-                            <ng-container *ngFor="let event of day.events">
-                                <i class="fas fa-tasks mr-1" *ngIf="event.task_id !== null"></i>
-                                <i class="fas fa-book mr-1 text-primary" *ngIf="event.exam_id !== null"></i>
-                                <i class="fas fa-project-diagram text-secondary mr-1"
-                                    *ngIf="event.project_id !== null"></i>
-                                <i class="fas fa-sticky-note text-warning mr-1" *ngIf="event.task_id == null 
+            <div class="row m-2">
+              <ng-container *ngFor="let event of day.events">
+                <i class="fas fa-tasks mr-1" *ngIf="event.task_id !== null"></i>
+                <i class="fas fa-book mr-1 text-primary" *ngIf="event.exam_id !== null"></i>
+                <i class="fas fa-project-diagram text-secondary mr-1" *ngIf="event.project_id !== null"></i>
+                <i class="fas fa-sticky-note text-warning mr-1" *ngIf="event.task_id == null 
                                     && event.exam_id == null && event.project_id == null"></i>
-                            </ng-container>
-                        </div>
-                    </ng-template>
-                </div>
+              </ng-container>
             </div>
+          </ng-template>
         </div>
-
-        <div class="col-lg-3 mb-2">
-            <div class="btn-group btn-block mb-4" role="group">
-                <button type="button" class="btn btn-secondary rounded-left-25" [class.btn-dark]="type == null"
-                    (click)="type = null">
-                    <i class="fas fa-calendar-alt mr-1"></i> Todos
-                </button>
-                <button type="button" class="btn btn-secondary" [class.btn-dark]="type == 1" (click)="type = 1">
-                    <i class="fas fa-tasks text-light mr-1"></i> Tareas
-                </button>
-                <button type="button" class="btn btn-secondary" [class.btn-dark]="type == 2" (click)=" type = 2">
-                    <i class="fas fa-book mr-1"></i> Examenes
-                </button>
-                <button type="button" class="btn btn-secondary" [class.btn-dark]="type == 3" (click)=" type = 3">
-                    <i class="fas fa-project-diagram mr-1"></i> Proyectos
-                </button>
-                <button type="button" class="btn btn-secondary rounded-right-25" [class.btn-dark]="type == 4"
-                    (click)="type = 4">
-                    <i class="fas fa-calendar-week mr-1"></i> Otros
-                </button>
-            </div>
-
-            <div class="card rounded-25">
-                <div class="card-body">
-                    <div class="title">
-                        <h2>Eventos</h2>
-                        <hr>
-                        <ng-container *ngFor="let event of events">
-                            <ng-container *ngIf="showEvent(event.start) == true">
-                                {{ event.title }}
-
-                                <section class="float-right mr-2">
-                                    <ng-container
-                                        *ngIf="(event.end | date:'d \'de\' MMM') != (event.start | date:'d \'de\' MMM')">
-                                        <p class="small text-light">
-                                            {{ event.start | date:'d \'de\' MMM' }}
-                                            -
-                                            {{ event.end | date:'d \'de\' MMM' }}
-                                        </p>
-                                    </ng-container>
-                                    <ng-container
-                                        *ngIf="(event.end | date:'d \'de\' MMM') == (event.start | date:'d \'de\' MMM')">
-                                        <p class="small text-primary mb-0">{{ event.start | date:'d \'de\' MMM' }}</p>
-
-                                        <p class="small">
-                                            {{ event.start | date:'HH:mm' }} -
-                                            {{ event.end | date:'HH:mm' }}
-                                        </p>
-                                    </ng-container>
-                                </section>
-
-                                <hr class="mt-5">
-                            </ng-container>
-                        </ng-container>
-
-                        <button class="btn btn-sm btn-block btn-primary mt-2 mb-2"
-                            (click)="openEventsModal(eventsModal)">Eventos</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
+
+    <div class="col-lg-3 mb-2">
+      <div class="btn-group btn-block mb-4" role="group">
+        <button type="button" class="btn btn-secondary rounded-left-25" [class.btn-dark]="type == null"
+          (click)="type = null">
+          <i class="fas fa-calendar-alt mr-1"></i> Todos
+        </button>
+        <button type="button" class="btn btn-secondary" [class.btn-dark]="type == 1" (click)="type = 1">
+          <i class="fas fa-tasks text-light mr-1"></i> Tareas
+        </button>
+        <button type="button" class="btn btn-secondary" [class.btn-dark]="type == 2" (click)=" type = 2">
+          <i class="fas fa-book mr-1"></i> Examenes
+        </button>
+        <button type="button" class="btn btn-secondary" [class.btn-dark]="type == 3" (click)=" type = 3">
+          <i class="fas fa-project-diagram mr-1"></i> Proyectos
+        </button>
+        <button type="button" class="btn btn-secondary rounded-right-25" [class.btn-dark]="type == 4"
+          (click)="type = 4">
+          <i class="fas fa-calendar-week mr-1"></i> Otros
+        </button>
+      </div>
+
+      <div class="card rounded-25">
+        <div class="card-body">
+          <div class="title">
+            <h2>Eventos</h2>
+            <hr>
+            <ng-container *ngFor="let event of events">
+              <ng-container *ngIf="showEvent(event.start) == true">
+                {{ event.title }}
+
+                <section class="float-right mr-2">
+                  <ng-container *ngIf="(event.end | date:'d \'de\' MMM') != (event.start | date:'d \'de\' MMM')">
+                    <p class="small text-light">
+                      {{ event.start | date:'d \'de\' MMM' }}
+                      -
+                      {{ event.end | date:'d \'de\' MMM' }}
+                    </p>
+                  </ng-container>
+                  <ng-container *ngIf="(event.end | date:'d \'de\' MMM') == (event.start | date:'d \'de\' MMM')">
+                    <p class="small text-primary mb-0">{{ event.start | date:'d \'de\' MMM' }}</p>
+
+                    <p class="small">
+                      {{ event.start | date:'HH:mm' }} -
+                      {{ event.end | date:'HH:mm' }}
+                    </p>
+                  </ng-container>
+                </section>
+
+                <hr class="mt-5">
+              </ng-container>
+            </ng-container>
+
+            <button class="btn btn-sm btn-block btn-primary mt-2 mb-2"
+              (click)="openEventsModal(eventsModal)">Eventos</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <ng-template #eventModal let-close="close">
-    <div class="modal-header">
-        <h5 class="modal-title">{{ modalData?.event.title }}</h5>
-        <button type="button" class="close" (click)="modal.close()">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body">
-        <pre>{{ modalData?.event | json }}</pre>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-outline-secondary" (click)="modal.close()">
-            Cerrar
-        </button>
-    </div>
+  <div class="modal-header">
+    <h5 class="modal-title">{{ modalData?.event.title }}</h5>
+    <button type="button" class="close" (click)="modal.close()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <pre>{{ modalData?.event | json }}</pre>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" (click)="modal.close()">
+      Cerrar
+    </button>
+  </div>
 </ng-template>
 
 <ng-template #eventsModal let-close="close">
-    <div class="modal-header">
-        <h5 class="modal-title">Añadir eventos</h5>
-        <button type="button" class="close" (click)="modal.close()">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body">
-        <button class="btn btn-primary float-right mb-4" (click)="addEvent()">
-            Añadir nuevo
-        </button>
+  <div class="modal-header">
+    <h5 class="modal-title">Añadir eventos</h5>
+    <button type="button" class="close" (click)="modal.close()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <button class="btn btn-primary float-right mb-4" (click)="addEvent()">
+      Añadir nuevo
+    </button>
 
-        <div class="table-responsive">
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Título</th>
-                        <th>Color</th>
-                        <th>Color</th>
-                        <th>Empieza</th>
-                        <th>Termina</th>
-                        <th>Eliminar</th>
-                    </tr>
-                </thead>
+    <div class="table-responsive">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Título</th>
+            <th>Color</th>
+            <th>Color</th>
+            <th>Empieza</th>
+            <th>Termina</th>
+            <th>Eliminar</th>
+          </tr>
+        </thead>
 
-                <tbody>
-                    <tr *ngFor="let event of events; let i=index">
-                        <td>
-                            <input type="text" class="form-control" [(ngModel)]="event.title"
-                                (keyup)="refresh.next()" />
-                        </td>
-                        <td>
-                            <input type="color" [(ngModel)]="event.color.primary" (change)="refresh.next()" />
-                        </td>
-                        <td>
-                            <input type="color" [(ngModel)]="event.color.secondary" (change)="refresh.next()" />
-                        </td>
-                        <td>
-                            <input class="form-control" type="text" mwlFlatpickr [(ngModel)]="event.start"
-                                (ngModelChange)="refresh.next()" [altInput]="true" [convertModelValue]="true"
-                                [enableTime]="true" dateFormat="Y-m-dTH:i" altFormat="F j, Y H:i"
-                                placeholder="Not set" />
-                        </td>
-                        <td>
-                            <input class="form-control" type="text" mwlFlatpickr [(ngModel)]="event.end"
-                                (ngModelChange)="refresh.next()" [altInput]="true" [convertModelValue]="true"
-                                [enableTime]="true" dateFormat="Y-m-dTH:i" altFormat="F j, Y H:i"
-                                placeholder="Not set" />
-                        </td>
-                        <td>
-                            <button class="btn btn-primary rounded-25 mr-2" (click)="storeEvent(event, i)"
-                                *ngIf="event['id'] == null">
-                                <i class="fa fa-save"></i>
-                            </button>
-                            <button class="btn btn-secondary rounded-25 mr-2" (click)="updateEvent(event, i)"
-                                *ngIf="event['id'] > 0">
-                                <i class="fas fa-pen"></i>
-                            </button>
-                            <button class="btn btn-danger rounded-25" (click)="deleteEvent(event, i)">
-                                <i class="fa fa-trash"></i>
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+        <tbody>
+          <tr *ngFor="let event of events; let i=index">
+            <td>
+              <input type="text" class="form-control" [(ngModel)]="event.title" (keyup)="refresh.next()" />
+            </td>
+            <td>
+              <input type="color" [(ngModel)]="event.color.primary" (change)="refresh.next()" />
+            </td>
+            <td>
+              <input type="color" [(ngModel)]="event.color.secondary" (change)="refresh.next()" />
+            </td>
+            <td>
+              <input class="form-control" type="text" mwlFlatpickr [(ngModel)]="event.start"
+                (ngModelChange)="refresh.next()" [altInput]="true" [convertModelValue]="true" [enableTime]="true"
+                dateFormat="Y-m-dTH:i" altFormat="F j, Y H:i" placeholder="Not set" />
+            </td>
+            <td>
+              <input class="form-control" type="text" mwlFlatpickr [(ngModel)]="event.end"
+                (ngModelChange)="refresh.next()" [altInput]="true" [convertModelValue]="true" [enableTime]="true"
+                dateFormat="Y-m-dTH:i" altFormat="F j, Y H:i" placeholder="Not set" />
+            </td>
+            <td>
+              <button class="btn btn-primary rounded-25 mr-2" (click)="storeEvent(event, i)"
+                *ngIf="event['id'] == null">
+                <i class="fa fa-save"></i>
+              </button>
+              <button class="btn btn-secondary rounded-25 mr-2" (click)="updateEvent(event, i)" *ngIf="event['id'] > 0">
+                <i class="fas fa-pen"></i>
+              </button>
+              <button class="btn btn-danger rounded-25" (click)="deleteEvent(event, i)">
+                <i class="fa fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-outline-secondary" (click)="modal.close()">
-            Cerrar
-        </button>
-    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" (click)="modal.close()">
+      Cerrar
+    </button>
+  </div>
 </ng-template>
