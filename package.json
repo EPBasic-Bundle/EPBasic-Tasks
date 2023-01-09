@@ -41,7 +41,7 @@
     "ngx-skeleton-loader": "^1.2.2",
     "ngx-ui-switch": "^8.2.0",
     "ngx-uploader": "^7.1.0",
-    "rrule": "2.6.2",
+    "rrule": "2.7.1",
     "rxjs": "~6.4.0",
     "tslib": "^1.10.0",
     "zone.js": "~0.9.1"
